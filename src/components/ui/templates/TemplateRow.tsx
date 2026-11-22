@@ -3,6 +3,19 @@ import TemplateActions from "./TemplateActions";
 import CopilotStatus from "@/components/ui/CopilotStatus";
 import type { Template } from "@/lib/types/templates";
 
+/** Plain-text preview of the (HTML) email body */
+function bodyPreview(html?: string): string {
+  if (!html) return "";
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 interface TemplateRowProps {
   template: Template;
   onEdit: () => void;
@@ -26,6 +39,7 @@ export default function TemplateRow({
       : 0;
   const lastUpdated = formatDate(template.updatedAt || template.createdAt || "");
   const status = template.status ?? "draft";
+  const body = bodyPreview(template.body);
 
   return (
     <>
@@ -33,11 +47,18 @@ export default function TemplateRow({
       <div
         className="hidden lg:grid items-center px-5 py-6 border-b border-[#E2E8F0] hover:bg-gray-50 transition-colors"
         style={{
-          gridTemplateColumns: "1.5fr 0.5fr 1fr 1fr 0.8fr 0.7fr 0.5fr",
+          gridTemplateColumns: "1.5fr 2fr 0.5fr 1fr 1fr 0.8fr 0.7fr 0.5fr",
         }}
       >
         <span className="font-semibold truncate pr-4 text-sm text-[#0F172A]">
           {template.name}
+        </span>
+
+        <span
+          className="truncate pr-4 text-sm text-[#59637C]"
+          title={body || undefined}
+        >
+          {body || "—"}
         </span>
 
         <span className="text-sm text-[#0F172A]">{steps}</span>
