@@ -5,9 +5,11 @@ import { useCopilotStore } from "@/store/copilotStore";
 import { useRouter } from "next/navigation";
 import StepsActions from "../StepsActions";
 import { copilotsApi } from "@/lib/api";
+import { toast } from "sonner";
 
 export default function Step1Settings() {
-  const { copilotData, updateCopilotData, setStep, mode } = useCopilotStore();
+  const { copilotData, updateCopilotData, setStep, mode, draftId } =
+    useCopilotStore();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const handleSubmit = async () => {
@@ -21,6 +23,15 @@ export default function Step1Settings() {
       });
 
       if (mode === "edit") {
+        // Save the step 1 fields right away; otherwise a renamed copilot is
+        // only persisted once the user also continues past step 2.
+        if (draftId) {
+          await copilotsApi.update(draftId, {
+            name: copilotData.name.trim(),
+            description: copilotData.description,
+            goal: copilotData.goal,
+          });
+        }
         setStep(2);
         return;
       }
@@ -33,6 +44,8 @@ export default function Step1Settings() {
       setStep(2);
       
       router.push(`/dashboard/copilots/new?edit=${response.data.id}`);
+    } catch {
+      toast.error("Failed to save copilot. Please try again.");
     } finally {
       setIsLoading(false);
     }
