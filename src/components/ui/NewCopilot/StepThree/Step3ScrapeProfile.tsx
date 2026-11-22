@@ -546,9 +546,7 @@ export default function Step3ScrapeProfile() {
         </div>
       </div>
       <StepsActions
-        onPress={() => {
-          handleONpress();
-        }}
+        onPress={() => handleONpress()}
         isLoading={loading}
         canContinue={canContinue}
       />
