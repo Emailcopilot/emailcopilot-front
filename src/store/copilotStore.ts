@@ -95,6 +95,19 @@ interface CopilotStore {
   getAllCopilots: () => Promise<void>;
   draftId: number | null;
   setDraftId: (id: number | null) => void;
+  /** The copilot being edited was live (active/running) when the wizard opened. */
+  editingLive: boolean;
+  setEditingLive: (live: boolean) => void;
+  /**
+   * Re-launch flow: a step's "Re-launch" button sets `relaunchPending` and
+   * runs the step's normal save. When that save finishes it calls setStep
+   * to advance; setStep then flips `relaunchRequested` instead of moving on,
+   * and the wizard page launches the copilot.
+   */
+  relaunchPending: boolean;
+  relaunchRequested: boolean;
+  setRelaunchPending: (pending: boolean) => void;
+  clearRelaunchRequest: () => void;
   /**
    * Persists the current draft to the backend (upsert): PUTs when a draft
    * id is known, otherwise POSTs and captures the new id. Returns the id.
@@ -152,12 +165,25 @@ export const useCopilotStore = create<CopilotStore>((set, get) => ({
   editingId: null,
   highestStep: 1,
   draftId: null,
+  editingLive: false,
+  relaunchPending: false,
+  relaunchRequested: false,
 
   setStep: (step) =>
-    set((state) => ({
-      currentStep: step,
-      highestStep: Math.max(state.highestStep, step) as Step,
-    })),
+    set((state) =>
+      state.relaunchPending
+        ? { relaunchPending: false, relaunchRequested: true }
+        : {
+            currentStep: step,
+            highestStep: Math.max(state.highestStep, step) as Step,
+          },
+    ),
+
+  setEditingLive: (live) => set({ editingLive: live }),
+
+  setRelaunchPending: (pending) => set({ relaunchPending: pending }),
+
+  clearRelaunchRequest: () => set({ relaunchRequested: false }),
 
   updateCopilotData: (data) =>
     set((state) => ({
@@ -203,7 +229,12 @@ export const useCopilotStore = create<CopilotStore>((set, get) => ({
     if (draftId) {
       // Update path: send only the changed fields when provided, so
       // untouched copilot data can never be overwritten by stale state.
-      await copilotsApi.update(draftId, partial ?? fullPayload);
+      // Every wizard save puts the copilot back in draft (editing pauses a
+      // live copilot until it is launched again).
+      await copilotsApi.update(
+        draftId,
+        partial ? { ...partial, status: "draft" } : fullPayload,
+      );
       return draftId;
     }
     const res = await copilotsApi.create(fullPayload);
@@ -229,6 +260,9 @@ export const useCopilotStore = create<CopilotStore>((set, get) => ({
       editingId: null,
       draftId: null,
       highestStep: 1,
+      editingLive: false,
+      relaunchPending: false,
+      relaunchRequested: false,
     }),
   getAllCopilots: async () => {
     try {
