@@ -53,7 +53,9 @@ export default function Step4Launch({
   launching,
   onSaveDraft,
 }: Step4LaunchProps) {
-  const { copilotData, setStep, draftId, persistDraft } = useCopilotStore();
+  const { copilotData, setStep, draftId, persistDraft, mode, editingLive } =
+    useCopilotStore();
+  const isRelaunch = mode === "edit" && editingLive;
   const queryClient = useQueryClient();
   const [saving, setSaving] = useState(false);
   const [sendingTestEmail, setSendingTestEmail] = useState(false);
@@ -546,7 +548,13 @@ export default function Step4Launch({
               className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Rocket size={15} />{" "}
-              {launching ? "Launching..." : "Launch Copilot"}
+              {launching
+                ? isRelaunch
+                  ? "Re-launching..."
+                  : "Launching..."
+                : isRelaunch
+                  ? "Re-launch Copilot"
+                  : "Launch Copilot"}
             </button>
             {!launching && (loadingTakeoff || loadingTestStatus || !readyAll) && (
               <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-md bg-gray-900 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover/tip:opacity-100">
