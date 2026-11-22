@@ -232,17 +232,15 @@ function WorkflowStepper({
   copilotId: string | number;
 }) {
   return (
-    <div className="flex items-center">
+    // Two rows of three so the table fits inside its card on laptop screens.
+    <div className="grid grid-cols-[repeat(3,max-content)] gap-1.5">
       {steps.map((step, index) => (
-        <React.Fragment key={step.key}>
-          {index > 0 && (
-            <div
-              className=" h-px w-4  shrink-0 bg-gray-200 "
-              aria-hidden="true"
-            />
-          )}
-          <StepColumn step={step} index={index} copilotId={copilotId} />
-        </React.Fragment>
+        <StepColumn
+          key={step.key}
+          step={step}
+          index={index}
+          copilotId={copilotId}
+        />
       ))}
     </div>
   );
@@ -306,27 +304,27 @@ function CopilotTable({
 
   return (
     <div
-      className={`w-full overflow-hidden lg:overflow-visible rounded-lg bg-white border border-[#E2E8F0] [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:flex-1 [@media(min-height:1081px)]:flex-col ${className}`}
+      className={`w-full overflow-hidden xl:overflow-visible rounded-lg bg-white border border-[#E2E8F0] [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:flex-1 [@media(min-height:1081px)]:flex-col ${className}`}
     >
-      {/* On desktop the page itself scrolls, so the header row can stick to the top of the screen.
+      {/* On wide screens (xl+) the page itself scrolls, so the header row can stick to the top of the screen.
           On smaller screens the table keeps its own scroll area (needed for horizontal scrolling). */}
-      <div className="overflow-x-auto max-lg:max-h-[calc(100dvh-270px)] lg:overflow-visible">
+      <div className="overflow-x-auto max-xl:max-h-[calc(100dvh-270px)] xl:overflow-visible">
         <table className="w-full min-w-225 border-collapse ">
           <thead>
             <tr className="border-b border-[#E2E8F0] bg-white">
-              <th className="sticky top-0 z-40 rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              <th className="sticky top-0 z-40 rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Copilots
               </th>
-              <th className="sticky top-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              <th className="sticky top-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Workflow status
               </th>
-              <th className="sticky top-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              <th className="sticky top-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Sent
               </th>
-              <th className="whitespace-nowrap sticky right-0 top-0 z-50 bg-white shadow-[inset_0_-1px_0_#E2E8F0] px-5 py-2.5 text-left uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              <th className="whitespace-nowrap sticky right-22 top-0 z-50 bg-white shadow-[inset_0_-1px_0_#E2E8F0] px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Status
               </th>
-              <th className="sticky top-0 z-40 rounded-tr-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] w-16 px-5 py-2.5 text-right uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              <th className="sticky right-0 top-0 z-50 rounded-tr-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] w-22 min-w-22 px-5 py-2.5 text-right font-normal text-xs leading-5 text-[#94A3B8]">
                 Actions
               </th>
             </tr>
@@ -377,12 +375,12 @@ function CopilotTable({
                   <td className="whitespace-nowrap px-5 py-4 text-sm align-middle text-[#0F172A]">
                     {copilot.emailsSent}
                   </td>
-                  <td className="whitespace-nowrap sticky right-0 bg-white group-hover/row:bg-gray-50 z-40 px-5 py-4 align-middle">
+                  <td className="whitespace-nowrap sticky right-22 bg-white group-hover/row:bg-gray-50 z-40 px-5 py-4 align-middle">
                     {/* <StatusBadge status={copilot.status} /> */}
                     <CopilotStatus status={copilot.status} />
                   </td>
                   <td
-                    className="px-5 py-4 text-right align-middle"
+                    className="sticky right-0 z-40 w-22 min-w-22 bg-white group-hover/row:bg-gray-50 px-5 py-4 text-right align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
