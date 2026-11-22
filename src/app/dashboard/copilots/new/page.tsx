@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState, useEffect, useCallback, useRef } from "react";
-import { MoreVertical, ChevronRight, Loader2 } from "lucide-react";
+import { MoreVertical, ChevronRight, Loader2, PauseCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Stepper from "@/components/ui/NewCopilot/Stepper";
@@ -22,7 +22,7 @@ import ScheduleStep from "@/components/ui/NewCopilot/StepFive/ScheduleStep";
 import ScheduleSideBar from "@/components/ui/NewCopilot/StepFive/ScheduleSideBar";
 import LaunchSideBar from "@/components/ui/NewCopilot/StepSix/LaunchSideBar";
 import { apiErrorMessage, getBrowserTimeZone } from "@/lib/helpers";
-import { copilotQuota } from "@/lib/limits";
+import { copilotQuota, emailQuota } from "@/lib/limits";
 import { useBilling } from "@/lib/useBilling";
 import { toast } from "sonner";
 
@@ -39,6 +39,10 @@ function NewCopilotPageContent() {
     persistDraft,
     loadCopilot,
     setStep,
+    editingLive,
+    setEditingLive,
+    relaunchRequested,
+    clearRelaunchRequest,
   } = useCopilotStore();
 
   const [launching, setLaunching] = useState(false);
@@ -46,6 +50,7 @@ function NewCopilotPageContent() {
 
   const { limits } = useBilling();
   const quota = copilotQuota(limits);
+  const mailQuota = emailQuota(limits);
 
   const { user } = useUser();
 
@@ -117,6 +122,9 @@ function NewCopilotPageContent() {
         .getById(id)
         .then((res) => {
           const copilot = res.data;
+          setEditingLive(
+            copilot.status === "active" || copilot.status === "running",
+          );
           loadCopilot(
             {
               id: copilot.id,
@@ -167,6 +175,7 @@ function NewCopilotPageContent() {
         })
         .finally(() => setLoadingCopilot(false));
     } else if (duplicateId) {
+      setEditingLive(false);
       const id = parseInt(duplicateId, 10);
       setLoadingCopilot(true);
       copilotsApi
@@ -213,7 +222,15 @@ function NewCopilotPageContent() {
       // Idempotent, so StrictMode double-fire is harmless.
       resetStore();
     }
-  }, [searchParams, router, loadCopilot, setDraftId, setStep, resetStore]);
+  }, [
+    searchParams,
+    router,
+    loadCopilot,
+    setDraftId,
+    setStep,
+    resetStore,
+    setEditingLive,
+  ]);
 
   // Creating is gated by the plan's copilot allowance. Editing or duplicating
   // an existing copilot is not. Send blocked users back to the list, which
@@ -275,6 +292,23 @@ function NewCopilotPageContent() {
     }
   }, [copilotData, draftId, router, resetStore, user]);
 
+  // "Re-launch" from any step: the step has just saved, now put it live again.
+  useEffect(() => {
+    if (!relaunchRequested) return;
+    clearRelaunchRequest();
+    if (mailQuota?.atLimit) {
+      toast.error(
+        "Your monthly email allowance is used up. Upgrade your plan to re-launch this copilot.",
+      );
+      return;
+    }
+    handleLaunch().then(() => {
+      if (!useCopilotStore.getState().draftId) {
+        toast.success("Copilot re-launched.");
+      }
+    });
+  }, [relaunchRequested, clearRelaunchRequest, mailQuota?.atLimit, handleLaunch]);
+
   if (loadingCopilot) {
     return (
       <div className="py-8 px-4 w-full mx-auto flex items-center justify-center min-h-100">
@@ -330,6 +364,13 @@ function NewCopilotPageContent() {
           </div>
         </div>
       </header>
+
+      {mode === "edit" && editingLive && (
+        <div className="flex items-start gap-2.5 mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <PauseCircle size={18} className="mt-px shrink-0 text-amber-500" />
+          <span>Editing pauses this copilot until you launch it again.</span>
+        </div>
+      )}
 
       {/* Stepper */}
       <Stepper />
