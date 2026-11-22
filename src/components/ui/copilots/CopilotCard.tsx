@@ -180,7 +180,7 @@ function CopilotCard({
       case "paused":
         return {
           action: () => handleResume(),
-          label: "resume",
+          label: "Resume",
         };
       case "draft":
         return {
