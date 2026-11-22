@@ -88,35 +88,35 @@ export default function TemplateRow({
       <div className="lg:hidden px-4 py-5 border-b border-[#E2E8F0] hover:bg-gray-50 transition-colors">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold truncate text-sm text-[#0F172A]">
-                {template.name}
-              </span>
-              {status === "draft" ? (
-                <CopilotStatus status="draft" isSmall />
-              ) : (
-                <span
-                  className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0"
-                  style={{
-                    backgroundColor: "#F0F9FF",
-                    color: "#0284C7",
-                    border: "1px solid #BAE6FD",
-                  }}
-                >
-                  In flight
-                </span>
-              )}
-            </div>
+            <span className="block font-semibold truncate text-sm text-[#0F172A] mb-1">
+              {template.name}
+            </span>
             <div className="flex items-center gap-3 text-xs text-[#59637C]">
               <span>{steps} steps</span>
               <span>{lastUpdated}</span>
             </div>
           </div>
-          <TemplateActions
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onDuplicate={onDuplicate}
-          />
+          <div className="flex items-center gap-2 shrink-0">
+            {status === "draft" ? (
+              <CopilotStatus status="draft" isSmall />
+            ) : (
+              <span
+                className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0"
+                style={{
+                  backgroundColor: "#F0F9FF",
+                  color: "#0284C7",
+                  border: "1px solid #BAE6FD",
+                }}
+              >
+                In flight
+              </span>
+            )}
+            <TemplateActions
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onDuplicate={onDuplicate}
+            />
+          </div>
         </div>
       </div>
     </>
