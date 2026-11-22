@@ -7,7 +7,6 @@ import {
   Map as MapIcon,
   MapPin,
   Building2,
-  CheckCircle2,
   CircleAlert,
 } from "lucide-react";
 import { Country, City, ICountry, ICity } from "country-state-city";
@@ -527,15 +526,7 @@ export default function Step3ScrapeProfile() {
                     }
                   }}
                 >
-                  {copilotData.targetAudienceId === profile.id && (
-                    <div className="absolute top-4 right-4 text-primary">
-                      <CheckCircle2
-                        size={20}
-                        className="fill-current text-white"
-                      />
-                    </div>
-                  )}
-                  <h4 className="font-semibold text-gray-900 pr-8 line-clamp-1">
+                  <h4 className="font-semibold text-gray-900 line-clamp-1">
                     {profile.name}
                   </h4>
                   <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
