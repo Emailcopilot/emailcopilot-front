@@ -13,6 +13,7 @@ export const CATEGORIES = [
 
 const TABLE_HEADERS = [
   "Template name",
+  "Email body",
   "Steps",
   "Last updated",
   "Used in",
@@ -21,7 +22,7 @@ const TABLE_HEADERS = [
   "Actions",
 ];
 
-const COLUMNS = "1.5fr 0.5fr 1fr 1fr 0.8fr 0.7fr 0.5fr";
+const COLUMNS = "1.5fr 2fr 0.5fr 1fr 1fr 0.8fr 0.7fr 0.5fr";
 
 interface TemplateTableProps {
   templates: Template[];
