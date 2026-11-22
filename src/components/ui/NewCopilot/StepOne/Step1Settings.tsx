@@ -30,6 +30,7 @@ export default function Step1Settings() {
             name: copilotData.name.trim(),
             description: copilotData.description,
             goal: copilotData.goal,
+            status: "draft",
           });
         }
         setStep(2);
