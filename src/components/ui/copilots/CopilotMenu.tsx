@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { Pencil, Copy, Play, Pause, Archive, Trash2, Mail } from "lucide-react";
+import {
+  Pencil,
+  Copy,
+  Play,
+  Pause,
+  Archive,
+  Trash2,
+  Mail,
+  Users,
+} from "lucide-react";
 import { Copilot } from "@/components/layout/features/copilots/CopilotTable";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -170,6 +179,13 @@ export default function CopilotMenu({
         >
           <Copy size={13} /> Duplicate
         </button>
+        <Link
+          href={`/dashboard/departure?copilotId=${copilot.id}&name=${encodeURIComponent(copilot.name ?? "")}`}
+          onClick={() => onClose?.()}
+          className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          <Users size={13} /> Departure
+        </Link>
         <span className="block" title={testEmailTooltip}>
           <button
             onClick={handleTestEmail}
