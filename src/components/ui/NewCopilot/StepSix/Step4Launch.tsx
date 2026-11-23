@@ -568,6 +568,11 @@ export default function Step4Launch({
         sending={sendingTestEmail}
         sent={gateSent}
         sentTo={selectedEmailProfile?.email}
+        audienceLabel={
+          resultsCount != null && resultsCount > 0
+            ? `${resultsCount.toLocaleString()} companies`
+            : selectedScrapeProfile?.name
+        }
         relaunch={isRelaunch}
         onSend={() => sendTestEmail(true)}
         onLaunch={() => {
