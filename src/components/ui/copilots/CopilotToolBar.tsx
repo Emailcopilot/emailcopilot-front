@@ -113,7 +113,7 @@ export function StatusDropdown({
         />
       </button>
       {open && (
-        <div className="absolute left-0 top-full z-42 mt-1.5 w-44 rounded-lg border border-gray-100 bg-white py-1.5 shadow-lg">
+        <div className="absolute left-0 top-full z-60 mt-1.5 w-44 rounded-lg border border-gray-100 bg-white py-1.5 shadow-lg">
           {options.map((opt) => {
             const isSelected = opt.value === value;
             return (
@@ -178,7 +178,7 @@ function TagsDropdown({
         />
       </button>
       {open && (
-        <div className="absolute left-0 top-full z-42 mt-1.5 w-48 rounded-lg border border-gray-100 bg-white py-1.5 shadow-lg">
+        <div className="absolute left-0 top-full z-60 mt-1.5 w-48 rounded-lg border border-gray-100 bg-white py-1.5 shadow-lg">
           {options.map((opt) => {
             const isSelected = opt.value === value;
             return (
