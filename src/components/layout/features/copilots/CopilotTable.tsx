@@ -247,6 +247,9 @@ export interface CopilotTableProps {
   onActionsClick?: (copilot: Copilot) => void;
   /** Called when menu actions require a refresh (e.g., delete, archive, status change). */
   onRefresh?: () => void;
+  /** Ids of the checked rows. When given together with onSelectionChange, a checkbox column is shown. */
+  selectedIds?: Set<number>;
+  onSelectionChange?: (ids: Set<number>) => void;
   className?: string;
 }
 
@@ -256,8 +259,35 @@ function CopilotTable({
 
   onActionsClick,
   onRefresh,
+  selectedIds,
+  onSelectionChange,
   className = "",
 }: CopilotTableProps) {
+  const selectable = !!selectedIds && !!onSelectionChange;
+  // Archived copilots can't be archived again, so they can't be selected.
+  const selectableIds = copilots
+    .filter((c) => c.status !== "archived")
+    .map((c) => c.id);
+  const allSelected =
+    selectable &&
+    selectableIds.length > 0 &&
+    selectableIds.every((id) => selectedIds.has(id));
+  const someSelected =
+    selectable && !allSelected && selectableIds.some((id) => selectedIds.has(id));
+  const toggleAll = () => {
+    if (!selectable) return;
+    const next = new Set(selectedIds);
+    if (allSelected) selectableIds.forEach((id) => next.delete(id));
+    else selectableIds.forEach((id) => next.add(id));
+    onSelectionChange(next);
+  };
+  const toggleOne = (id: number) => {
+    if (!selectable) return;
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    onSelectionChange(next);
+  };
   const [menuCopilotId, setMenuCopilotId] = React.useState<number | null>(null);
   const [menuPos, setMenuPos] = React.useState<{
     top: number;
@@ -301,6 +331,21 @@ function CopilotTable({
             {/* Content columns shrink to fit (w-px); the four empty w-1/4 spacer columns share the leftover width,
                 so the gaps between Copilots, Workflow status, Sent, Status and Actions are equal. */}
             <tr className="border-b border-[#E2E8F0] bg-white">
+              {selectable && (
+                <th className="sticky top-0 z-40 w-px rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] py-2.5 pl-5 pr-0 text-left">
+                  <input
+                    type="checkbox"
+                    aria-label="Select all copilots on this page"
+                    checked={allSelected}
+                    ref={(el) => {
+                      if (el) el.indeterminate = someSelected;
+                    }}
+                    onChange={toggleAll}
+                    disabled={selectableIds.length === 0}
+                    className="size-4 cursor-pointer accent-primary align-middle disabled:cursor-not-allowed"
+                  />
+                </th>
+              )}
               <th className="sticky top-0 z-40 w-px rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Copilots
               </th>
@@ -342,6 +387,26 @@ function CopilotTable({
                   tabIndex={0}
                   className="group/row cursor-pointer border-b border-[#E2E8F0] align-top last:border-b-0 hover:bg-gray-50 transition-colors focus-visible:outline-2 focus-visible:outline-primary/40"
                 >
+                  {selectable && (
+                    <td
+                      className="w-px py-4 pl-5 pr-0 align-middle"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <input
+                        type="checkbox"
+                        aria-label={`Select ${copilot.name}`}
+                        checked={selectedIds.has(copilot.id)}
+                        onChange={() => toggleOne(copilot.id)}
+                        disabled={copilot.status === "archived"}
+                        title={
+                          copilot.status === "archived"
+                            ? "Already archived"
+                            : undefined
+                        }
+                        className="size-4 cursor-pointer accent-primary align-middle disabled:cursor-not-allowed disabled:opacity-40"
+                      />
+                    </td>
+                  )}
                   <td className="w-px px-5 py-4 align-middle">
                     <div className="w-max max-w-55">
                       <p className="text-sm font-semibold text-[#0F172A]">
