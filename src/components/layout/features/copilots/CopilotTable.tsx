@@ -465,13 +465,13 @@ function CopilotTable({
                         });
                         setMenuCopilotId(copilot.id);
                       }}
-                      className="text-gray-500 transition-colors hover:text-gray-800 p-1.5 rounded-md hover:bg-gray-100"
+                      className="text-gray-300 transition-colors hover:text-gray-500"
                       aria-label="Copilot actions"
                     >
                       {menuCopilotId === copilot.id ? (
-                        <X size={20} strokeWidth={2.5} />
+                        <X size={18} />
                       ) : (
-                        <MoreVertical size={20} strokeWidth={2.75} />
+                        <MoreVertical size={18} />
                       )}
                     </button>
                     {menuCopilotId === copilot.id &&
