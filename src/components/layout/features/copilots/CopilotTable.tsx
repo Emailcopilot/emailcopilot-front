@@ -375,12 +375,12 @@ function CopilotTable({
                   <td className="whitespace-nowrap px-5 py-4 text-sm align-middle text-[#0F172A]">
                     {copilot.emailsSent}
                   </td>
-                  <td className="whitespace-nowrap sticky right-22 bg-white group-hover/row:bg-gray-50 z-40 px-5 py-4 align-middle">
+                  <td className="whitespace-nowrap sticky right-22 bg-white group-hover/row:bg-gray-50 z-40 shadow-[inset_0_-1px_0_#E2E8F0] [tr:last-child>&]:shadow-none px-5 py-4 align-middle">
                     {/* <StatusBadge status={copilot.status} /> */}
                     <CopilotStatus status={copilot.status} />
                   </td>
                   <td
-                    className="sticky right-0 z-40 w-22 min-w-22 bg-white group-hover/row:bg-gray-50 px-5 py-4 text-right align-middle"
+                    className="sticky right-0 z-40 w-22 min-w-22 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] [tr:last-child>&]:shadow-none px-5 py-4 text-right align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
