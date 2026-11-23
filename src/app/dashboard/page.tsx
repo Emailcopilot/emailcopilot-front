@@ -18,14 +18,41 @@ import CopilotsCard from "@/components/ui/overview/CopilotsCard";
 import CopilotFooter from "@/components/ui/NewCopilot/CopilotFooter";
 import { useLeadStore } from "@/store/leadStore";
 import { useCopilotStore } from "@/store/copilotStore";
+import { useAuth, useUser } from "@clerk/nextjs";
+import { decodeJwtPayload, getDisplayUsername } from "@/lib/userDisplay";
 
 export default function OverviewPage() {
   const { leads, getAllLeads } = useLeadStore();
   const { copilots, getAllCopilots } = useCopilotStore();
+  const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
 
   const router = useRouter();
 
   const [period, setPeriod] = useState<DateRange>("Last 7 days");
+  const [displayUsername, setDisplayUsername] = useState("");
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    let cancelled = false;
+
+    const loadUsername = async () => {
+      try {
+        const token = await getToken();
+        const claims = token ? decodeJwtPayload(token) : null;
+        if (!cancelled) setDisplayUsername(getDisplayUsername(claims, user));
+      } catch {
+        if (!cancelled) setDisplayUsername(getDisplayUsername(null, user));
+      }
+    };
+
+    void loadUsername();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [getToken, isLoaded, user]);
 
   useEffect(() => {
     getAllLeads();
@@ -101,7 +128,11 @@ export default function OverviewPage() {
   return (
     <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 xl:px-8 py-4 sm:py-5">
       <DashboardHeader
-        title="Welcome back!👋"
+        title={
+          displayUsername
+            ? `Welcome back, ${displayUsername}!👋`
+            : "Welcome back!👋"
+        }
         description={`Here's what's happening with your outreach today`}
         actionLabel="Create New Copilot"
         onAction={() => router.push("/dashboard/copilots/new")}

@@ -328,6 +328,42 @@ export function isValidTimeZone(timeZone?: string | null): boolean {
   }
 }
 
+const DEFAULT_FLIGHT_TIMEZONE_STORAGE_PREFIX =
+  "emailcopilot:default-flight-timezone";
+
+export function getStoredDefaultTimeZone(
+  userId?: string | null,
+): string | null {
+  if (!userId || typeof window === "undefined") return null;
+
+  try {
+    const timeZone = window.localStorage.getItem(
+      `${DEFAULT_FLIGHT_TIMEZONE_STORAGE_PREFIX}:${userId}`,
+    );
+    return isValidTimeZone(timeZone) ? timeZone : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveStoredDefaultTimeZone(
+  userId: string | null | undefined,
+  timeZone: string,
+): void {
+  if (!userId || !isValidTimeZone(timeZone) || typeof window === "undefined") {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(
+      `${DEFAULT_FLIGHT_TIMEZONE_STORAGE_PREFIX}:${userId}`,
+      timeZone,
+    );
+  } catch {
+    return;
+  }
+}
+
 /**
  * Offset in minutes for a zone at a given instant, using the browser's own
  * timezone database — so DST is applied instead of a frozen winter offset.

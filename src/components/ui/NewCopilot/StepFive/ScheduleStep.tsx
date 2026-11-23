@@ -8,12 +8,15 @@ import { flightSchedulesApi } from "@/lib/api";
 import {
   baseScheduleName,
   getBrowserTimeZone,
+  getStoredDefaultTimeZone,
   isValidTimeZone,
   nextScheduleCopyName,
+  saveStoredDefaultTimeZone,
 } from "@/lib/helpers";
 import { toast } from "sonner";
 import TimeZoneSelect from "@/components/ui/TimeZoneSelect";
 import ScheduleList from "./ScheduleList";
+import { useUser } from "@clerk/nextjs";
 
 const DAYS = [
   { value: 1, label: "Mon" },
@@ -64,8 +67,10 @@ export default function ScheduleStep() {
 
   const schedule = copilotData.flightSchedule;
   const selectedId = copilotData.flightScheduleId;
+  const { user, isLoaded } = useUser();
 
   const [loading, setLoading] = useState(false);
+  const [saveAsDefault, setSaveAsDefault] = useState(true);
   // Open by default when nothing is linked yet (edit mode hydrates later).
   const [listOpen, setListOpen] = useState(!copilotData.flightScheduleId);
 
@@ -77,15 +82,23 @@ export default function ScheduleStep() {
   // of the hardcoded default, so the picker opens where the user actually is.
   const preselectedTimeZone = useRef(false);
   useEffect(() => {
-    if (preselectedTimeZone.current) return;
+    if (!isLoaded || preselectedTimeZone.current) return;
     preselectedTimeZone.current = true;
     if (selectedId) return;
 
     const current = schedule.timezone;
-    if (current === DEFAULT_TIMEZONE || !isValidTimeZone(current)) {
-      updateFlightSchedule({ timezone: getBrowserTimeZone() });
-    }
-  }, [selectedId, schedule.timezone, updateFlightSchedule]);
+    if (current !== DEFAULT_TIMEZONE && isValidTimeZone(current)) return;
+
+    updateFlightSchedule({
+      timezone: getStoredDefaultTimeZone(user?.id) ?? getBrowserTimeZone(),
+    });
+  }, [
+    isLoaded,
+    selectedId,
+    schedule.timezone,
+    updateFlightSchedule,
+    user?.id,
+  ]);
 
   // Local text for the daily limit so the field can be cleared/typed freely.
   const [limitText, setLimitText] = useState(
@@ -146,6 +159,11 @@ export default function ScheduleStep() {
     updateFlightSchedule({ activeDays: newDays.sort() });
   };
 
+  const persistDefaultTimeZone = () => {
+    if (!saveAsDefault) return;
+    saveStoredDefaultTimeZone(user?.id, schedule.timezone);
+  };
+
   const handleSave = async () => {
     if (schedule.activeDays.length === 0) {
       toast.error("Please select at least one active day.");
@@ -157,6 +175,7 @@ export default function ScheduleStep() {
       setLoading(true);
       try {
         await persistDraft();
+        persistDefaultTimeZone();
         setStep(6);
       } catch {
         toast.error("Failed to save draft. Please try again.");
@@ -209,6 +228,8 @@ export default function ScheduleStep() {
         toast.error("Failed to save draft. Please try again.");
         return;
       }
+
+      persistDefaultTimeZone();
 
       if (selectedId) {
         toast.success(
@@ -512,12 +533,23 @@ export default function ScheduleStep() {
             </p>
           </div>
 
-          <div className="col-span-4 flex-1 pt-1 justify-between flex">
+          <div className="col-span-4 flex-1 pt-1">
             <TimeZoneSelect
               value={schedule.timezone}
               onChange={(timezone) => updateFlightSchedule({ timezone })}
               className="w-full max-w-md"
             />
+            <label className="mt-3 flex max-w-md cursor-pointer items-start gap-2 text-xs font-medium text-slate-600">
+              <input
+                type="checkbox"
+                checked={saveAsDefault}
+                onChange={(e) => setSaveAsDefault(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 accent-blue-600"
+              />
+              <span>
+                Save this timezone as my default for new flight schedules
+              </span>
+            </label>
           </div>
         </div>
       </div>

@@ -5,13 +5,14 @@ import { ChevronUp, Crown, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { handlePlanNameChange } from "@/lib/helpers";
+import { getDisplayUsername, type DisplayUser } from "@/lib/userDisplay";
 
 export default function UserCard({
   user,
   isActive,
   onpress,
 }: {
-  user: any;
+  user: DisplayUser | null | undefined;
   isActive: boolean;
   onpress?: () => void;
 }) {
@@ -27,6 +28,7 @@ export default function UserCard({
   const [showUserMenu, setShowUserMenu] = useState(false);
   const { openUserProfile, signOut } = useClerk();
   const menuRef = useRef<HTMLDivElement>(null);
+  const displayUsername = getDisplayUsername(null, user) || "Account";
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -95,16 +97,15 @@ export default function UserCard({
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
               <span className="text-sm font-bold text-gray-700">
-                {user?.firstName?.[0] ||
-                  user?.emailAddresses?.[0].emailAddress[0]?.toUpperCase()}
+                {displayUsername[0]?.toUpperCase()}
               </span>
             </div>
             <div>
               <div className="text-sm font-bold leading-none mb-1">
-                {user?.firstName} {user?.lastName}
+                {displayUsername}
               </div>
               <div className="text-xs text-gray-500 leading-none">
-                {user?.emailAddresses?.[0].emailAddress}
+                {user?.emailAddresses?.[0]?.emailAddress}
               </div>
             </div>
           </div>
