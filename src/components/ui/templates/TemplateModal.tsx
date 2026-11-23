@@ -313,7 +313,7 @@ export default function TemplateModal({
               <button
                 onClick={() => onSave(steps)}
                 disabled={saving}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+                className="px-4 py-2 btn-cta border border-transparent text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
               >
                 {saving ? "Saving..." : "Save"}
               </button>
@@ -653,7 +653,7 @@ export default function TemplateModal({
             <button
               onClick={() => onSave(steps)}
               disabled={saving}
-              className="flex-1 bg-blue-600 text-white rounded-lg py-3 text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="flex-1 btn-cta border border-transparent text-white rounded-lg py-3 text-sm font-medium transition-colors disabled:opacity-50"
             >
               {saving ? "Saving..." : "Save changes"}
             </button>
