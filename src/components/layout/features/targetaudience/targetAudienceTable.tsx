@@ -20,6 +20,10 @@ function formatCount(value: number | null | undefined): string {
   return value.toLocaleString("en-US");
 }
 
+// Audience size isn't calculated yet by the back-end (always 0). Greyed out
+// until it is; flip to true to show the real numbers again.
+const AUDIENCE_SIZE_LIVE = false;
+
 const TABLE_HEADERS = [
   "Target Audience name",
   "Industry",
@@ -133,9 +137,18 @@ function AudienceRow({
           {audience.city || "All cities"}
         </span>
 
-        <span className="text-sm text-[#0F172A]">
-          {formatCount(audience.resultsCount)}
-        </span>
+        {AUDIENCE_SIZE_LIVE ? (
+          <span className="text-sm text-[#0F172A]">
+            {formatCount(audience.resultsCount)}
+          </span>
+        ) : (
+          <span
+            className="text-xs text-gray-300"
+            title="Audience size isn't live yet"
+          >
+            Coming soon
+          </span>
+        )}
 
         <span className="text-sm text-[#0F172A]">
           {formatDate(audience.updatedAt)}
@@ -159,8 +172,10 @@ function AudienceRow({
             <div className="mt-0.5 text-xs text-[#59637C]">
               {[audience.country, audience.city || "All cities"]
                 .filter(Boolean)
-                .join(" · ")}{" "}
-              · {formatCount(audience.resultsCount)} leads
+                .join(" · ")}
+              {AUDIENCE_SIZE_LIVE && (
+                <> · {formatCount(audience.resultsCount)} leads</>
+              )}
             </div>
             <div className="mt-0.5 text-xs text-[#59637C]">
               {formatDate(audience.updatedAt)}
@@ -258,7 +273,11 @@ function TargetAudienceTable({
           {TABLE_HEADERS.map((col) => (
             <span
               key={col}
-              className="font-normal text-xs leading-5 text-[#94A3B8]"
+              className={`font-normal text-xs leading-5 ${
+                col === "Est. Audience Size" && !AUDIENCE_SIZE_LIVE
+                  ? "text-gray-300"
+                  : "text-[#94A3B8]"
+              }`}
             >
               {col}
             </span>
