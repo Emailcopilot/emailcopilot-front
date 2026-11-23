@@ -6,7 +6,7 @@ import { Users, Search } from "lucide-react";
 import { leadsApi } from "@/lib/api";
 import type { Lead, PaginatedMeta } from "@/lib/types";
 import LeadStatus from "@/components/ui/departure/LeadStatus";
-import LeadMenu from "@/components/ui/departure/LeadMenu";
+import LeadMenu, { getHiddenLeadIds } from "@/components/ui/departure/LeadMenu";
 import { Pagination } from "@/components/ui/Pagination";
 import EmailPreviewCard from "@/components/ui/EmialPreview";
 import { CopilotsPopup } from "@/components/ui/CopilotsPopup";
@@ -231,7 +231,8 @@ function LeadsPageContent() {
         ...(targetCopilotId != null ? { copilotId: targetCopilotId } : {}),
       });
       if (seq !== requestSeqRef.current) return;
-      setLeads(res.data.data);
+      const hidden = getHiddenLeadIds();
+      setLeads(res.data.data.filter((lead: Lead) => !hidden.has(lead.id)));
       setMeta(res.data.meta);
     } catch {
       if (seq === requestSeqRef.current) {
@@ -298,18 +299,17 @@ function LeadsPageContent() {
 
       {/* Search stays mounted through loading and empty states so typing
           keeps focus and a no-results query can always be cleared. */}
-      <div className="bg-white border border-[#E2E8F0] rounded-lg px-4 sm:px-5 py-4 mb-4 flex items-center">
-        <div className="relative w-full sm:w-[378px]">
+      <div className="w-full p-2 border border-[#E2E8F0] mb-3 bg-white rounded-lg flex items-center">
+        <div className="relative min-w-48 flex-1">
           <Search
-            size={20}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#59637C]"
+            size={14}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
           />
           <input
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Search company, email, website or phone..."
-            className="w-full h-11 border border-[#E2E8F0] rounded-lg pl-10 pr-4 text-[15px] font-light bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
-            style={{ color: "#59637C" }}
+            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-100"
           />
         </div>
       </div>
@@ -381,19 +381,19 @@ function LeadsPageContent() {
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
                       Template
                     </th>
-                    <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5  text-[#94A3B8] px-6 py-3">
+                    <th className="sticky top-0 right-22 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5  text-[#94A3B8] px-6 py-3">
                       Status
                     </th>
-                    <th className="font-semibold text-gray-900 px-6 py-5 z-40 sticky top-0 right-0 bg-white shadow-[inset_0_-1px_0_#E2E8F0]">
-                      <span className="sr-only">Actions</span>
+                    <th className="sticky top-0 right-0 z-40 w-22 min-w-22 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-center text-xs leading-5 text-[#94A3B8] px-5 py-3">
+                      Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody className="max-h-75 overflow-y-auto">
-                  {leads.map((lead) => (
+                  {leads.map((lead, index) => (
                     <tr
-                      key={lead.id}
-                      className=" border-b text-sm border-[#E2E8F0] hover:bg-gray-50 transition-colors"
+                      key={lead.id + index}
+                      className="group/row border-b text-sm border-[#E2E8F0] hover:bg-gray-50 transition-colors"
                     >
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2">
@@ -412,7 +412,7 @@ function LeadsPageContent() {
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2">
                           <Tooltip text={lead.companyName}>
-                            <div className="font-semibold line-clamp-2 max-w-48 text-sm text-[#0F172A]">
+                            <div className="line-clamp-2 max-w-48 text-sm text-[#0F172A]">
                               {lead.companyName}
                             </div>
                           </Tooltip>
@@ -426,7 +426,7 @@ function LeadsPageContent() {
                                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.address)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="font-semibold line-clamp-2 max-w-48 text-sm text-[#0F172A]"
+                                className="line-clamp-2 max-w-48 text-sm text-[#0F172A]"
                               >
                                 {lead.address}
                               </a>
@@ -443,7 +443,7 @@ function LeadsPageContent() {
                               target="_blank"
                               rel="noopener noreferrer"
                               href={normalizeUrl(lead.website || "#")}
-                              className="font-semibold line-clamp-2 text-sm text-blue-500 hover:text-blue-600 transition-colors"
+                              className="line-clamp-2 text-sm text-blue-500 hover:text-blue-600 transition-colors"
                             >
                               {lead.website}
                             </a>
@@ -455,7 +455,7 @@ function LeadsPageContent() {
                           href={`mailto:${lead.email}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium group transition-colors"
+                          className="flex items-center gap-2 text-blue-500 hover:text-blue-600 group transition-colors"
                         >
                           <Tooltip text={lead.email}>
                             <a
@@ -479,7 +479,7 @@ function LeadsPageContent() {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   href={`https://wa.me/${lead.phone.replace("+", "")}`}
-                                  className="font-semibold whitespace-nowrap text-sm text-[#0F172A]"
+                                  className="whitespace-nowrap text-sm text-[#0F172A]"
                                 >
                                   {lead.phone}
                                 </a>
@@ -497,7 +497,7 @@ function LeadsPageContent() {
                               <Tooltip text={lead.sourceQuery}>
                                 <a
                                   href={`/dashboard/target-audiences#${lead.sourceQuery.replace(" ", "-")}`}
-                                  className="font-semibold whitespace-nowrap text-sm text-[#0F172A]"
+                                  className="whitespace-nowrap text-sm text-[#0F172A]"
                                 >
                                   {lead.sourceQuery}
                                 </a>
@@ -518,7 +518,7 @@ function LeadsPageContent() {
                                 : "Unknown"
                             }
                           >
-                            <div className="font-semibold whitespace-nowrap text-sm text-[#0F172A]">
+                            <div className="whitespace-nowrap text-sm text-[#0F172A]">
                               {lead.sentAt
                                 ? formatDateTime(lead.sentAt)
                                 : "Unknown"}
@@ -532,7 +532,7 @@ function LeadsPageContent() {
                           onClick={() => handleShowPreview(lead)}
                         >
                           <div
-                            className="inline-flex min-w-[60px] items-center justify-center rounded-lg px-3.5 py-1.5 text-xs leading-4 font-semibold capitalize transition-colors hover:brightness-95"
+                            className="inline-flex items-center justify-center rounded-md px-3 py-2 text-[12px] font-medium capitalize transition-colors hover:brightness-95"
                             style={{
                               backgroundColor: "#F5F7FF",
                               color: "#2563EB",
@@ -542,12 +542,12 @@ function LeadsPageContent() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5 align-middle transition-colors">
+                      <td className="px-6 py-5 sticky right-22 z-20 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] align-middle transition-colors">
                         <div className="flex items-center gap-2 ">
                           <Tooltip
                             text={
                               lead.suppressed
-                                ? "Suppressed"
+                                ? "Excluded"
                                 : lead.status.charAt(0).toUpperCase() +
                                     lead.status.slice(1) || "Sent"
                             }
@@ -562,7 +562,7 @@ function LeadsPageContent() {
                           </Tooltip>
                         </div>
                       </td>
-                      <td className="px-6 py-5 sticky w-16 align-middle right-0 z-30 transition-colors">
+                      <td className="px-5 py-5 sticky w-22 min-w-22 align-middle right-0 z-20 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] transition-colors">
                         <div className="flex items-center justify-center">
                           <LeadMenu
                             lead={lead}

@@ -3,9 +3,13 @@ import { useLeadStore } from "@/store/leadStore";
 import { formatDateTime } from "@/lib/helpers";
 import NoData from "./NoData";
 import LeadStatus from "../departure/LeadStatus";
+import { getHiddenLeadIds } from "../departure/LeadMenu";
 
 export default function DepartureCard() {
-  const { leads } = useLeadStore();
+  const { leads: allLeads } = useLeadStore();
+  // Leads the user removed from the Departure overview stay hidden here too.
+  const hidden = getHiddenLeadIds();
+  const leads = allLeads.filter((lead) => !hidden.has(lead.id));
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-5  w-full ">

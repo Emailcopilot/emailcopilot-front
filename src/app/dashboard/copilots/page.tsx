@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Send } from "lucide-react";
+import { Archive, Loader2, Plus, Send, X } from "lucide-react";
+import { toast } from "sonner";
 import { copilotsApi } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import CopilotTable, {
@@ -29,6 +30,11 @@ export default function CopilotsPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+
+  // Bulk selection (list view): check rows, then archive them in one go.
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [confirmArchive, setConfirmArchive] = useState(false);
+  const [archiving, setArchiving] = useState(false);
 
   // Pagination state — same responsive rows-per-page as the templates table
   const [currentPage, setCurrentPage] = useState(1);
@@ -116,6 +122,36 @@ export default function CopilotsPage() {
     setCurrentPage(1);
   }, [status, search, perPage]);
 
+  // Only rows you can see stay selected.
+  useEffect(() => {
+    setSelectedIds(new Set());
+    setConfirmArchive(false);
+  }, [status, search, safeCurrentPage, perPage, viewMode]);
+
+  async function handleBulkArchive() {
+    const ids = [...selectedIds];
+    if (ids.length === 0) return;
+    setArchiving(true);
+    const results = await Promise.allSettled(
+      ids.map((id) => copilotsApi.updateStatus(id, "archived")),
+    );
+    const failedIds = ids.filter((_, i) => results[i].status === "rejected");
+    const archived = ids.length - failedIds.length;
+    if (archived > 0)
+      toast.success(
+        `${archived} copilot${archived === 1 ? "" : "s"} archived.`,
+      );
+    if (failedIds.length > 0)
+      toast.error(
+        `${failedIds.length} copilot${failedIds.length === 1 ? "" : "s"} could not be archived. Please try again.`,
+      );
+    // Keep the ones that failed selected so the user can retry.
+    setSelectedIds(new Set(failedIds));
+    setConfirmArchive(false);
+    setArchiving(false);
+    fetchCopilots();
+  }
+
   return (
     <div data-setup-feedback-copilots aria-busy={loading} className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 xl:px-8 py-4 sm:py-5 [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:min-h-full [@media(min-height:1081px)]:flex-col">
       {/* Header */}
@@ -177,7 +213,15 @@ export default function CopilotsPage() {
             />
           </div>
         ) : (
-          <CopilotTable copilots={paginatedData} onRefresh={fetchCopilots} />
+          <CopilotTable
+            copilots={paginatedData}
+            onRefresh={fetchCopilots}
+            selectedIds={selectedIds}
+            onSelectionChange={(ids) => {
+              setSelectedIds(ids);
+              setConfirmArchive(false);
+            }}
+          />
         )}
       </div>
 
@@ -189,6 +233,67 @@ export default function CopilotsPage() {
             totalPages={totalPages}
             onPageChange={setCurrentPage}
           />
+        </div>
+      )}
+
+      {/* Bulk action bar — floats at the bottom while rows are selected */}
+      {viewMode === "list" && selectedIds.size > 0 && (
+        <div
+          role="toolbar"
+          aria-label="Bulk actions"
+          className="fixed bottom-6 left-1/2 z-60 flex -translate-x-1/2 items-center gap-3 rounded-xl bg-gray-900 py-2 pl-4 pr-2 text-sm text-white shadow-2xl"
+        >
+          {confirmArchive ? (
+            <>
+              <span className="whitespace-nowrap">
+                Archive {selectedIds.size} copilot
+                {selectedIds.size === 1 ? "" : "s"}? They stop sending.
+              </span>
+              <button
+                type="button"
+                onClick={() => setConfirmArchive(false)}
+                disabled={archiving}
+                className="rounded-lg px-3 py-1.5 font-medium text-gray-300 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleBulkArchive}
+                disabled={archiving}
+                className="flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 font-medium text-gray-900 transition-colors hover:bg-gray-100 disabled:opacity-70"
+              >
+                {archiving ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Archive size={14} />
+                )}
+                {archiving ? "Archiving..." : "Archive"}
+              </button>
+            </>
+          ) : (
+            <>
+              <span className="whitespace-nowrap font-medium">
+                {selectedIds.size} selected
+              </span>
+              <span className="h-5 w-px bg-white/20" />
+              <button
+                type="button"
+                onClick={() => setConfirmArchive(true)}
+                className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium transition-colors hover:bg-white/10"
+              >
+                <Archive size={14} /> Archive
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedIds(new Set())}
+                aria-label="Clear selection"
+                className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                <X size={16} />
+              </button>
+            </>
+          )}
         </div>
       )}
 

@@ -377,7 +377,7 @@ export default function FlightScheduleFormModal({
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 bg-primary text-white rounded-lg py-2.5 text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="flex-1 btn-cta border border-transparent text-white rounded-lg py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
             >
               {saving
                 ? "Saving…"

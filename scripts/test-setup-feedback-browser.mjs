@@ -224,8 +224,8 @@ try {
 
   await evaluate("window.feedbackTest.remountReview()"); await ready();
   await click("Launch Copilot");
-  await waitFor('document.body.innerText.includes("Send a test email first")');
-  await evaluate(`(() => { const b = Array.from(document.querySelectorAll('[role=dialog] button')).find(b => b.textContent.trim() === 'Send test email'); b.click(); b.click(); })()`);
+  await waitFor('document.body.innerText.includes("Launch without testing?")');
+  await evaluate(`(() => { const b = Array.from(document.querySelectorAll('[role=dialog] button')).find(b => b.textContent.trim() === 'Send a test first'); b.click(); b.click(); })()`);
   await waitFor('document.body.innerText.includes("Test email request accepted")');
   await quiet();
   assert.equal(await evaluate("window.feedbackTest.mock.testRequests"), 2);

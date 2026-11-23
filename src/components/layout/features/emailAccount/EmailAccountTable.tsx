@@ -129,6 +129,10 @@ const EMAIL_ACCOUNT_STATUS_OPTIONS: StatusOption[] = [
   { value: "error", label: "Error", dotClassName: "bg-error" },
 ];
 
+// "Emails sent" per account isn't reliable yet (back-end task). Greyed out
+// until it is; flip to true to show the real numbers again.
+const EMAILS_SENT_LIVE = false;
+
 const TABLE_HEADERS = [
   "Email account",
   "Email address",
@@ -167,9 +171,18 @@ function AccountRow({ account }: { account: EmailAccount }) {
           {formatDate(account.createdAt)}
         </span>
 
-        <span className="text-sm text-[#0F172A]">
-          {getEmailsSentCount(account)}
-        </span>
+        {EMAILS_SENT_LIVE ? (
+          <span className="text-sm text-[#0F172A]">
+            {getEmailsSentCount(account)}
+          </span>
+        ) : (
+          <span
+            className="text-xs text-gray-300"
+            title="Emails sent per account isn't live yet"
+          >
+            Coming soon
+          </span>
+        )}
 
         <span>
           <EmailAccountStatus status={account.status} />
@@ -194,7 +207,8 @@ function AccountRow({ account }: { account: EmailAccount }) {
               {account.email}
             </div>
             <div className="mt-0.5 text-xs text-[#59637C]">
-              {providerMeta.label} · {getEmailsSentCount(account)} sent ·{" "}
+              {providerMeta.label} ·{" "}
+              {EMAILS_SENT_LIVE && <>{getEmailsSentCount(account)} sent · </>}
               {formatDate(account.createdAt)}
             </div>
             <div className="mt-2">
@@ -326,7 +340,11 @@ export default function EmailAccountsTable({
           {TABLE_HEADERS.map((col) => (
             <span
               key={col}
-              className="font-normal text-xs leading-5 text-[#94A3B8]"
+              className={`font-normal text-xs leading-5 ${
+                col === "Emails sent" && !EMAILS_SENT_LIVE
+                  ? "text-gray-300"
+                  : "text-[#94A3B8]"
+              }`}
             >
               {col}
             </span>

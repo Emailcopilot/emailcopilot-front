@@ -1,24 +1,40 @@
 "use client";
 
 import { useEffect } from "react";
-import { CheckCircle2, Loader2, Mail, Rocket } from "lucide-react";
+import {
+  CheckCircle2,
+  Loader2,
+  Mail,
+  Rocket,
+  TriangleAlert,
+  X,
+} from "lucide-react";
 
 interface TestEmailGateModalProps {
   open: boolean;
   sending: boolean;
   sent: boolean;
   sentTo?: string | null;
+  /** Who the copilot will email, e.g. "1,200 companies" or the audience name. */
+  audienceLabel?: string | null;
+  /** Editing a live copilot: wording says "re-launch". */
+  relaunch?: boolean;
   onSend: () => void;
   onLaunch: () => void;
   onCancel: () => void;
 }
 
-/** Pre-launch gate: forces a test email before the copilot can take off. */
+/**
+ * Pre-launch gate, shown when no test email was sent yet: recommends a test
+ * first, but the user can still launch anyway.
+ */
 export default function TestEmailGateModal({
   open,
   sending,
   sent,
   sentTo,
+  audienceLabel,
+  relaunch = false,
   onSend,
   onLaunch,
   onCancel,
@@ -70,7 +86,7 @@ export default function TestEmailGateModal({
                   {sentTo || "your connected inbox"}
                 </span>{" "}
                 and make sure everything looks right. When you&apos;re happy
-                with it, launch your copilot.
+                with it, {relaunch ? "re-launch" : "launch"} your copilot.
               </p>
             </div>
 
@@ -85,9 +101,10 @@ export default function TestEmailGateModal({
               <button
                 type="button"
                 onClick={onLaunch}
-                className="flex items-center gap-2 rounded-lg btn-cta px-4 py-2.5 text-sm font-semibold text-white transition-colors"
+                className="flex items-center gap-2 rounded-lg btn-cta border border-transparent px-4 py-2.5 text-sm font-semibold text-white transition-colors"
               >
-                <Rocket size={14} /> Launch copilot
+                <Rocket size={14} />{" "}
+                {relaunch ? "Re-launch copilot" : "Launch copilot"}
               </button>
             </div>
           </>
@@ -95,21 +112,44 @@ export default function TestEmailGateModal({
           <>
             <div className="px-6 pt-6">
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                  <Mail size={18} />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-50 text-amber-600">
+                  <TriangleAlert size={18} />
                 </span>
                 <h2
                   id="test-email-gate-title"
                   className="text-lg font-bold text-gray-900"
                 >
-                  Send a test email first
+                  {relaunch ? "Re-launch" : "Launch"} without testing?
                 </h2>
+                <button
+                  type="button"
+                  onClick={onCancel}
+                  disabled={sending}
+                  aria-label="Close"
+                  className="ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
+                >
+                  <X size={18} />
+                </button>
               </div>
 
               <p className="mt-3 text-sm text-gray-500">
-                Send one to yourself so you know the template and your sending
-                account work. Check your inbox after the request is accepted,
-                then launch when you&apos;re ready.
+                This copilot will {relaunch ? "start emailing again" : "start emailing"}
+                {audienceLabel ? (
+                  <>
+                    {" "}
+                    <span className="font-medium text-gray-900">
+                      {audienceLabel}
+                    </span>
+                  </>
+                ) : null}
+                {sentTo ? (
+                  <>
+                    {" "}
+                    from{" "}
+                    <span className="font-medium text-gray-900">{sentTo}</span>
+                  </>
+                ) : null}
+                . You haven&apos;t read the email yourself yet.
               </p>
 
               <div className="mt-4 flex items-start gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5">
@@ -118,30 +158,33 @@ export default function TestEmailGateModal({
                   className="mt-0.5 shrink-0 text-emerald-600"
                 />
                 <p className="text-xs leading-relaxed text-emerald-700">
-                  <span className="font-semibold">Test emails are free.</span>{" "}
-                  They don&apos;t count toward your monthly email limit, and
-                  they never show up on your bill.
+                  A test takes about a minute and reaches nobody but you. Test
+                  emails don&apos;t count toward your monthly limit.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 px-6 py-6">
+            <div className="flex items-center justify-between gap-3 px-6 py-6">
               <button
                 type="button"
-                onClick={onCancel}
+                onClick={onLaunch}
                 disabled={sending}
-                className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                className="text-sm font-medium text-gray-500 transition-colors hover:text-gray-900 disabled:opacity-50"
               >
-                Not now
+                {relaunch ? "Re-launch anyway" : "Launch anyway"}
               </button>
               <button
                 type="button"
                 onClick={(event) => { if (event.detail <= 1) onSend(); }}
                 disabled={sending}
-                className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary/90 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg btn-cta border border-transparent px-4 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-50"
               >
-                {sending && <Loader2 size={14} className="animate-spin" />}
-                {sending ? "Sending..." : "Send test email"}
+                {sending ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <Mail size={14} />
+                )}
+                {sending ? "Sending..." : "Send a test first"}
               </button>
             </div>
           </>

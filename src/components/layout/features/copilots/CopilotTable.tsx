@@ -167,12 +167,6 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-const STEP_LABEL_CLASSES: Record<WorkflowStepState, string> = {
-  done: "text-emerald-500",
-  blocked: "text-rose-500",
-  pending: "text-amber-500",
-};
-
 function StepIcon({ state }: { state: WorkflowStepState }) {
   if (state === "done")
     return <CheckCircle2 size={13} className="text-emerald-500" />;
@@ -180,6 +174,14 @@ function StepIcon({ state }: { state: WorkflowStepState }) {
     return <CircleAlert size={13} className="text-rose-500" />;
   return <Clock size={13} className="text-amber-500" />;
 }
+
+/** Short labels so all six steps fit on one row inside the table card. */
+const SHORT_STEP_TITLES: Record<string, string> = {
+  "Email Account": "Account",
+  "Target Audience": "Audience",
+  "Email Templates": "Template",
+  "Flight Schedule": "Schedule",
+};
 
 function StepColumn({
   step,
@@ -198,28 +200,13 @@ function StepColumn({
         setStep((index + 1) as Step),
         router.push(`/dashboard/copilots/new?edit=${copilotId}`)
       )}
-      className="flex min-w-26 group hover:bg-primary/5 flex-col gap-1 border border-gray-100 hover:border-primary rounded-lg px-2 py-1"
+      title={`${index + 1}. ${step.title}: ${step.label}`}
+      className="flex items-center gap-1.5 group hover:bg-primary/5 border border-gray-100 hover:border-primary rounded-lg px-2 py-1"
     >
-      <div className="flex items-center gap-1.5">
-        <span
-          className={`flex h-4 w-4 border border-gray-300 text-gray-400 group-hover:bg-blue-500 group-hover:border-blue-500 group-hover:text-white shrink-0 items-center justify-center rounded-full text-[10px] font-medium 
-         
-          }`}
-        >
-          {index + 1}
-        </span>
-        <span className="text-[12px] font-medium group-hover:text-primary text-gray-700 whitespace-nowrap">
-          {step.title}
-        </span>
-      </div>
-      <div className="flex items-center gap-1 ">
-        <StepIcon state={step.state} />
-        <span
-          className={`text-[12px] whitespace-nowrap ${STEP_LABEL_CLASSES[step.state]}`}
-        >
-          {step.label}
-        </span>
-      </div>
+      <StepIcon state={step.state} />
+      <span className="text-[12px] font-medium group-hover:text-primary text-gray-700 whitespace-nowrap">
+        {SHORT_STEP_TITLES[step.title] ?? step.title}
+      </span>
     </div>
   );
 }
@@ -232,17 +219,15 @@ function WorkflowStepper({
   copilotId: string | number;
 }) {
   return (
-    <div className="flex items-center">
+    // One row: the icon shows each step's state, details are in the tooltip.
+    <div className="flex items-center gap-1">
       {steps.map((step, index) => (
-        <React.Fragment key={step.key}>
-          {index > 0 && (
-            <div
-              className=" h-px w-4  shrink-0 bg-gray-200 "
-              aria-hidden="true"
-            />
-          )}
-          <StepColumn step={step} index={index} copilotId={copilotId} />
-        </React.Fragment>
+        <StepColumn
+          key={step.key}
+          step={step}
+          index={index}
+          copilotId={copilotId}
+        />
       ))}
     </div>
   );
@@ -262,6 +247,9 @@ export interface CopilotTableProps {
   onActionsClick?: (copilot: Copilot) => void;
   /** Called when menu actions require a refresh (e.g., delete, archive, status change). */
   onRefresh?: () => void;
+  /** Ids of the checked rows. When given together with onSelectionChange, a checkbox column is shown. */
+  selectedIds?: Set<number>;
+  onSelectionChange?: (ids: Set<number>) => void;
   className?: string;
 }
 
@@ -271,8 +259,35 @@ function CopilotTable({
 
   onActionsClick,
   onRefresh,
+  selectedIds,
+  onSelectionChange,
   className = "",
 }: CopilotTableProps) {
+  const selectable = !!selectedIds && !!onSelectionChange;
+  // Archived copilots can't be archived again, so they can't be selected.
+  const selectableIds = copilots
+    .filter((c) => c.status !== "archived")
+    .map((c) => c.id);
+  const allSelected =
+    selectable &&
+    selectableIds.length > 0 &&
+    selectableIds.every((id) => selectedIds.has(id));
+  const someSelected =
+    selectable && !allSelected && selectableIds.some((id) => selectedIds.has(id));
+  const toggleAll = () => {
+    if (!selectable) return;
+    const next = new Set(selectedIds);
+    if (allSelected) selectableIds.forEach((id) => next.delete(id));
+    else selectableIds.forEach((id) => next.add(id));
+    onSelectionChange(next);
+  };
+  const toggleOne = (id: number) => {
+    if (!selectable) return;
+    const next = new Set(selectedIds);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    onSelectionChange(next);
+  };
   const [menuCopilotId, setMenuCopilotId] = React.useState<number | null>(null);
   const [menuPos, setMenuPos] = React.useState<{
     top: number;
@@ -306,27 +321,48 @@ function CopilotTable({
 
   return (
     <div
-      className={`w-full overflow-hidden lg:overflow-visible rounded-lg bg-white border border-[#E2E8F0] [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:flex-1 [@media(min-height:1081px)]:flex-col ${className}`}
+      className={`w-full overflow-hidden xl:overflow-visible rounded-lg bg-white border border-[#E2E8F0] [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:flex-1 [@media(min-height:1081px)]:flex-col ${className}`}
     >
-      {/* On desktop the page itself scrolls, so the header row can stick to the top of the screen.
+      {/* On wide screens (xl+) the page itself scrolls, so the header row can stick to the top of the screen.
           On smaller screens the table keeps its own scroll area (needed for horizontal scrolling). */}
-      <div className="overflow-x-auto max-lg:max-h-[calc(100dvh-270px)] lg:overflow-visible">
+      <div className="overflow-x-auto max-xl:max-h-[calc(100dvh-270px)] xl:overflow-visible">
         <table className="w-full min-w-225 border-collapse ">
           <thead>
+            {/* Content columns shrink to fit (w-px); the four empty w-1/4 spacer columns share the leftover width,
+                so the gaps between Copilots, Workflow status, Sent, Status and Actions are equal. */}
             <tr className="border-b border-[#E2E8F0] bg-white">
-              <th className="sticky top-0 z-40 rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              {selectable && (
+                <th className="sticky top-0 z-40 w-px rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] py-2.5 pl-5 pr-0 text-left">
+                  <input
+                    type="checkbox"
+                    aria-label="Select all copilots on this page"
+                    checked={allSelected}
+                    ref={(el) => {
+                      if (el) el.indeterminate = someSelected;
+                    }}
+                    onChange={toggleAll}
+                    disabled={selectableIds.length === 0}
+                    className="size-4 cursor-pointer accent-primary align-middle disabled:cursor-not-allowed"
+                  />
+                </th>
+              )}
+              <th className="sticky top-0 z-40 w-px rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Copilots
               </th>
-              <th className="sticky top-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
+              <th className="sticky top-0 z-40 w-px bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Workflow status
               </th>
-              <th className="sticky top-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
+              <th className="sticky top-0 z-40 w-px bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Sent
               </th>
-              <th className="whitespace-nowrap sticky right-0 top-0 z-50 bg-white shadow-[inset_0_-1px_0_#E2E8F0] px-5 py-2.5 text-left uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
+              <th className="w-px whitespace-nowrap sticky right-22 top-0 z-50 bg-white shadow-[inset_0_-1px_0_#E2E8F0] px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Status
               </th>
-              <th className="sticky top-0 z-40 rounded-tr-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] w-16 px-5 py-2.5 text-right uppercase font-normal text-xs leading-5 text-[#94A3B8]">
+              <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
+              <th className="sticky right-0 top-0 z-50 rounded-tr-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] w-22 min-w-22 px-5 py-2.5 text-center font-normal text-xs leading-5 text-[#94A3B8]">
                 Actions
               </th>
             </tr>
@@ -351,8 +387,28 @@ function CopilotTable({
                   tabIndex={0}
                   className="group/row cursor-pointer border-b border-[#E2E8F0] align-top last:border-b-0 hover:bg-gray-50 transition-colors focus-visible:outline-2 focus-visible:outline-primary/40"
                 >
-                  <td className="px-5 py-4 align-middle">
-                    <div className="max-w-55">
+                  {selectable && (
+                    <td
+                      className="w-px py-4 pl-5 pr-0 align-middle"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <input
+                        type="checkbox"
+                        aria-label={`Select ${copilot.name}`}
+                        checked={selectedIds.has(copilot.id)}
+                        onChange={() => toggleOne(copilot.id)}
+                        disabled={copilot.status === "archived"}
+                        title={
+                          copilot.status === "archived"
+                            ? "Already archived"
+                            : undefined
+                        }
+                        className="size-4 cursor-pointer accent-primary align-middle disabled:cursor-not-allowed disabled:opacity-40"
+                      />
+                    </td>
+                  )}
+                  <td className="w-px px-5 py-4 align-middle">
+                    <div className="w-max max-w-55">
                       <p className="text-sm font-semibold text-[#0F172A]">
                         {copilot.name}
                       </p>
@@ -368,21 +424,25 @@ function CopilotTable({
                       )}
                     </div>
                   </td>
+                  <td aria-hidden className="w-1/4 p-0" />
                   <td
-                    className="px-5 py-4 align-middle"
+                    className="w-px whitespace-nowrap px-5 py-4 align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <WorkflowStepper steps={steps} copilotId={copilot.id} />
                   </td>
-                  <td className="whitespace-nowrap px-5 py-4 text-sm align-middle text-[#0F172A]">
+                  <td aria-hidden className="w-1/4 p-0" />
+                  <td className="w-px whitespace-nowrap px-5 py-4 text-sm align-middle text-[#0F172A]">
                     {copilot.emailsSent}
                   </td>
-                  <td className="whitespace-nowrap sticky right-0 bg-white group-hover/row:bg-gray-50 z-40 px-5 py-4 align-middle">
+                  <td aria-hidden className="w-1/4 p-0" />
+                  <td className="w-px whitespace-nowrap sticky right-22 bg-white group-hover/row:bg-gray-50 z-40 shadow-[inset_0_-1px_0_#E2E8F0] [tr:last-child>&]:shadow-none px-5 py-4 align-middle">
                     {/* <StatusBadge status={copilot.status} /> */}
                     <CopilotStatus status={copilot.status} />
                   </td>
+                  <td aria-hidden className="w-1/4 p-0" />
                   <td
-                    className="px-5 py-4 text-right align-middle"
+                    className="sticky right-0 z-40 w-22 min-w-22 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] [tr:last-child>&]:shadow-none px-5 py-4 text-center align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
@@ -405,13 +465,13 @@ function CopilotTable({
                         });
                         setMenuCopilotId(copilot.id);
                       }}
-                      className="text-gray-500 transition-colors hover:text-gray-800 p-1.5 rounded-md hover:bg-gray-100"
+                      className="text-gray-300 transition-colors hover:text-gray-500"
                       aria-label="Copilot actions"
                     >
                       {menuCopilotId === copilot.id ? (
-                        <X size={20} strokeWidth={2.5} />
+                        <X size={18} />
                       ) : (
-                        <MoreVertical size={20} strokeWidth={2.75} />
+                        <MoreVertical size={18} />
                       )}
                     </button>
                     {menuCopilotId === copilot.id &&

@@ -81,6 +81,7 @@ export default function OverviewPage() {
       change: replyStats.percentageChange,
       comparisonLabel,
       icon: BarChart3,
+      comingSoon: true,
     },
     {
       label: "Reply Rate",
@@ -88,6 +89,7 @@ export default function OverviewPage() {
       change: 0,
       comparisonLabel,
       icon: Users,
+      comingSoon: true,
     },
     {
       label: "Copilots",
@@ -116,6 +118,7 @@ export default function OverviewPage() {
             value={s.value as string | number}
             change={s.change}
             comparisonLabel={s.comparisonLabel}
+            comingSoon={"comingSoon" in s && s.comingSoon}
           />
         ))}
       </div>

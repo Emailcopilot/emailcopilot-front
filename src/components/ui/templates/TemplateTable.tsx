@@ -1,5 +1,5 @@
 import { FileText, Plus, Search } from "lucide-react";
-import TemplateRow from "./TemplateRow";
+import TemplateRow, { REPLY_RATE_LIVE } from "./TemplateRow";
 import type { Template } from "@/lib/types/templates";
 
 export const CATEGORIES = [
@@ -13,6 +13,7 @@ export const CATEGORIES = [
 
 const TABLE_HEADERS = [
   "Template name",
+  "Email body",
   "Steps",
   "Last updated",
   "Used in",
@@ -21,7 +22,7 @@ const TABLE_HEADERS = [
   "Actions",
 ];
 
-const COLUMNS = "1.5fr 0.5fr 1fr 1fr 0.8fr 0.7fr 0.5fr";
+const COLUMNS = "1.5fr 2fr 0.5fr 1fr 1fr 0.8fr 0.7fr 0.5fr";
 
 interface TemplateTableProps {
   templates: Template[];
@@ -76,7 +77,11 @@ export default function TemplateTable({
         {TABLE_HEADERS.map((col) => (
           <span
             key={col}
-            className="font-normal text-xs leading-5 text-[#94A3B8]"
+            className={`font-normal text-xs leading-5 ${
+              col === "Reply rate" && !REPLY_RATE_LIVE
+                ? "text-gray-300"
+                : "text-[#94A3B8]"
+            }`}
           >
             {col}
           </span>

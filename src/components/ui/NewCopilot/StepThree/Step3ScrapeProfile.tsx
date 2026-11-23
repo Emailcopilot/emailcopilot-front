@@ -7,8 +7,6 @@ import {
   Map as MapIcon,
   MapPin,
   Building2,
-  CheckCircle2,
-  CircleAlert,
 } from "lucide-react";
 import { Country, City, ICountry, ICity } from "country-state-city";
 import StepsActions from "../StepsActions";
@@ -429,17 +427,20 @@ export default function Step3ScrapeProfile() {
               In which cities are your target companies located?
             </p>
           </div>
-          {!enableCity ? (
-            <div className="w-full lg:col-span-2 flex justify-between items-start gap-2">
-              <div className=" relative flex items-start gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50/50">
-                <CircleAlert className="w-6 h-6 text-blue-500 shrink-0" />
+          {/* The switch sits inside the card and is labelled, so it's clear
+              that OFF = all cities, ON = only the cities picked below. */}
+          <div className="w-full lg:col-span-2 rounded-xl border border-gray-200 p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <MapIcon size={15} className="text-gray-400 shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 mb-1">
-                    All cities included
-                  </h3>
-                  <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                    Your Copilot will search all cities within the selected
-                    country.
+                  <p className="text-sm font-semibold text-gray-900">
+                    Target specific cities
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {enableCity
+                      ? "Only companies in the cities you pick below."
+                      : "All cities within the selected countries are included."}
                   </p>
                 </div>
               </div>
@@ -448,39 +449,36 @@ export default function Step3ScrapeProfile() {
                 onClick={() => setEnableCity(!enableCity)}
               />
             </div>
-          ) : (
-            <div className="w-full lg:col-span-2 flex justify-between items-start gap-2">
-              <TagInput
-                icon={<MapIcon size={15} />}
-                options={availableCities}
-                selected={cities}
-                onAdd={(v) => {
-                  if (copilotData.targetAudienceId) {
-                    updateCopilotData({ targetAudienceId: null });
+            {enableCity && (
+              <div className="mt-3">
+                <TagInput
+                  icon={<MapIcon size={15} />}
+                  options={availableCities}
+                  selected={cities}
+                  onAdd={(v) => {
+                    if (copilotData.targetAudienceId) {
+                      updateCopilotData({ targetAudienceId: null });
+                    }
+                    updateTargetProfile({ cities: [...cities, v] });
+                  }}
+                  onRemove={(v) =>
+                    updateTargetProfile({ cities: cities.filter((c) => c !== v) })
                   }
-                  updateTargetProfile({ cities: [...cities, v] });
-                }}
-                onRemove={(v) =>
-                  updateTargetProfile({ cities: cities.filter((c) => c !== v) })
-                }
-                onClearAll={() => updateTargetProfile({ cities: [] })}
-                placeholder={
-                  countries.length === 0
-                    ? "Select a country first…"
-                    : "Search cities…"
-                }
-                emptyMessage={
-                  countries.length === 0
-                    ? "Please select a country first"
-                    : "No cities found"
-                }
-              />
-              <Switcher
-                isOn={enableCity}
-                onClick={() => setEnableCity(!enableCity)}
-              />
-            </div>
-          )}
+                  onClearAll={() => updateTargetProfile({ cities: [] })}
+                  placeholder={
+                    countries.length === 0
+                      ? "Select a country first…"
+                      : "Search cities…"
+                  }
+                  emptyMessage={
+                    countries.length === 0
+                      ? "Please select a country first"
+                      : "No cities found"
+                  }
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -527,15 +525,7 @@ export default function Step3ScrapeProfile() {
                     }
                   }}
                 >
-                  {copilotData.targetAudienceId === profile.id && (
-                    <div className="absolute top-4 right-4 text-primary">
-                      <CheckCircle2
-                        size={20}
-                        className="fill-current text-white"
-                      />
-                    </div>
-                  )}
-                  <h4 className="font-semibold text-gray-900 pr-8 line-clamp-1">
+                  <h4 className="font-semibold text-gray-900 line-clamp-1">
                     {profile.name}
                   </h4>
                   <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
@@ -555,9 +545,7 @@ export default function Step3ScrapeProfile() {
         </div>
       </div>
       <StepsActions
-        onPress={() => {
-          handleONpress();
-        }}
+        onPress={() => handleONpress()}
         isLoading={loading}
         canContinue={canContinue}
       />

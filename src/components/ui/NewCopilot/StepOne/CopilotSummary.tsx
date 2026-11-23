@@ -3,7 +3,8 @@ import { Shield } from "lucide-react";
 import { useCopilotStore } from "../../../../store/copilotStore";
 
 function CopilotSummary({ draftId }: { draftId?: string }) {
-  const { copilotData } = useCopilotStore();
+  const { copilotData, mode, editingLive } = useCopilotStore();
+  const isRelaunch = mode === "edit" && editingLive;
   return (
     <div className="w-full ">
       <h2 className="text-lg font-bold mb-1">Copilot Summary</h2>
@@ -49,10 +50,12 @@ function CopilotSummary({ draftId }: { draftId?: string }) {
       {draftId && (
         <div className="bg-white border border-gray-200 rounded-xl p-4 mt-5">
           <p className="text-xs font-medium text-gray-900 mb-0.5">
-            Draft saved
+            {isRelaunch ? "Paused while editing" : "Draft saved"}
           </p>
           <p className="text-xs text-gray-400">
-            Your progress is saved. Come back anytime to finish.
+            {isRelaunch
+              ? "Your changes are saved. Re-launch to start sending again."
+              : "Your progress is saved. Come back anytime to finish."}
           </p>
         </div>
       )}

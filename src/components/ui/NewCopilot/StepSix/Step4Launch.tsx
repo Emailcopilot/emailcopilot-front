@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useTakeoffCopilot } from "@/lib/useTakeoffCopilot";
-import { estimateAudienceSize } from "@/lib/estimates";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -56,7 +55,9 @@ export default function Step4Launch({
   onSaveDraft,
 }: Step4LaunchProps) {
   const feedback = useSetupFeedbackActions();
-  const { copilotData, setStep, draftId, persistDraft } = useCopilotStore();
+  const { copilotData, setStep, draftId, persistDraft, mode, editingLive } =
+    useCopilotStore();
+  const isRelaunch = mode === "edit" && editingLive;
   const queryClient = useQueryClient();
   const [saving, setSaving] = useState(false);
   const [sendingTestEmail, setSendingTestEmail] = useState(false);
@@ -185,11 +186,7 @@ export default function Step4Launch({
   const audienceSizeLabel =
     resultsCount != null && resultsCount > 0
       ? `${resultsCount.toLocaleString()} companies`
-      : `~${estimateAudienceSize(
-          sched,
-          copilotData.targetAudienceId,
-          copilotData.name,
-        ).toLocaleString()} companies`;
+      : "After first run";
 
   // Gate only when no test email has ever been sent for this copilot. If the
   // status can't be verified, fail open so a flaky endpoint never blocks launch.
@@ -534,7 +531,8 @@ export default function Step4Launch({
               </span>
             ) : (
               <>
-                <Save size={15} /> Save as Draft
+                <Save size={15} />{" "}
+                {isRelaunch ? "Save, keep paused" : "Save as Draft"}
               </>
             )}
           </button>
@@ -542,10 +540,16 @@ export default function Step4Launch({
             <button
               onClick={handleLaunch}
               disabled={launching || loadingTakeoff || loadingTestStatus || !readyAll}
-              className="flex items-center gap-2 px-6 py-2.5 btn-cta text-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-6 py-2.5 btn-cta border border-transparent text-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Rocket size={15} />{" "}
-              {launching ? "Launching..." : "Launch Copilot"}
+              {launching
+                ? isRelaunch
+                  ? "Re-launching..."
+                  : "Launching..."
+                : isRelaunch
+                  ? "Re-launch Copilot"
+                  : "Launch Copilot"}
             </button>
             {!launching && (loadingTakeoff || loadingTestStatus || !readyAll) && (
               <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-md bg-gray-900 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover/tip:opacity-100">
@@ -563,6 +567,12 @@ export default function Step4Launch({
         sending={sendingTestEmail}
         sent={gateSent}
         sentTo={selectedEmailProfile?.email}
+        audienceLabel={
+          resultsCount != null && resultsCount > 0
+            ? `${resultsCount.toLocaleString()} companies`
+            : selectedScrapeProfile?.name
+        }
+        relaunch={isRelaunch}
         onSend={() => sendTestEmail(true)}
         onLaunch={() => {
           setShowTestGate(false);

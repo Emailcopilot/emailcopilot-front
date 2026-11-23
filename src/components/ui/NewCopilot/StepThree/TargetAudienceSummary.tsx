@@ -4,7 +4,6 @@ import React from "react";
 import { Building2, Globe, Map, Users } from "lucide-react";
 import { useCopilotStore } from "../../../../store/copilotStore";
 import { useWizardTargetAudiences } from "@/lib/useWizardOptions";
-import { estimateAudienceSize } from "@/lib/estimates";
 
 function TargetAudienceSummary() {
   const { copilotData } = useCopilotStore();
@@ -14,15 +13,11 @@ function TargetAudienceSummary() {
   const linkedAudience = targetAudiences.find(
     (a) => String(a.id) === String(copilotData.targetAudienceId),
   );
-  const realSize = linkedAudience?.resultsCount;
-  const isEstimate = realSize == null || realSize <= 0;
-  const estimatedSize = isEstimate
-    ? estimateAudienceSize(
-        copilotData.flightSchedule,
-        copilotData.targetAudienceId,
-        copilotData.name,
-      )
-    : realSize;
+  // Only show a size once the scraper has a real count. There is no reliable
+  // estimate before the first run (a back-end estimate is planned).
+  const realSize = linkedAudience?.resultsCount ?? 0;
+  const hasSize = realSize > 0;
+  const estimatedSize = realSize;
   let label = "";
 
   let colorClass = "text-gray-600 bg-gray-100";
@@ -94,20 +89,27 @@ function TargetAudienceSummary() {
               Est. audience size
             </p>
             <div className="flex  justify-between mt-1">
-              <p className="text-xl font-bold text-gray-900">
-                {isEstimate ? "~" : ""}
-                {estimatedSize.toLocaleString()}{" "}
-                <span className="text-xs font-normal text-gray-500">
-                  companies
-                </span>
-              </p>
+              {hasSize ? (
+                <p className="text-xl font-bold text-gray-900">
+                  {estimatedSize.toLocaleString()}{" "}
+                  <span className="text-xs font-normal text-gray-500">
+                    companies
+                  </span>
+                </p>
+              ) : (
+                <p className="text-xs text-gray-500">
+                  Calculated after the first run
+                </p>
+              )}
             </div>
           </div>
-          <span
-            className={`text-[8px] font-semibold px-1 py-0.5 rounded-sm ${colorClass}`}
-          >
-            {label}
-          </span>
+          {hasSize && label && (
+            <span
+              className={`text-[8px] font-semibold px-1 py-0.5 rounded-sm ${colorClass}`}
+            >
+              {label}
+            </span>
+          )}
         </div>
       </div>
     </div>
