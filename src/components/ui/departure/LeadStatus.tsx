@@ -21,9 +21,9 @@ function LeadStatus({
 
   return (
     <div
-      className={`inline-flex w-fit items-center justify-center rounded-lg font-semibold capitalize ${
-        isSmall ? "px-2 py-0.5 text-[10px] leading-[13px]" : "px-3.5 py-1.5 text-xs leading-4"
-      } ${status === "suppressed" ? "min-w-[90px]" : "min-w-[60px]"}`}
+      className={`inline-flex w-fit items-center justify-center rounded-md font-medium capitalize ${
+        isSmall ? "px-2 py-1 text-[10px]" : "px-3 py-2 text-[12px]"
+      }`}
       style={{ backgroundColor: style.bg, color: style.text }}
     >
       <span className="line-clamp-1">{status || "Sent"}</span>
