@@ -101,7 +101,7 @@ export default function TestEmailGateModal({
               <button
                 type="button"
                 onClick={onLaunch}
-                className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+                className="flex items-center gap-2 rounded-lg btn-cta border border-transparent px-4 py-2.5 text-sm font-semibold text-white transition-colors"
               >
                 <Rocket size={14} />{" "}
                 {relaunch ? "Re-launch copilot" : "Launch copilot"}
@@ -177,7 +177,7 @@ export default function TestEmailGateModal({
                 type="button"
                 onClick={onSend}
                 disabled={sending}
-                className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary/90 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg btn-cta border border-transparent px-4 py-2.5 text-sm font-medium text-white transition-colors disabled:opacity-50"
               >
                 {sending ? (
                   <Loader2 size={14} className="animate-spin" />
