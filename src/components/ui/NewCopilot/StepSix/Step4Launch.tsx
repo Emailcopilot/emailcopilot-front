@@ -541,7 +541,7 @@ export default function Step4Launch({
             <button
               onClick={handleLaunch}
               disabled={launching || loadingTakeoff || loadingTestStatus || !readyAll}
-              className="flex items-center gap-2 px-6 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-6 py-2.5 btn-cta border border-transparent text-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Rocket size={15} />{" "}
               {launching
