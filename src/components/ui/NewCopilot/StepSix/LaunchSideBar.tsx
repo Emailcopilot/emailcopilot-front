@@ -14,7 +14,8 @@ interface LaunchSideBarProps {
 }
 
 export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
-  const { copilotData } = useCopilotStore();
+  const { copilotData, mode, editingLive } = useCopilotStore();
+  const isRelaunch = mode === "edit" && editingLive;
   const { data: takeoff } = useTakeoffCopilot();
 
   const selectedEmailProfile = takeoff?.emailAccount ?? null;
@@ -137,7 +138,11 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
           <div>
             <p className="text-[13px] font-bold text-gray-900 mb-1">Status</p>
             <p className="text-[13px] text-gray-500">
-              {readyAll ? "Ready to take-off" : "Incomplete — finish setup"}
+              {readyAll
+                ? isRelaunch
+                  ? "Ready to re-launch"
+                  : "Ready to take-off"
+                : "Incomplete — finish setup"}
             </p>
           </div>
         </div>
@@ -147,10 +152,12 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
       {draftId && (
         <div className="bg-white border border-gray-200 rounded-xl p-4">
           <p className="text-xs font-medium text-gray-900 mb-0.5">
-            Draft saved
+            {isRelaunch ? "Paused while editing" : "Draft saved"}
           </p>
           <p className="text-xs text-gray-400">
-            Your progress is saved. Come back anytime to finish.
+            {isRelaunch
+              ? "Your changes are saved. Re-launch to start sending again."
+              : "Your progress is saved. Come back anytime to finish."}
           </p>
         </div>
       )}
