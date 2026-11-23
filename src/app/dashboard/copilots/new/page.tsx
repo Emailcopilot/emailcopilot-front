@@ -252,7 +252,12 @@ function NewCopilotPageContent() {
   const handleSaveDraftStep = useCallback(async () => {
     try {
       await persistDraft();
-      toast.success("Draft saved — you can launch anytime.");
+      toast.success(
+        useCopilotStore.getState().mode === "edit" &&
+          useCopilotStore.getState().editingLive
+          ? "Changes saved — the copilot stays paused until you re-launch it."
+          : "Draft saved — you can launch anytime.",
+      );
       router.push("/dashboard/copilots");
     } catch {
       toast.error("Failed to save draft. Please try again.");
