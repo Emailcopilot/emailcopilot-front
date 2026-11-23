@@ -384,8 +384,8 @@ function LeadsPageContent() {
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5  text-[#94A3B8] px-6 py-3">
                       Status
                     </th>
-                    <th className="font-semibold text-gray-900 px-6 py-5 z-40 sticky top-0 right-0 bg-white shadow-[inset_0_-1px_0_#E2E8F0]">
-                      <span className="sr-only">Actions</span>
+                    <th className="sticky top-0 right-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-center text-xs leading-5 text-[#94A3B8] px-6 py-3">
+                      Actions
                     </th>
                   </tr>
                 </thead>
