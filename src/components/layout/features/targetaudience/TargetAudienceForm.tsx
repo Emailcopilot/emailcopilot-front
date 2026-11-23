@@ -460,7 +460,7 @@ export default function TargetAudienceForm({
         <button
           onClick={handleCreate}
           disabled={saving}
-          className="flex-1 bg-primary text-white rounded-lg py-2.5 text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50"
+          className="flex-1 btn-cta border border-transparent text-white rounded-lg py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
         >
           {saving
             ? "Saving..."
