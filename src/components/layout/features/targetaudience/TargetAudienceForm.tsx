@@ -7,7 +7,7 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { Globe, X, Map as MapIcon, Building2, CircleAlert } from "lucide-react";
+import { Globe, X, Map as MapIcon, Building2, LocateFixed } from "lucide-react";
 import { Country, City, ICountry, ICity } from "country-state-city";
 import { targetAudiencesApi } from "@/lib/api";
 import { toast } from "sonner";
@@ -349,12 +349,15 @@ export default function TargetAudienceForm({
           <p className="text-sm text-gray-500 mb-2 ">
             Give your target a name so you can easily identify it later
           </p>
-          <input
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-            placeholder="E.g. Tech Leads in Amsterdam"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <label className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2.5 min-h-10.5 cursor-text">
+            <LocateFixed size={15} className="text-gray-400 shrink-0" />
+            <input
+              className="no-focus-ring flex-1 outline-none focus:outline-none focus:ring-0 text-sm bg-transparent placeholder:text-gray-400"
+              placeholder="E.g. Tech Leads in Amsterdam"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </label>
         </div>
 
         <div>
@@ -378,7 +381,7 @@ export default function TargetAudienceForm({
         <div>
           <label className="text-lg font-bold  mb-1">Country</label>
           <p className="text-sm text-gray-500 mb-2">
-            In which countries are you target companies located?
+            In which countries are your target companies located?
           </p>
           <TagInput
             icon={<Globe size={15} />}
@@ -392,34 +395,36 @@ export default function TargetAudienceForm({
         </div>
 
         <div>
-          <div className="flex items-center justify-between ">
-            <label className="text-lg font-bold mb-1">City</label>
-            <Switcher
-              isOn={enableCity}
-              onClick={() => setEnableCity(!enableCity)}
-            />
-          </div>
+          <label className="text-lg font-bold mb-1">City</label>
+          <p className="text-sm text-gray-500 mb-2">
+            In which cities are your target companies located?
+          </p>
 
-          {!enableCity ? (
-            <div className="w-full lg:col-span-2 flex justify-between items-start gap-2">
-              <div className=" relative flex items-start gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50/50">
-                <CircleAlert className="w-6 h-6 text-blue-500 shrink-0" />
+          {/* The switch sits inside the card and is labelled, so it's clear
+              that OFF = all cities, ON = only the cities picked below. */}
+          <div className="rounded-xl border border-gray-200 p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <MapIcon size={15} className="text-gray-400 shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 mb-1">
-                    All cities included
-                  </h3>
-                  <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                    Your Copilot will search all cities within the selected
-                    country.
+                  <p className="text-sm font-semibold text-gray-900">
+                    Target specific cities
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {enableCity
+                      ? "Only companies in the cities you pick below."
+                      : "All cities within the selected countries are included."}
                   </p>
                 </div>
               </div>
+              <Switcher
+                isOn={enableCity}
+                onClick={() => setEnableCity(!enableCity)}
+              />
             </div>
-          ) : (
-            <>
-              <p className="text-sm text-gray-500 mb-2">
-                In which cities are you target companies located?
-              </p>
+
+            {enableCity && (
+              <div className="mt-3">
               <TagInput
                 icon={<MapIcon size={15} />}
                 options={availableCities}
@@ -438,8 +443,9 @@ export default function TargetAudienceForm({
                     : "No cities found"
                 }
               />
-            </>
-          )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
