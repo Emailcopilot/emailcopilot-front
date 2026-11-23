@@ -13,6 +13,30 @@ interface LeadMenuProps {
   onSuppressionChange: (id: number, suppressed: boolean) => void;
 }
 
+// "Delete" hides a lead from the overview only (the back-end keeps it, so
+// sending logic is unaffected). The hidden ids are remembered in this browser
+// so the lead doesn't come back after a refresh.
+const HIDDEN_LEADS_KEY = "emailcopilot.hiddenLeadIds";
+
+export function getHiddenLeadIds(): Set<number> {
+  try {
+    const raw = localStorage.getItem(HIDDEN_LEADS_KEY);
+    return new Set(raw ? (JSON.parse(raw) as number[]) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function hideLead(id: number) {
+  try {
+    const ids = getHiddenLeadIds();
+    ids.add(id);
+    localStorage.setItem(HIDDEN_LEADS_KEY, JSON.stringify([...ids]));
+  } catch {
+    // Storage unavailable (e.g. private mode): the lead is still removed from view.
+  }
+}
+
 function escapeCsvCell(value: string | null | undefined): string {
   const text = value ?? "";
   return `"${text.replace(/"/g, '""')}"`;
@@ -92,7 +116,7 @@ export default function LeadMenu({
     try {
       await leadsApi.updateDoNotContact(lead.id, true);
       onSuppressionChange(lead.id, true);
-      toast.success(`You will never email ${lead.email} again.`);
+      toast.success(`${lead.email} is excluded. You won't email them again.`);
     } catch {
       toast.error("Failed to update lead.");
     } finally {
@@ -119,9 +143,10 @@ export default function LeadMenu({
   }
 
   function handleDelete() {
-    if (!confirm(`Delete ${lead.email}? It will reappear on refresh.`)) return;
+    if (!confirm(`Remove ${lead.email} from your overview?`)) return;
+    hideLead(lead.id);
     onDeleted(lead.id);
-    toast.success("Lead removed from view.");
+    toast.success("Lead removed from the overview.");
     setOpen(false);
   }
 
@@ -155,7 +180,7 @@ export default function LeadMenu({
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 <MailCheck size={13} />
-                Email Again
+                Include Again
               </button>
             ) : (
               <button
@@ -167,7 +192,7 @@ export default function LeadMenu({
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 <Ban size={13} />
-                Never Email Again
+                Exclude
               </button>
             )}
             <button
