@@ -9,6 +9,8 @@ interface StatCardProps {
   value: string | number;
   change?: number | string; // e.g. 12, -5 — percentage change or string ratio
   comparisonLabel?: string; // e.g. "vs previous period"
+  /** Metric isn't live yet: card is greyed out and shows "Coming soon". */
+  comingSoon?: boolean;
 }
 
 export default function StatCard({
@@ -17,7 +19,34 @@ export default function StatCard({
   value,
   change,
   comparisonLabel = "",
+  comingSoon = false,
 }: StatCardProps) {
+  if (comingSoon) {
+    return (
+      <div
+        className="bg-gray-50 border border-gray-200 rounded-lg p-5 w-full"
+        title="This metric isn't live yet"
+      >
+        <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center w-12 h-12 rounded-md bg-gray-100 shrink-0">
+            <Icon size={22} className="text-gray-400" strokeWidth={2} />
+          </div>
+
+          <div>
+            <div className="text-sm font-semibold text-gray-400">{label}</div>
+            <div className="text-lg font-bold text-gray-300 mt-1">–</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1 mt-6 text-xs">
+          <span className="rounded-md bg-gray-100 px-2 py-1 font-medium text-gray-500">
+            Coming soon
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   const isNumericChange = typeof change === "number";
   const isPositive = isNumericChange ? (change as number) >= 0 : true;
   const TrendIcon = isPositive ? ArrowUp : ArrowDown;
