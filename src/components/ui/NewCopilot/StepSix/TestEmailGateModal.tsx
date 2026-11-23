@@ -8,6 +8,8 @@ interface TestEmailGateModalProps {
   sending: boolean;
   sent: boolean;
   sentTo?: string | null;
+  /** Editing a live copilot: wording says "re-launch". */
+  relaunch?: boolean;
   onSend: () => void;
   onLaunch: () => void;
   onCancel: () => void;
@@ -19,6 +21,7 @@ export default function TestEmailGateModal({
   sending,
   sent,
   sentTo,
+  relaunch = false,
   onSend,
   onLaunch,
   onCancel,
@@ -70,7 +73,7 @@ export default function TestEmailGateModal({
                   {sentTo || "your connected inbox"}
                 </span>{" "}
                 and make sure everything looks right. When you&apos;re happy
-                with it, launch your copilot.
+                with it, {relaunch ? "re-launch" : "launch"} your copilot.
               </p>
             </div>
 
@@ -87,7 +90,8 @@ export default function TestEmailGateModal({
                 onClick={onLaunch}
                 className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
               >
-                <Rocket size={14} /> Launch copilot
+                <Rocket size={14} />{" "}
+                {relaunch ? "Re-launch copilot" : "Launch copilot"}
               </button>
             </div>
           </>
@@ -108,7 +112,8 @@ export default function TestEmailGateModal({
 
               <p className="mt-3 text-sm text-gray-500">
                 Send one to yourself so you know the template and your sending
-                account actually work. Once it lands, you can launch.
+                account actually work. Once it lands, you can{" "}
+                {relaunch ? "re-launch" : "launch"}.
               </p>
 
               <div className="mt-4 flex items-start gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5">
