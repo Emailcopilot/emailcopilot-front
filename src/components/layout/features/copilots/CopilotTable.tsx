@@ -167,12 +167,6 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-const STEP_LABEL_CLASSES: Record<WorkflowStepState, string> = {
-  done: "text-emerald-500",
-  blocked: "text-rose-500",
-  pending: "text-amber-500",
-};
-
 function StepIcon({ state }: { state: WorkflowStepState }) {
   if (state === "done")
     return <CheckCircle2 size={13} className="text-emerald-500" />;
@@ -180,6 +174,14 @@ function StepIcon({ state }: { state: WorkflowStepState }) {
     return <CircleAlert size={13} className="text-rose-500" />;
   return <Clock size={13} className="text-amber-500" />;
 }
+
+/** Short labels so all six steps fit on one row inside the table card. */
+const SHORT_STEP_TITLES: Record<string, string> = {
+  "Email Account": "Account",
+  "Target Audience": "Audience",
+  "Email Templates": "Template",
+  "Flight Schedule": "Schedule",
+};
 
 function StepColumn({
   step,
@@ -198,28 +200,13 @@ function StepColumn({
         setStep((index + 1) as Step),
         router.push(`/dashboard/copilots/new?edit=${copilotId}`)
       )}
-      className="flex min-w-26 group hover:bg-primary/5 flex-col gap-1 border border-gray-100 hover:border-primary rounded-lg px-2 py-1"
+      title={`${index + 1}. ${step.title}: ${step.label}`}
+      className="flex items-center gap-1.5 group hover:bg-primary/5 border border-gray-100 hover:border-primary rounded-lg px-2 py-1"
     >
-      <div className="flex items-center gap-1.5">
-        <span
-          className={`flex h-4 w-4 border border-gray-300 text-gray-400 group-hover:bg-blue-500 group-hover:border-blue-500 group-hover:text-white shrink-0 items-center justify-center rounded-full text-[10px] font-medium 
-         
-          }`}
-        >
-          {index + 1}
-        </span>
-        <span className="text-[12px] font-medium group-hover:text-primary text-gray-700 whitespace-nowrap">
-          {step.title}
-        </span>
-      </div>
-      <div className="flex items-center gap-1 ">
-        <StepIcon state={step.state} />
-        <span
-          className={`text-[12px] whitespace-nowrap ${STEP_LABEL_CLASSES[step.state]}`}
-        >
-          {step.label}
-        </span>
-      </div>
+      <StepIcon state={step.state} />
+      <span className="text-[12px] font-medium group-hover:text-primary text-gray-700 whitespace-nowrap">
+        {SHORT_STEP_TITLES[step.title] ?? step.title}
+      </span>
     </div>
   );
 }
@@ -232,8 +219,8 @@ function WorkflowStepper({
   copilotId: string | number;
 }) {
   return (
-    // Two rows of three so the table fits inside its card on laptop screens.
-    <div className="grid grid-cols-[repeat(3,max-content)] gap-1.5">
+    // One row: the icon shows each step's state, details are in the tooltip.
+    <div className="flex items-center gap-1">
       {steps.map((step, index) => (
         <StepColumn
           key={step.key}
