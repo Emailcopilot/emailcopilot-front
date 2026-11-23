@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2, Edit2, Mail, MoreVertical } from "lucide-react";
+import { Trash2, Edit2, Mail, MoreVertical, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useEmailAccountStore } from "@/store/emailAccountStore";
@@ -72,9 +72,9 @@ export default function EmailAccountList({
                                         e.stopPropagation();
                                         setOpenMenuId(openMenuId === profile.id ? null : profile.id);
                                     }}
-                                    className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                                    className="text-gray-300 transition-colors hover:text-gray-500"
                                 >
-                                    <MoreVertical size={18} />
+                                    {openMenuId === profile.id ? <X size={18} /> : <MoreVertical size={18} />}
                                 </button>
                                 {openMenuId === profile.id && (
                                     <div
