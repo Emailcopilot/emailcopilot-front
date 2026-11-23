@@ -298,20 +298,26 @@ function CopilotTable({
       <div className="overflow-x-auto max-xl:max-h-[calc(100dvh-270px)] xl:overflow-visible">
         <table className="w-full min-w-225 border-collapse ">
           <thead>
+            {/* Content columns shrink to fit (w-px); the four empty w-1/4 spacer columns share the leftover width,
+                so the gaps between Copilots, Workflow status, Sent, Status and Actions are equal. */}
             <tr className="border-b border-[#E2E8F0] bg-white">
-              <th className="sticky top-0 z-40 rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
+              <th className="sticky top-0 z-40 w-px rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Copilots
               </th>
-              <th className="sticky top-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
+              <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
+              <th className="sticky top-0 z-40 w-px bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Workflow status
               </th>
-              <th className="sticky top-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
+              <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
+              <th className="sticky top-0 z-40 w-px bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Sent
               </th>
-              <th className="whitespace-nowrap sticky right-22 top-0 z-50 bg-white shadow-[inset_0_-1px_0_#E2E8F0] px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
+              <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
+              <th className="w-px whitespace-nowrap sticky right-22 top-0 z-50 bg-white shadow-[inset_0_-1px_0_#E2E8F0] px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
                 Status
               </th>
-              <th className="sticky right-0 top-0 z-50 rounded-tr-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] w-22 min-w-22 px-5 py-2.5 text-right font-normal text-xs leading-5 text-[#94A3B8]">
+              <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
+              <th className="sticky right-0 top-0 z-50 rounded-tr-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] w-22 min-w-22 px-5 py-2.5 text-center font-normal text-xs leading-5 text-[#94A3B8]">
                 Actions
               </th>
             </tr>
@@ -336,8 +342,8 @@ function CopilotTable({
                   tabIndex={0}
                   className="group/row cursor-pointer border-b border-[#E2E8F0] align-top last:border-b-0 hover:bg-gray-50 transition-colors focus-visible:outline-2 focus-visible:outline-primary/40"
                 >
-                  <td className="px-5 py-4 align-middle">
-                    <div className="max-w-55">
+                  <td className="w-px px-5 py-4 align-middle">
+                    <div className="w-max max-w-55">
                       <p className="text-sm font-semibold text-[#0F172A]">
                         {copilot.name}
                       </p>
@@ -353,21 +359,25 @@ function CopilotTable({
                       )}
                     </div>
                   </td>
+                  <td aria-hidden className="w-1/4 p-0" />
                   <td
-                    className="px-5 py-4 align-middle"
+                    className="w-px whitespace-nowrap px-5 py-4 align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <WorkflowStepper steps={steps} copilotId={copilot.id} />
                   </td>
-                  <td className="whitespace-nowrap px-5 py-4 text-sm align-middle text-[#0F172A]">
+                  <td aria-hidden className="w-1/4 p-0" />
+                  <td className="w-px whitespace-nowrap px-5 py-4 text-sm align-middle text-[#0F172A]">
                     {copilot.emailsSent}
                   </td>
-                  <td className="whitespace-nowrap sticky right-22 bg-white group-hover/row:bg-gray-50 z-40 shadow-[inset_0_-1px_0_#E2E8F0] [tr:last-child>&]:shadow-none px-5 py-4 align-middle">
+                  <td aria-hidden className="w-1/4 p-0" />
+                  <td className="w-px whitespace-nowrap sticky right-22 bg-white group-hover/row:bg-gray-50 z-40 shadow-[inset_0_-1px_0_#E2E8F0] [tr:last-child>&]:shadow-none px-5 py-4 align-middle">
                     {/* <StatusBadge status={copilot.status} /> */}
                     <CopilotStatus status={copilot.status} />
                   </td>
+                  <td aria-hidden className="w-1/4 p-0" />
                   <td
-                    className="sticky right-0 z-40 w-22 min-w-22 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] [tr:last-child>&]:shadow-none px-5 py-4 text-right align-middle"
+                    className="sticky right-0 z-40 w-22 min-w-22 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] [tr:last-child>&]:shadow-none px-5 py-4 text-center align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
