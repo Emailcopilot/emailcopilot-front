@@ -532,7 +532,7 @@ function LeadsPageContent() {
                           onClick={() => handleShowPreview(lead)}
                         >
                           <div
-                            className="inline-flex min-w-[60px] items-center justify-center rounded-lg px-3.5 py-1.5 text-xs leading-4 font-semibold capitalize transition-colors hover:brightness-95"
+                            className="inline-flex items-center justify-center rounded-md px-3 py-2 text-[12px] font-medium capitalize transition-colors hover:brightness-95"
                             style={{
                               backgroundColor: "#F5F7FF",
                               color: "#2563EB",
