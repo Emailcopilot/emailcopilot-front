@@ -299,18 +299,17 @@ function LeadsPageContent() {
 
       {/* Search stays mounted through loading and empty states so typing
           keeps focus and a no-results query can always be cleared. */}
-      <div className="bg-white border border-[#E2E8F0] rounded-lg px-4 sm:px-5 py-4 mb-4 flex items-center">
-        <div className="relative w-full sm:w-[378px]">
+      <div className="w-full p-2 border border-[#E2E8F0] mb-3 bg-white rounded-lg flex items-center">
+        <div className="relative min-w-48 flex-1">
           <Search
-            size={20}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#59637C]"
+            size={14}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
           />
           <input
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="Search company, email, website or phone..."
-            className="w-full h-11 border border-[#E2E8F0] rounded-lg pl-10 pr-4 text-[15px] font-light bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
-            style={{ color: "#59637C" }}
+            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-100"
           />
         </div>
       </div>
@@ -413,7 +412,7 @@ function LeadsPageContent() {
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2">
                           <Tooltip text={lead.companyName}>
-                            <div className="font-semibold line-clamp-2 max-w-48 text-sm text-[#0F172A]">
+                            <div className="line-clamp-2 max-w-48 text-sm text-[#0F172A]">
                               {lead.companyName}
                             </div>
                           </Tooltip>
@@ -427,7 +426,7 @@ function LeadsPageContent() {
                                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.address)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="font-semibold line-clamp-2 max-w-48 text-sm text-[#0F172A]"
+                                className="line-clamp-2 max-w-48 text-sm text-[#0F172A]"
                               >
                                 {lead.address}
                               </a>
@@ -444,7 +443,7 @@ function LeadsPageContent() {
                               target="_blank"
                               rel="noopener noreferrer"
                               href={normalizeUrl(lead.website || "#")}
-                              className="font-semibold line-clamp-2 text-sm text-blue-500 hover:text-blue-600 transition-colors"
+                              className="line-clamp-2 text-sm text-blue-500 hover:text-blue-600 transition-colors"
                             >
                               {lead.website}
                             </a>
@@ -456,7 +455,7 @@ function LeadsPageContent() {
                           href={`mailto:${lead.email}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium group transition-colors"
+                          className="flex items-center gap-2 text-blue-500 hover:text-blue-600 group transition-colors"
                         >
                           <Tooltip text={lead.email}>
                             <a
@@ -480,7 +479,7 @@ function LeadsPageContent() {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   href={`https://wa.me/${lead.phone.replace("+", "")}`}
-                                  className="font-semibold whitespace-nowrap text-sm text-[#0F172A]"
+                                  className="whitespace-nowrap text-sm text-[#0F172A]"
                                 >
                                   {lead.phone}
                                 </a>
@@ -498,7 +497,7 @@ function LeadsPageContent() {
                               <Tooltip text={lead.sourceQuery}>
                                 <a
                                   href={`/dashboard/target-audiences#${lead.sourceQuery.replace(" ", "-")}`}
-                                  className="font-semibold whitespace-nowrap text-sm text-[#0F172A]"
+                                  className="whitespace-nowrap text-sm text-[#0F172A]"
                                 >
                                   {lead.sourceQuery}
                                 </a>
@@ -519,7 +518,7 @@ function LeadsPageContent() {
                                 : "Unknown"
                             }
                           >
-                            <div className="font-semibold whitespace-nowrap text-sm text-[#0F172A]">
+                            <div className="whitespace-nowrap text-sm text-[#0F172A]">
                               {lead.sentAt
                                 ? formatDateTime(lead.sentAt)
                                 : "Unknown"}
