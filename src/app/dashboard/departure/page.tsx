@@ -381,10 +381,10 @@ function LeadsPageContent() {
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
                       Template
                     </th>
-                    <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5  text-[#94A3B8] px-6 py-3">
+                    <th className="sticky top-0 right-22 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5  text-[#94A3B8] px-6 py-3">
                       Status
                     </th>
-                    <th className="sticky top-0 right-0 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-center text-xs leading-5 text-[#94A3B8] px-6 py-3">
+                    <th className="sticky top-0 right-0 z-40 w-22 min-w-22 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-center text-xs leading-5 text-[#94A3B8] px-5 py-3">
                       Actions
                     </th>
                   </tr>
@@ -393,7 +393,7 @@ function LeadsPageContent() {
                   {leads.map((lead, index) => (
                     <tr
                       key={lead.id + index}
-                      className=" border-b text-sm border-[#E2E8F0] hover:bg-gray-50 transition-colors"
+                      className="group/row border-b text-sm border-[#E2E8F0] hover:bg-gray-50 transition-colors"
                     >
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2">
@@ -542,7 +542,7 @@ function LeadsPageContent() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5 align-middle transition-colors">
+                      <td className="px-6 py-5 sticky right-22 z-20 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] align-middle transition-colors">
                         <div className="flex items-center gap-2 ">
                           <Tooltip
                             text={
@@ -562,7 +562,7 @@ function LeadsPageContent() {
                           </Tooltip>
                         </div>
                       </td>
-                      <td className="px-6 py-5 sticky w-16 align-middle right-0 z-30 transition-colors">
+                      <td className="px-5 py-5 sticky w-22 min-w-22 align-middle right-0 z-20 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] transition-colors">
                         <div className="flex items-center justify-center">
                           <LeadMenu
                             lead={lead}
