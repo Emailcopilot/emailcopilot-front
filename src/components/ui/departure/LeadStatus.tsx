@@ -10,6 +10,11 @@ const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
 
 const DEFAULT_STYLE = { bg: "#F1F5F9", text: "#64748B" };
 
+/** Shown instead of the raw status where the wording differs. */
+const STATUS_LABELS: Record<string, string> = {
+  suppressed: "Excluded",
+};
+
 function LeadStatus({
   status,
   isSmall,
@@ -26,7 +31,9 @@ function LeadStatus({
       }`}
       style={{ backgroundColor: style.bg, color: style.text }}
     >
-      <span className="line-clamp-1">{status || "Sent"}</span>
+      <span className="line-clamp-1">
+        {STATUS_LABELS[status] ?? (status || "Sent")}
+      </span>
     </div>
   );
 }
