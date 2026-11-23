@@ -23,6 +23,10 @@ interface TemplateRowProps {
   onDuplicate: () => void;
 }
 
+// Reply tracking isn't implemented yet. Greyed out until it is; flip to true
+// to show the real reply rate again (also in TemplateTable's header).
+export const REPLY_RATE_LIVE = false;
+
 export default function TemplateRow({
   template,
   onEdit,
@@ -32,11 +36,15 @@ export default function TemplateRow({
   const isUp = (template.trend ?? "up") === "up";
   const replyRate = template.replyRate ?? 0;
   const usedIn = template.usedIn ?? 0;
-  const steps = Array.isArray(template.steps)
-    ? template.steps.length
-    : typeof template.steps === "number"
-      ? template.steps
-      : 0;
+  // Every template is at least one email (one step); sequences come later.
+  const steps = Math.max(
+    1,
+    Array.isArray(template.steps)
+      ? template.steps.length
+      : typeof template.steps === "number"
+        ? template.steps
+        : 0,
+  );
   const lastUpdated = formatDate(template.updatedAt || template.createdAt || "");
   const status = template.status ?? "draft";
   const body = bodyPreview(template.body);
@@ -66,18 +74,29 @@ export default function TemplateRow({
         <span className="text-sm text-[#0F172A]">{lastUpdated}</span>
 
         <span className="text-sm text-[#0F172A]">
-          {usedIn} {usedIn <= 1 ? "copilot" : "copilots"}
+          {usedIn} {usedIn === 1 ? "copilot" : "copilots"}
         </span>
 
-        <span
-          className="inline-flex items-center gap-1 text-sm"
-          style={{
-            color: replyRate === 0 ? "#59637C" : isUp ? "#1d8a68" : "#d9485f",
-          }}
-        >
-          {replyRate}%
-          {replyRate > 0 && <span className="text-xs">{isUp ? "↑" : "↓"}</span>}
-        </span>
+        {REPLY_RATE_LIVE ? (
+          <span
+            className="inline-flex items-center gap-1 text-sm"
+            style={{
+              color: replyRate === 0 ? "#59637C" : isUp ? "#1d8a68" : "#d9485f",
+            }}
+          >
+            {replyRate}%
+            {replyRate > 0 && (
+              <span className="text-xs">{isUp ? "↑" : "↓"}</span>
+            )}
+          </span>
+        ) : (
+          <span
+            className="text-xs text-gray-300"
+            title="Reply rate isn't live yet"
+          >
+            Coming soon
+          </span>
+        )}
 
         <span>
           {status === "draft" ? (
@@ -113,7 +132,9 @@ export default function TemplateRow({
               {template.name}
             </span>
             <div className="flex items-center gap-3 text-xs text-[#59637C]">
-              <span>{steps} steps</span>
+              <span>
+                {steps} {steps === 1 ? "step" : "steps"}
+              </span>
               <span>{lastUpdated}</span>
             </div>
           </div>
