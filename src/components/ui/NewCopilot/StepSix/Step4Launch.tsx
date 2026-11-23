@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useTakeoffCopilot } from "@/lib/useTakeoffCopilot";
-import { estimateAudienceSize } from "@/lib/estimates";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -184,11 +183,7 @@ export default function Step4Launch({
   const audienceSizeLabel =
     resultsCount != null && resultsCount > 0
       ? `${resultsCount.toLocaleString()} companies`
-      : `~${estimateAudienceSize(
-          sched,
-          copilotData.targetAudienceId,
-          copilotData.name,
-        ).toLocaleString()} companies`;
+      : "After first run";
 
   // Gate only when no test email has ever been sent for this copilot. If the
   // status can't be verified, fail open so a flaky endpoint never blocks launch.
