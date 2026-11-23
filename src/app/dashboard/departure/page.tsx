@@ -6,7 +6,7 @@ import { Users, Search } from "lucide-react";
 import { leadsApi } from "@/lib/api";
 import type { Lead, PaginatedMeta } from "@/lib/types";
 import LeadStatus from "@/components/ui/departure/LeadStatus";
-import LeadMenu from "@/components/ui/departure/LeadMenu";
+import LeadMenu, { getHiddenLeadIds } from "@/components/ui/departure/LeadMenu";
 import { Pagination } from "@/components/ui/Pagination";
 import EmailPreviewCard from "@/components/ui/EmialPreview";
 import { CopilotsPopup } from "@/components/ui/CopilotsPopup";
@@ -231,7 +231,8 @@ function LeadsPageContent() {
         ...(targetCopilotId != null ? { copilotId: targetCopilotId } : {}),
       });
       if (seq !== requestSeqRef.current) return;
-      setLeads(res.data.data);
+      const hidden = getHiddenLeadIds();
+      setLeads(res.data.data.filter((lead: Lead) => !hidden.has(lead.id)));
       setMeta(res.data.meta);
     } catch {
       if (seq === requestSeqRef.current) {
@@ -547,7 +548,7 @@ function LeadsPageContent() {
                           <Tooltip
                             text={
                               lead.suppressed
-                                ? "Suppressed"
+                                ? "Excluded"
                                 : lead.status.charAt(0).toUpperCase() +
                                     lead.status.slice(1) || "Sent"
                             }
