@@ -532,7 +532,8 @@ export default function Step4Launch({
               </span>
             ) : (
               <>
-                <Save size={15} /> Save as Draft
+                <Save size={15} />{" "}
+                {isRelaunch ? "Save, keep paused" : "Save as Draft"}
               </>
             )}
           </button>
@@ -567,6 +568,7 @@ export default function Step4Launch({
         sending={sendingTestEmail}
         sent={gateSent}
         sentTo={selectedEmailProfile?.email}
+        relaunch={isRelaunch}
         onSend={() => sendTestEmail(true)}
         onLaunch={() => {
           setShowTestGate(false);
