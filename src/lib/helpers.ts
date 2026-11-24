@@ -33,11 +33,14 @@ export const handlePlanNameChange = (planName: string): string => {
 };
 
 /** Month-name date ("Sep 22, 2026") — the standard table date format. */
-export function formatDate(apiDateString?: string | null): string {
+export function formatDate(
+  apiDateString?: string | null,
+  locale = "en-US",
+): string {
   if (!apiDateString) return "—";
   const date = new Date(apiDateString);
   if (isNaN(date.getTime())) return "—";
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
