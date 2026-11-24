@@ -26,9 +26,11 @@ import { copilotQuota, emailQuota } from "@/lib/limits";
 import { useBilling } from "@/lib/useBilling";
 import { useSetupFeedbackActions } from "@/lib/SetupFeedbackProvider";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n";
 
 function NewCopilotPageContent() {
   const feedback = useSetupFeedbackActions();
+  const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
   const {
@@ -168,14 +170,16 @@ function NewCopilotPageContent() {
             setStep(2);
             if (provider) {
               toast.success(
-                `${provider.charAt(0).toUpperCase() + provider.slice(1)} connected successfully`,
+                t("{provider} connected successfully", {
+                  provider: provider.charAt(0).toUpperCase() + provider.slice(1),
+                }),
               );
             }
           }
         })
         .catch(() => {
           if (cancelled) return;
-          toast.error("Failed to load copilot. Please try again.");
+          toast.error(t("Failed to load copilot. Please try again."));
           router.push("/dashboard/copilots");
         })
         .finally(() => { if (!cancelled) setLoadingCopilot(false); });
@@ -190,7 +194,7 @@ function NewCopilotPageContent() {
           const copilot = res.data;
           loadCopilot(
             {
-              name: `Copy of ${copilot.name}`,
+              name: t("Copy of {name}", { name: copilot.name }),
               description: copilot.description,
               goal: copilot.goal,
               emailAccountId: copilot.emailAccountId,
@@ -219,7 +223,7 @@ function NewCopilotPageContent() {
         })
         .catch(() => {
           if (cancelled) return;
-          toast.error("Failed to load copilot. Please try again.");
+          toast.error(t("Failed to load copilot. Please try again."));
           router.push("/dashboard/copilots");
         })
         .finally(() => { if (!cancelled) setLoadingCopilot(false); });
@@ -253,9 +257,9 @@ function NewCopilotPageContent() {
   }, [quota?.atLimit, searchParams, router]);
 
   const getPageTitle = () => {
-    if (mode === "edit") return "Edit Copilot";
-    if (mode === "duplicate") return "Duplicate Copilot";
-    return "Create New Copilot";
+    if (mode === "edit") return t("Edit Copilot");
+    if (mode === "duplicate") return t("Duplicate Copilot");
+    return t("Create New Copilot");
   };
 
   const handleSaveDraftStep = useCallback(async () => {
@@ -264,14 +268,14 @@ function NewCopilotPageContent() {
       toast.success(
         useCopilotStore.getState().mode === "edit" &&
           useCopilotStore.getState().editingLive
-          ? "Changes saved — the copilot stays paused until you re-launch it."
-          : "Draft saved — you can launch anytime.",
+          ? t("Changes saved — the copilot stays paused until you re-launch it.")
+          : t("Draft saved — you can launch anytime."),
       );
       router.push("/dashboard/copilots");
     } catch {
-      toast.error("Failed to save draft. Please try again.");
+      toast.error(t("Failed to save draft. Please try again."));
     }
-  }, [persistDraft, router]);
+  }, [persistDraft, router, t]);
 
   const handleLaunch = useCallback(async () => {
     if (feedback.isBusy()) return;
@@ -302,16 +306,16 @@ function NewCopilotPageContent() {
         if (!Number.isSafeInteger(id) || id < 1) throw new Error("The launch response did not include a valid copilot ID.");
         return id;
       }, () => {
-        toast.success("Copilot launch accepted.");
+        toast.success(t("Copilot launch accepted."));
         resetStore();
         router.push("/dashboard/copilots");
       });
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Failed to launch copilot. Please try again."));
+      toast.error(apiErrorMessage(error, t("Failed to launch copilot. Please try again.")));
     } finally {
       setLaunching(false);
     }
-  }, [copilotData, draftId, router, resetStore, user, feedback]);
+  }, [copilotData, draftId, router, resetStore, user, feedback, t]);
 
   // "Re-launch" from any step: the step has just saved, now put it live again.
   useEffect(() => {
@@ -319,23 +323,25 @@ function NewCopilotPageContent() {
     clearRelaunchRequest();
     if (mailQuota?.atLimit) {
       toast.error(
-        "Your monthly email allowance is used up. Upgrade your plan to re-launch this copilot.",
+        t(
+          "Your monthly email allowance is used up. Upgrade your plan to re-launch this copilot.",
+        ),
       );
       return;
     }
     handleLaunch().then(() => {
       if (!useCopilotStore.getState().draftId) {
-        toast.success("Copilot re-launched.");
+        toast.success(t("Copilot re-launched."));
       }
     });
-  }, [relaunchRequested, clearRelaunchRequest, mailQuota?.atLimit, handleLaunch]);
+  }, [relaunchRequested, clearRelaunchRequest, mailQuota?.atLimit, handleLaunch, t]);
 
   if (loadingCopilot) {
     return (
       <div className="py-8 px-4 w-full mx-auto flex items-center justify-center min-h-100">
         <div className="flex items-center gap-3 text-gray-500">
           <Loader2 size={20} className="animate-spin" />
-          <span>Loading copilot...</span>
+          <span>{t("Loading copilot...")}</span>
         </div>
       </div>
     );
@@ -358,10 +364,10 @@ function NewCopilotPageContent() {
           </div>
 
           <p className="text-gray-800 text-sm lg:text-lg font-bold">
-            Create New Copilot
+            {getPageTitle()}
           </p>
           <p className="text-gray-500 text-xs lg:text-sm">
-            Build your outbound copilot in 6 simple steps.
+            {t("Build your outbound copilot in 6 simple steps.")}
           </p>
         </div>
 
@@ -379,7 +385,7 @@ function NewCopilotPageContent() {
                 }}
                 className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
               >
-                Discard &amp; exit
+                {t("Discard & exit")}
               </button>
             </div>
           </div>
@@ -389,7 +395,7 @@ function NewCopilotPageContent() {
       {mode === "edit" && editingLive && (
         <div className="flex items-start gap-2.5 mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
           <PauseCircle size={18} className="mt-px shrink-0 text-amber-500" />
-          <span>Editing pauses this copilot until you launch it again.</span>
+          <span>{t("Editing pauses this copilot until you launch it again.")}</span>
         </div>
       )}
 
@@ -416,6 +422,11 @@ function NewCopilotPageContent() {
   );
 }
 
+function LoadingLabel() {
+  const { t } = useI18n();
+  return <span>{t("Loading...")}</span>;
+}
+
 export default function NewCopilotPage() {
   return (
     <Suspense
@@ -423,7 +434,7 @@ export default function NewCopilotPage() {
         <div className="py-8 px-4 w-full mx-auto flex items-center justify-center min-h-100">
           <div className="flex items-center gap-3 text-gray-500">
             <Loader2 size={20} className="animate-spin" />
-            <span>Loading...</span>
+            <LoadingLabel />
           </div>
         </div>
       }
