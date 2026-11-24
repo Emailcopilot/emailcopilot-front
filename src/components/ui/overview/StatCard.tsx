@@ -12,6 +12,8 @@ interface StatCardProps {
   comparisonLabel?: string; // e.g. "vs previous period"
   /** Metric isn't live yet: card is greyed out and shows "Coming soon". */
   comingSoon?: boolean;
+  /** Shown instead of the trend, e.g. "All time" when there is no period data. */
+  footnote?: string;
 }
 
 export default function StatCard({
@@ -21,6 +23,7 @@ export default function StatCard({
   change,
   comparisonLabel = "",
   comingSoon = false,
+  footnote,
 }: StatCardProps) {
   const { t } = useI18n();
   if (comingSoon) {
@@ -74,7 +77,9 @@ export default function StatCard({
       </div>
 
       <div className="flex items-center gap-1 mt-6 text-xs">
-        {label !== "Copilots" ? (
+        {footnote ? (
+          <span className="text-gray-500">{footnote}</span>
+        ) : label !== "Copilots" ? (
           <>
             <TrendIcon size={14} className={trendColor} strokeWidth={2.5} />
             <span className={`font-semibold ${trendColor}`}>
