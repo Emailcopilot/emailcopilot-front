@@ -3,6 +3,7 @@
 import type { Plan, PlanId } from "@/lib/useBilling";
 import { handlePlanNameChange } from "@/lib/helpers";
 import LimitUpgradeDialog from "./LimitUpgradeDialog";
+import { useI18n } from "@/lib/i18n";
 
 interface CopilotLimitDialogProps {
   open: boolean;
@@ -22,27 +23,38 @@ export default function CopilotLimitDialog({
   tiers,
   onClose,
 }: CopilotLimitDialogProps) {
+  const { t } = useI18n();
   const planName = currentPlanId
     ? handlePlanNameChange(currentPlanId)
-    : "current";
+    : t("current");
 
   return (
     <LimitUpgradeDialog
       open={open}
       onClose={onClose}
-      title="Copilot limit reached"
+      title={t("Copilot limit reached")}
       description={
-        <>
-          Your {planName} plan includes {max} copilot
-          {max === 1 ? "" : "s"} and you are using all {max}. Delete one of your
-          copilots to free a slot{tiers.length > 0 ? ", or upgrade to add more" : ""}.
-        </>
+        tiers.length > 0
+          ? t(
+              max === 1
+                ? "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot, or upgrade to add more."
+                : "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot, or upgrade to add more.",
+              { plan: planName, max },
+            )
+          : t(
+              max === 1
+                ? "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot."
+                : "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot.",
+              { plan: planName, max },
+            )
       }
       currentPlanId={currentPlanId}
       tiers={tiers}
       reason="copilots"
       featureKeyword="copilot"
-      emptyTiersMessage="You are already on our highest plan. Contact support if you need more copilots."
+      emptyTiersMessage={t(
+        "You are already on our highest plan. Contact support if you need more copilots.",
+      )}
     />
   );
 }
