@@ -13,8 +13,10 @@ import NeedHelpCard from "@/components/ui/billing/NeedHelpCard";
 import PlanSelector from "@/components/ui/billing/PlanSelector";
 import type { BillingInterval } from "@/components/ui/billing/PlanSelector";
 import { useBilling, type PlanId } from "@/lib/useBilling";
+import { useI18n } from "@/lib/i18n";
 
 export default function BillingPage() {
+  const { t } = useI18n();
   const {
     plans,
     subscription,
@@ -56,7 +58,7 @@ export default function BillingPage() {
       );
     } catch (e) {
       toast.error(
-        e instanceof Error ? e.message : "Could not start checkout. Try again.",
+        e instanceof Error ? e.message : t("Could not start checkout. Try again."),
       );
       setSubscribingPlanId(null);
     }
@@ -67,11 +69,15 @@ export default function BillingPage() {
       await cancel();
       setCancelOpen(false);
       toast.success(
-        "Subscription canceled. You keep access until the end of your billing period.",
+        t(
+          "Subscription canceled. You keep access until the end of your billing period.",
+        ),
       );
     } catch (e) {
       toast.error(
-        e instanceof Error ? e.message : "Could not cancel your subscription.",
+        e instanceof Error
+          ? e.message
+          : t("Could not cancel your subscription."),
       );
     }
   }
@@ -83,7 +89,7 @@ export default function BillingPage() {
       toast.error(
         e instanceof Error
           ? e.message
-          : "Could not update your payment method. Try again.",
+          : t("Could not update your payment method. Try again."),
       );
     }
   }
@@ -116,8 +122,9 @@ export default function BillingPage() {
 
       {isPending && (
         <div className="mb-6 rounded-xl border border-warning/30 bg-warning/10 p-4 text-sm text-warning">
-          Your payment is still being processed. This page updates as soon as
-          it&apos;s confirmed.
+          {t(
+            "Your payment is still being processed. This page updates as soon as it's confirmed.",
+          )}
         </div>
       )}
 
@@ -165,10 +172,12 @@ export default function BillingPage() {
 
       <ConfirmDialog
         open={cancelOpen}
-        title="Cancel your subscription?"
-        description="You'll keep access to your current plan until the end of your billing period. Your Copilots and data stay untouched."
-        confirmLabel={isCanceling ? "Canceling..." : "Cancel plan"}
-        cancelLabel="Keep plan"
+        title={t("Cancel your subscription?")}
+        description={t(
+          "You'll keep access to your current plan until the end of your billing period. Your Copilots and data stay untouched.",
+        )}
+        confirmLabel={isCanceling ? t("Canceling...") : t("Cancel plan")}
+        cancelLabel={t("Keep plan")}
         tone="danger"
         loading={isCanceling}
         onConfirm={handleCancel}
