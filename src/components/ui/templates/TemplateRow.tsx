@@ -1,6 +1,5 @@
 import { formatDate } from "@/lib/helpers";
 import TemplateActions from "./TemplateActions";
-import CopilotStatus from "@/components/ui/CopilotStatus";
 import type { Template } from "@/lib/types/templates";
 
 /** Plain-text preview of the (HTML) email body */
@@ -27,6 +26,30 @@ interface TemplateRowProps {
 // to show the real reply rate again (also in TemplateTable's header).
 export const REPLY_RATE_LIVE = false;
 
+/** Templates have no status of their own: show whether a copilot uses it. */
+function UsageStatus({
+  inUse,
+  isSmall = false,
+}: {
+  inUse: boolean;
+  isSmall?: boolean;
+}) {
+  return (
+    <span
+      className={`inline-flex w-fit shrink-0 items-center rounded-md font-medium whitespace-nowrap ${
+        isSmall ? "text-[10px] px-2 py-1" : "text-[12px] px-3 py-2"
+      }`}
+      style={
+        inUse
+          ? { backgroundColor: "#E3FCEF", color: "#1D8A68" }
+          : { backgroundColor: "#F1F5F9", color: "#64748B" }
+      }
+    >
+      {inUse ? "In use" : "Not in use"}
+    </span>
+  );
+}
+
 export default function TemplateRow({
   template,
   onEdit,
@@ -46,7 +69,6 @@ export default function TemplateRow({
         : 0,
   );
   const lastUpdated = formatDate(template.updatedAt || template.createdAt || "");
-  const status = template.status ?? "draft";
   const body = bodyPreview(template.body);
 
   return (
@@ -99,20 +121,7 @@ export default function TemplateRow({
         )}
 
         <span>
-          {status === "draft" ? (
-            <CopilotStatus status="draft" />
-          ) : (
-            <span
-              className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-              style={{
-                backgroundColor: "#F0F9FF",
-                color: "#0284C7",
-                border: "1px solid #BAE6FD",
-              }}
-            >
-              In flight
-            </span>
-          )}
+          <UsageStatus inUse={usedIn > 0} />
         </span>
 
         <div className="flex items-center">
@@ -139,20 +148,7 @@ export default function TemplateRow({
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            {status === "draft" ? (
-              <CopilotStatus status="draft" isSmall />
-            ) : (
-              <span
-                className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0"
-                style={{
-                  backgroundColor: "#F0F9FF",
-                  color: "#0284C7",
-                  border: "1px solid #BAE6FD",
-                }}
-              >
-                In flight
-              </span>
-            )}
+            <UsageStatus inUse={usedIn > 0} isSmall />
             <TemplateActions
               onEdit={onEdit}
               onDelete={onDelete}
