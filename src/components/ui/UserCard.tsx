@@ -1,7 +1,10 @@
+"use client";
+
 import { useBilling } from "@/lib/useBilling";
 import { emailQuota } from "@/lib/limits";
 import { useClerk } from "@clerk/nextjs";
-import { ChevronUp, Crown, User, LogOut } from "lucide-react";
+import { Check, ChevronUp, Crown, Globe, User, LogOut } from "lucide-react";
+import { LOCALES, useI18n } from "@/lib/i18n";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { handlePlanNameChange } from "@/lib/helpers";
@@ -25,6 +28,10 @@ export default function UserCard({
         ? "bg-amber-500"
         : "bg-gray-900";
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showLanguages, setShowLanguages] = useState(false);
+  const { t, locale, setLocale } = useI18n();
+  const currentLanguage =
+    LOCALES.find((l) => l.code === locale)?.label ?? "English";
   const { openUserProfile, signOut } = useClerk();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -61,10 +68,10 @@ export default function UserCard({
                 <span className="font-bold text-gray-900">
                   {limits?.usage?.emailsSent ?? 0}
                 </span>{" "}
-                / {limits?.limits?.emailsPerMonth ?? 0} emails used
+                / {limits?.limits?.emailsPerMonth ?? 0} {t("emails used")}
                 {quota?.atLimit && (
                   <span className="ml-1 font-medium text-red-600">
-                    · Limit reached
+                    · {t("Limit reached")}
                   </span>
                 )}
               </div>
@@ -82,7 +89,7 @@ export default function UserCard({
           onClick={onpress}
           className="flex justify-center border border-gray-300 hover:border-primary/10 w-full bg-white text-gray-900 text-sm font-medium py-2 rounded-lg hover:bg-primary/5 hover:text-primary transition-colors"
         >
-          Manage Plan
+          {t("Manage Plan")}
         </Link>
       </div>
 
@@ -118,8 +125,46 @@ export default function UserCard({
               style={{ color: "var(--color-primary)" }}
             >
               <User size={16} style={{ color: "var(--color-secondary)" }} />
-              Profile
+              {t("Profile")}
             </button>
+            <button
+              onClick={() => setShowLanguages((v) => !v)}
+              aria-expanded={showLanguages}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+              style={{ color: "var(--color-primary)" }}
+            >
+              <Globe size={16} style={{ color: "var(--color-secondary)" }} />
+              <span className="flex-1 text-left">{t("Language")}</span>
+              <span className="text-xs text-gray-400">{currentLanguage}</span>
+            </button>
+            {showLanguages && (
+              <div className="pl-3">
+                {LOCALES.map((l) => {
+                  const active = l.code === locale;
+                  return (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        setLocale(l.code);
+                        setShowLanguages(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-4 py-2 rounded-lg text-sm transition-colors hover:bg-gray-50 ${
+                        active ? "font-semibold text-primary" : "text-gray-700"
+                      }`}
+                    >
+                      <span>{l.label}</span>
+                      {active ? (
+                        <Check size={14} className="text-primary" />
+                      ) : (
+                        <span className="text-xs uppercase text-gray-400">
+                          {l.code}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
             <hr className="w-full border-gray-200" />
             <button
               onClick={() => signOut()}
@@ -127,7 +172,7 @@ export default function UserCard({
               style={{ color: "#dc2626" }}
             >
               <LogOut size={16} style={{ color: "#dc2626" }} />
-              Sign Out
+              {t("Sign Out")}
             </button>
           </div>
         )}
