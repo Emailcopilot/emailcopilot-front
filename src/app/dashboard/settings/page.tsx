@@ -72,7 +72,7 @@ export default function SettingsPage() {
       setPwSaving(true);
       await settingsApi.updatePassword({ current: pwForm.current, password: pwForm.next });
       setPwForm({ current: "", next: "", confirm: "" });
-      toast.error("Password updated.");
+      toast.success("Password updated.");
     } catch { toast.error("Failed to update password."); } finally { setPwSaving(false); }
   }
 
@@ -86,16 +86,16 @@ export default function SettingsPage() {
   if (!settings) return null;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 xl:px-8 py-4 sm:py-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
         <p className="text-gray-500 text-sm mt-1">Manage your account preferences.</p>
       </div>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-8">
         {/* Sidebar */}
-        <div className="w-44 flex-shrink-0">
-          <nav className="space-y-1">
+        <div className="md:w-44 flex-shrink-0">
+          <nav className="flex md:flex-col gap-1">
             {TABS.map(tab => {
               const Icon = tab.icon;
               return (
@@ -112,7 +112,7 @@ export default function SettingsPage() {
           {activeTab === "profile" && (
             <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-5">
               <h2 className="font-semibold text-gray-900">Profile Information</h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">First Name</label>
                   <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" value={settings.firstName} onChange={e => setSettings({ ...settings, firstName: e.target.value })} />
@@ -132,7 +132,7 @@ export default function SettingsPage() {
                   {["UTC", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Asia/Tokyo", "Asia/Kolkata"].map(tz => <option key={tz} value={tz}>{tz}</option>)}
                 </select>
               </div>
-              <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50">
+              <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 btn-cta border border-transparent text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50">
                 <Save size={14} /> {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
               </button>
             </div>
@@ -160,7 +160,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
                   ))}
-                  <button onClick={handlePasswordChange} disabled={pwSaving} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50 mt-1">
+                  <button onClick={handlePasswordChange} disabled={pwSaving} className="flex items-center gap-2 btn-cta border border-transparent text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 mt-1">
                     <Lock size={14} /> {pwSaving ? "Updating..." : "Update Password"}
                   </button>
                 </div>
@@ -202,7 +202,7 @@ export default function SettingsPage() {
                   </div>
                 ))}
               </div>
-              <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50 mt-6">
+              <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 btn-cta border border-transparent text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 mt-6">
                 <Save size={14} /> {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
               </button>
             </div>
@@ -223,7 +223,7 @@ export default function SettingsPage() {
                   </button>
                 ))}
               </div>
-              <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50 mt-6">
+              <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 btn-cta border border-transparent text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 mt-6">
                 <Save size={14} /> {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
               </button>
             </div>
