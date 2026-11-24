@@ -8,6 +8,7 @@ import Pagination from "@/components/ui/templates/Pagination";
 import { copilotsApi, templatesApi } from "@/lib/api";
 import { useRowsPerPage } from "@/lib/hooks";
 import { toast } from "sonner";
+import { translate as tr } from "@/lib/i18n";
 import type {
   Template,
   TemplateStep,
@@ -102,7 +103,7 @@ export default function TemplatesPage() {
       setForm({ name: "", subject: "", body: "", category: "Cold Outreach" });
       fetchTemplates();
     } catch {
-      toast.error("Failed to save template.");
+      toast.error(tr("Failed to save template."));
     } finally {
       setSaving(false);
     }
@@ -110,12 +111,12 @@ export default function TemplatesPage() {
 
   async function handleDelete(id: number) {
     // needs sonner to be implemented
-    if (!confirm("Delete this template?")) return;
+    if (!confirm(tr("Delete this template?"))) return;
     try {
       await templatesApi.delete(id);
       fetchTemplates();
     } catch {
-      toast.error("Failed to delete.");
+      toast.error(tr("Failed to delete."));
     }
   }
 
@@ -124,7 +125,7 @@ export default function TemplatesPage() {
       await templatesApi.duplicate(id);
       fetchTemplates();
     } catch {
-      toast.error("Failed to duplicate.");
+      toast.error(tr("Failed to duplicate."));
     }
   }
 
