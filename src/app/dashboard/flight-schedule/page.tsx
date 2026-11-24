@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { toast } from "sonner";
+import { translate as tr } from "@/lib/i18n";
 import { flightSchedulesApi, copilotsApi } from "@/lib/api";
 import FlightScheduleTable, {
   type FlightScheduleRow,
@@ -36,7 +37,7 @@ export default function FlightSchedulePage() {
       const res = await flightSchedulesApi.getAll();
       setSchedules(Array.isArray(res.data) ? res.data : []);
     } catch {
-      toast.error("Failed to load flight schedules.");
+      toast.error(tr("Failed to load flight schedules."));
       setSchedules([]);
     } finally {
       setLoading(false);
@@ -104,10 +105,10 @@ export default function FlightSchedulePage() {
   const handleSave = async (data: Omit<Schedule, "id">) => {
     if (editingSchedule?.id) {
       await flightSchedulesApi.update(editingSchedule.id, data);
-      toast.success("Flight schedule updated.");
+      toast.success(tr("Flight schedule updated."));
     } else {
       await flightSchedulesApi.create(data);
-      toast.success("Flight schedule created.");
+      toast.success(tr("Flight schedule created."));
     }
     closeModal();
     fetchSchedules();
@@ -117,14 +118,14 @@ export default function FlightSchedulePage() {
 
   const handleDelete = async (schedule: Schedule) => {
     if (!schedule.id) return;
-    if (!confirm("Are you sure you want to delete this flight schedule?"))
+    if (!confirm(tr("Are you sure you want to delete this flight schedule?")))
       return;
     try {
       await flightSchedulesApi.delete(schedule.id);
-      toast.success("Flight schedule deleted.");
+      toast.success(tr("Flight schedule deleted."));
       fetchSchedules();
     } catch {
-      toast.error("Failed to delete flight schedule.");
+      toast.error(tr("Failed to delete flight schedule."));
     }
   };
 
@@ -133,7 +134,7 @@ export default function FlightSchedulePage() {
   const handleDuplicate = async (schedule: Schedule) => {
     try {
       await flightSchedulesApi.create({
-        name: `${schedule.name || "Flight Schedule"} (Copy)`,
+        name: `${schedule.name || "Flight Schedule"} (${tr("Copy")})`,
         sendLimit: schedule.sendLimit,
         sendLimitActive: schedule.sendLimitActive,
         activeDays: schedule.activeDays,
@@ -141,10 +142,10 @@ export default function FlightSchedulePage() {
         sendingHoursActive: schedule.sendingHoursActive,
         timezone: schedule.timezone,
       });
-      toast.success("Flight schedule duplicated.");
+      toast.success(tr("Flight schedule duplicated."));
       fetchSchedules();
     } catch {
-      toast.error("Failed to duplicate flight schedule.");
+      toast.error(tr("Failed to duplicate flight schedule."));
     }
   };
 
