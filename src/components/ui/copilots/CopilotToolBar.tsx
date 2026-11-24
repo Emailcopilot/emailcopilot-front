@@ -237,7 +237,7 @@ interface ViewModeToggleProps {
 
 function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
   return (
-    <div className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white p-1">
+    <div className="hidden md:flex items-center gap-1 rounded-lg border border-gray-200 bg-white p-1">
       <button
         type="button"
         onClick={() => onChange("list")}
