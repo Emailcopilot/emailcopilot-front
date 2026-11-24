@@ -461,6 +461,150 @@ const nl: Messages = {
     "Beschikbaarheid: {value} (alleen gekozen actieve dagen).",
   "Saving…": "Opslaan…",
   "Create Schedule": "Schema maken",
+  // Billing
+  "Could not start checkout. Try again.":
+    "Afrekenen starten mislukt. Probeer het opnieuw.",
+  "Subscription canceled. You keep access until the end of your billing period.":
+    "Abonnement opgezegd. Je houdt toegang tot het einde van je factuurperiode.",
+  "Could not cancel your subscription.": "Abonnement opzeggen mislukt.",
+  "Could not update your payment method. Try again.":
+    "Betaalmethode bijwerken mislukt. Probeer het opnieuw.",
+  "Your payment is still being processed. This page updates as soon as it's confirmed.":
+    "Je betaling wordt nog verwerkt. Deze pagina werkt bij zodra hij is bevestigd.",
+  "Cancel your subscription?": "Je abonnement opzeggen?",
+  "You'll keep access to your current plan until the end of your billing period. Your Copilots and data stay untouched.":
+    "Je houdt toegang tot je huidige abonnement tot het einde van je factuurperiode. Je copilots en gegevens blijven onaangetast.",
+  "Canceling...": "Opzeggen...",
+  "Cancel plan": "Abonnement opzeggen",
+  "Keep plan": "Abonnement houden",
+  "Billing summary": "Factuuroverzicht",
+  Plan: "Abonnement",
+  Price: "Prijs",
+  "Billing period": "Factuurperiode",
+  "Next billing date": "Volgende factuurdatum",
+  "Amount due": "Te betalen",
+  Annual: "Jaarlijks",
+  Monthly: "Maandelijks",
+  "Update payment method": "Betaalmethode bijwerken",
+  "Current Plan": "Huidig abonnement",
+  "Subscription actions": "Abonnementsacties",
+  "Email credits usage": "Gebruik e-mailtegoed",
+  "Emails used": "E-mails gebruikt",
+  "{percent} % used": "{percent} % gebruikt",
+  "Monthly allowance reached. Sending resumes on {date}.":
+    "Maandtegoed bereikt. Versturen gaat verder op {date}.",
+  "Monthly allowance reached. Sending resumes when your allowance renews.":
+    "Maandtegoed bereikt. Versturen gaat verder zodra je tegoed wordt vernieuwd.",
+  "Your plan is canceled and stays active until {date}.":
+    "Je abonnement is opgezegd en blijft actief tot {date}.",
+  "Card on file": "Kaart geregistreerd",
+  "Change plan": "Abonnement wijzigen",
+  "Plan renews on": "Verlengt op",
+  "Payment method": "Betaalmethode",
+  Update: "Bijwerken",
+  "/ year": "/ jaar",
+  "/ month": "/ maand",
+  "Current plan": "Huidig abonnement",
+  "Most Popular": "Meest gekozen",
+  "Choose plan": "Kies abonnement",
+  "Included:": "Inbegrepen:",
+  "Perfect for individuals.": "Perfect voor zelfstandigen.",
+  "Perfect for growing businesses.": "Perfect voor groeiende bedrijven.",
+  "For power users and teams": "Voor power users en teams",
+  "Choose your plan": "Kies je abonnement",
+  "Billing interval": "Factuurinterval",
+  "Save {percent}%": "Bespaar {percent}%",
+  "Back to billing": "Terug naar facturering",
+  "Cancel anytime. No long-term commitments.":
+    "Altijd opzegbaar. Geen lange contracten.",
+  "Cancel anytime": "Altijd opzegbaar",
+  "No contracts. Upgrade or downgrade anytime.":
+    "Geen contracten. Op- of afschalen wanneer je wilt.",
+  "Your own email": "Je eigen e-mail",
+  "Every email is sent from your own connected email account.":
+    "Elke e-mail wordt verstuurd vanaf je eigen gekoppelde e-mailaccount.",
+  "Secure & reliable": "Veilig & betrouwbaar",
+  "Your data is encrypted and never shared.":
+    "Je gegevens zijn versleuteld en worden nooit gedeeld.",
+  Invoices: "Facturen",
+  "No invoices yet.": "Nog geen facturen.",
+  "Download invoice": "Factuur downloaden",
+  Date: "Datum",
+  "View and download your past invoices.":
+    "Bekijk en download je eerdere facturen.",
+  Invoice: "Factuur",
+  Amount: "Bedrag",
+  Download: "Downloaden",
+  "View all invoices": "Alle facturen bekijken",
+  Paid: "Betaald",
+  "Need help?": "Hulp nodig?",
+  "If you have any question about billing or your subscription we're here to help.":
+    "Heb je een vraag over facturering of je abonnement? We helpen je graag.",
+  "Find answers to common billing questions.":
+    "Vind antwoorden op veelgestelde factuurvragen.",
+  "Contact support": "Contact met support",
+  "Everything you need to know about payments, subscriptions and invoices.":
+    "Alles wat je moet weten over betalingen, abonnementen en facturen.",
+  "Search billing questions...": "Zoek in factuurvragen...",
+  "Search billing questions": "Zoek in factuurvragen",
+  "No questions match your search.":
+    "Geen vragen gevonden voor je zoekopdracht.",
+  "We're here to help. Contact our team and we'll get back to you as soon as possible.":
+    "We helpen je graag. Neem contact op met ons team en we reageren zo snel mogelijk.",
+  "Still have questions?": "Nog vragen?",
+  "Email us": "Mail ons",
+  "1 email account": "1 e-mailaccount",
+  "3 email accounts": "3 e-mailaccounts",
+  "5 email accounts": "5 e-mailaccounts",
+  "500 emails/month": "500 e-mails/maand",
+  "1,200 emails/month": "1.200 e-mails/maand",
+  "3,000 emails/month": "3.000 e-mails/maand",
+  "CSV export": "CSV-export",
+  "Email support": "E-mailsupport",
+  "Priority support": "Prioriteitssupport",
+  "What payment methods do you accept?":
+    "Welke betaalmethoden accepteren jullie?",
+  "We currently accept all major credit and debit cards. We're always looking to expand our supported payment methods.":
+    "We accepteren momenteel alle gangbare creditcards en debitcards. We kijken altijd naar meer betaalmethoden.",
+  "Can I change my plan at any time?":
+    "Kan ik op elk moment van abonnement wisselen?",
+  "Yes. You can upgrade or downgrade your plan at any time from the Billing page. Your new subscription starts immediately after payment.":
+    "Ja. Je kunt op elk moment op- of afschalen via de pagina Facturering. Je nieuwe abonnement start direct na betaling.",
+  "Can I cancel my subscription at any time?":
+    "Kan ik mijn abonnement op elk moment opzeggen?",
+  "Absolutely. There are no long-term contracts. You can cancel your subscription at any time from your Billing settings, and your plan will remain active until the end of your current billing period.":
+    "Zeker. Er zijn geen lange contracten. Je kunt je abonnement op elk moment opzeggen via Facturering, en het blijft actief tot het einde van je huidige factuurperiode.",
+  "When will I be charged?": "Wanneer wordt er afgeschreven?",
+  "Your subscription renews automatically on the same day of each billing cycle. You can always view your next billing date and upcoming charge from the Billing page.":
+    "Je abonnement verlengt automatisch op dezelfde dag van elke factuurperiode. Je volgende factuurdatum en bedrag zie je altijd op de pagina Facturering.",
+  "What happens if my payment fails?":
+    "Wat gebeurt er als mijn betaling mislukt?",
+  "If a payment can't be processed, we'll automatically retry your payment and notify you by email. If payment continues to fail, your subscription may be paused until your payment method is updated.":
+    "Als een betaling niet lukt, proberen we het automatisch opnieuw en sturen we je een e-mail. Blijft de betaling mislukken, dan kan je abonnement worden gepauzeerd tot je betaalmethode is bijgewerkt.",
+  "Where can I download my invoices?": "Waar kan ik mijn facturen downloaden?",
+  "All of your invoices are available in the Billing History section of your Billing page. You can download them at any time for your records or accounting.":
+    "Al je facturen staan in het factuuroverzicht op de pagina Facturering. Je kunt ze altijd downloaden voor je administratie of boekhouding.",
+  "Do you offer annual billing?": "Bieden jullie jaarlijkse facturering aan?",
+  "Yes. You can choose between monthly and annual billing. Annual subscriptions include a discounted rate compared to paying monthly.":
+    "Ja. Je kiest tussen maandelijks en jaarlijks betalen. Een jaarabonnement is voordeliger dan maandelijks betalen.",
+  "Will I lose my data if I downgrade?":
+    "Verlies ik mijn gegevens als ik afschaal?",
+  "No. Your data remains safely stored. If your new plan includes lower limits, some features or usage may be restricted until you're within your new plan's limits or decide to upgrade again.":
+    "Nee. Je gegevens blijven veilig bewaard. Heeft je nieuwe abonnement lagere limieten, dan kunnen sommige functies of gebruik beperkt zijn tot je binnen de nieuwe limieten valt of weer opschaalt.",
+  "What happens if I reach my monthly email limit?":
+    "Wat gebeurt er als ik mijn maandelijkse e-maillimiet bereik?",
+  "Once you've reached your monthly email allowance, your Copilots will pause sending new emails until your limit resets or you upgrade to a higher plan. Your data, settings, and Copilots remain unchanged.":
+    "Zodra je je maandtegoed hebt bereikt, versturen je copilots geen nieuwe e-mails meer tot je limiet wordt vernieuwd of je opschaalt. Je gegevens, instellingen en copilots blijven ongewijzigd.",
+  "How do refunds work?": "Hoe werken terugbetalingen?",
+  "We generally don't offer refunds for subscription payments. However, if you've experienced a billing issue or believe you've been charged incorrectly, please contact us and we'll review your case fairly.":
+    "Over het algemeen betalen we abonnementskosten niet terug. Heb je een factuurprobleem of denk je dat er onterecht is afgeschreven? Neem contact met ons op en we bekijken je situatie eerlijk.",
+  "Is my payment information secure?": "Zijn mijn betaalgegevens veilig?",
+  "Yes. All payments are processed securely through our trusted payment provider. Emailcopilot never stores your full payment card details.":
+    "Ja. Alle betalingen worden veilig verwerkt via onze vertrouwde betaalprovider. Emailcopilot slaat nooit je volledige kaartgegevens op.",
+  "How do I contact billing support?":
+    "Hoe neem ik contact op met factuursupport?",
+  "If you have any questions about your subscription, invoices, payments, or billing, our team is here to help.":
+    "Heb je vragen over je abonnement, facturen, betalingen of facturering? Ons team helpt je graag.",
 };
 
 const de: Messages = {
@@ -934,6 +1078,148 @@ const de: Messages = {
     "Verfügbarkeit: {value} (nur gewählte aktive Tage).",
   "Saving…": "Wird gespeichert…",
   "Create Schedule": "Zeitplan erstellen",
+  // Billing
+  "Could not start checkout. Try again.":
+    "Checkout konnte nicht gestartet werden. Bitte versuche es erneut.",
+  "Subscription canceled. You keep access until the end of your billing period.":
+    "Abo gekündigt. Du behältst den Zugang bis zum Ende deines Abrechnungszeitraums.",
+  "Could not cancel your subscription.": "Abo konnte nicht gekündigt werden.",
+  "Could not update your payment method. Try again.":
+    "Zahlungsmethode konnte nicht aktualisiert werden. Bitte versuche es erneut.",
+  "Your payment is still being processed. This page updates as soon as it's confirmed.":
+    "Deine Zahlung wird noch verarbeitet. Diese Seite aktualisiert sich, sobald sie bestätigt ist.",
+  "Cancel your subscription?": "Abo kündigen?",
+  "You'll keep access to your current plan until the end of your billing period. Your Copilots and data stay untouched.":
+    "Du behältst den Zugang zu deinem aktuellen Plan bis zum Ende deines Abrechnungszeitraums. Deine Copilots und Daten bleiben unverändert.",
+  "Canceling...": "Wird gekündigt...",
+  "Cancel plan": "Plan kündigen",
+  "Keep plan": "Plan behalten",
+  "Billing summary": "Abrechnungsübersicht",
+  Price: "Preis",
+  "Billing period": "Abrechnungszeitraum",
+  "Next billing date": "Nächstes Abrechnungsdatum",
+  "Amount due": "Fälliger Betrag",
+  Annual: "Jährlich",
+  Monthly: "Monatlich",
+  "Update payment method": "Zahlungsmethode aktualisieren",
+  "Current Plan": "Aktueller Plan",
+  "Subscription actions": "Abo-Aktionen",
+  "Email credits usage": "Nutzung des E-Mail-Guthabens",
+  "Emails used": "E-Mails verbraucht",
+  "{percent} % used": "{percent} % verbraucht",
+  "Monthly allowance reached. Sending resumes on {date}.":
+    "Monatskontingent erreicht. Der Versand geht am {date} weiter.",
+  "Monthly allowance reached. Sending resumes when your allowance renews.":
+    "Monatskontingent erreicht. Der Versand geht weiter, sobald dein Kontingent erneuert wird.",
+  "Your plan is canceled and stays active until {date}.":
+    "Dein Plan ist gekündigt und bleibt aktiv bis {date}.",
+  "Card on file": "Karte hinterlegt",
+  "Change plan": "Plan ändern",
+  "Plan renews on": "Verlängert sich am",
+  "Payment method": "Zahlungsmethode",
+  Update: "Aktualisieren",
+  "/ year": "/ Jahr",
+  "/ month": "/ Monat",
+  "Current plan": "Aktueller Plan",
+  "Most Popular": "Am beliebtesten",
+  "Choose plan": "Plan wählen",
+  "Included:": "Enthalten:",
+  "Perfect for individuals.": "Perfekt für Einzelpersonen.",
+  "Perfect for growing businesses.": "Perfekt für wachsende Unternehmen.",
+  "For power users and teams": "Für Power-User und Teams",
+  "Choose your plan": "Wähle deinen Plan",
+  "Billing interval": "Abrechnungsintervall",
+  "Save {percent}%": "Spare {percent}%",
+  "Back to billing": "Zurück zur Abrechnung",
+  "Cancel anytime. No long-term commitments.":
+    "Jederzeit kündbar. Keine langen Laufzeiten.",
+  "Cancel anytime": "Jederzeit kündbar",
+  "No contracts. Upgrade or downgrade anytime.":
+    "Keine Verträge. Jederzeit up- oder downgraden.",
+  "Your own email": "Deine eigene E-Mail",
+  "Every email is sent from your own connected email account.":
+    "Jede E-Mail wird von deinem eigenen verbundenen E-Mail-Konto gesendet.",
+  "Secure & reliable": "Sicher & zuverlässig",
+  "Your data is encrypted and never shared.":
+    "Deine Daten sind verschlüsselt und werden nie geteilt.",
+  Invoices: "Rechnungen",
+  "No invoices yet.": "Noch keine Rechnungen.",
+  "Download invoice": "Rechnung herunterladen",
+  Date: "Datum",
+  "View and download your past invoices.":
+    "Sieh dir deine bisherigen Rechnungen an und lade sie herunter.",
+  Invoice: "Rechnung",
+  Amount: "Betrag",
+  Download: "Herunterladen",
+  "View all invoices": "Alle Rechnungen ansehen",
+  Paid: "Bezahlt",
+  "Need help?": "Brauchst du Hilfe?",
+  "If you have any question about billing or your subscription we're here to help.":
+    "Hast du Fragen zur Abrechnung oder zu deinem Abo? Wir helfen gerne.",
+  "Find answers to common billing questions.":
+    "Finde Antworten auf häufige Abrechnungsfragen.",
+  "Contact support": "Support kontaktieren",
+  "Everything you need to know about payments, subscriptions and invoices.":
+    "Alles, was du über Zahlungen, Abos und Rechnungen wissen musst.",
+  "Search billing questions...": "Abrechnungsfragen durchsuchen...",
+  "Search billing questions": "Abrechnungsfragen durchsuchen",
+  "No questions match your search.": "Keine Fragen passen zu deiner Suche.",
+  "We're here to help. Contact our team and we'll get back to you as soon as possible.":
+    "Wir helfen gerne. Kontaktiere unser Team, wir melden uns so schnell wie möglich.",
+  "Still have questions?": "Noch Fragen?",
+  "Email us": "Schreib uns",
+  "1 email account": "1 E-Mail-Konto",
+  "3 email accounts": "3 E-Mail-Konten",
+  "5 email accounts": "5 E-Mail-Konten",
+  "500 emails/month": "500 E-Mails/Monat",
+  "1,200 emails/month": "1.200 E-Mails/Monat",
+  "3,000 emails/month": "3.000 E-Mails/Monat",
+  "CSV export": "CSV-Export",
+  "Email support": "E-Mail-Support",
+  "Priority support": "Priorisierter Support",
+  "What payment methods do you accept?":
+    "Welche Zahlungsmethoden akzeptiert ihr?",
+  "We currently accept all major credit and debit cards. We're always looking to expand our supported payment methods.":
+    "Wir akzeptieren derzeit alle gängigen Kredit- und Debitkarten. Wir arbeiten daran, weitere Zahlungsmethoden anzubieten.",
+  "Can I change my plan at any time?": "Kann ich meinen Plan jederzeit ändern?",
+  "Yes. You can upgrade or downgrade your plan at any time from the Billing page. Your new subscription starts immediately after payment.":
+    "Ja. Du kannst jederzeit auf der Abrechnungsseite up- oder downgraden. Dein neues Abo startet direkt nach der Zahlung.",
+  "Can I cancel my subscription at any time?":
+    "Kann ich mein Abo jederzeit kündigen?",
+  "Absolutely. There are no long-term contracts. You can cancel your subscription at any time from your Billing settings, and your plan will remain active until the end of your current billing period.":
+    "Auf jeden Fall. Es gibt keine langen Laufzeiten. Du kannst dein Abo jederzeit in den Abrechnungseinstellungen kündigen, und dein Plan bleibt bis zum Ende des aktuellen Abrechnungszeitraums aktiv.",
+  "When will I be charged?": "Wann wird abgebucht?",
+  "Your subscription renews automatically on the same day of each billing cycle. You can always view your next billing date and upcoming charge from the Billing page.":
+    "Dein Abo verlängert sich automatisch am selben Tag jedes Abrechnungszyklus. Dein nächstes Abrechnungsdatum und den Betrag siehst du jederzeit auf der Abrechnungsseite.",
+  "What happens if my payment fails?":
+    "Was passiert, wenn meine Zahlung fehlschlägt?",
+  "If a payment can't be processed, we'll automatically retry your payment and notify you by email. If payment continues to fail, your subscription may be paused until your payment method is updated.":
+    "Wenn eine Zahlung nicht verarbeitet werden kann, versuchen wir es automatisch erneut und benachrichtigen dich per E-Mail. Schlägt die Zahlung weiterhin fehl, kann dein Abo pausiert werden, bis deine Zahlungsmethode aktualisiert ist.",
+  "Where can I download my invoices?":
+    "Wo kann ich meine Rechnungen herunterladen?",
+  "All of your invoices are available in the Billing History section of your Billing page. You can download them at any time for your records or accounting.":
+    "Alle deine Rechnungen findest du im Bereich Rechnungen auf der Abrechnungsseite. Du kannst sie jederzeit für deine Unterlagen oder Buchhaltung herunterladen.",
+  "Do you offer annual billing?": "Bietet ihr jährliche Abrechnung an?",
+  "Yes. You can choose between monthly and annual billing. Annual subscriptions include a discounted rate compared to paying monthly.":
+    "Ja. Du kannst zwischen monatlicher und jährlicher Abrechnung wählen. Jahresabos sind günstiger als monatliche Zahlung.",
+  "Will I lose my data if I downgrade?":
+    "Verliere ich meine Daten beim Downgrade?",
+  "No. Your data remains safely stored. If your new plan includes lower limits, some features or usage may be restricted until you're within your new plan's limits or decide to upgrade again.":
+    "Nein. Deine Daten bleiben sicher gespeichert. Hat dein neuer Plan niedrigere Limits, können einige Funktionen oder die Nutzung eingeschränkt sein, bis du innerhalb der neuen Limits bist oder wieder upgradest.",
+  "What happens if I reach my monthly email limit?":
+    "Was passiert, wenn ich mein monatliches E-Mail-Limit erreiche?",
+  "Once you've reached your monthly email allowance, your Copilots will pause sending new emails until your limit resets or you upgrade to a higher plan. Your data, settings, and Copilots remain unchanged.":
+    "Sobald dein Monatskontingent erreicht ist, senden deine Copilots keine neuen E-Mails mehr, bis dein Limit zurückgesetzt wird oder du upgradest. Deine Daten, Einstellungen und Copilots bleiben unverändert.",
+  "How do refunds work?": "Wie funktionieren Rückerstattungen?",
+  "We generally don't offer refunds for subscription payments. However, if you've experienced a billing issue or believe you've been charged incorrectly, please contact us and we'll review your case fairly.":
+    "In der Regel erstatten wir Abo-Zahlungen nicht. Wenn du ein Abrechnungsproblem hattest oder glaubst, falsch belastet worden zu sein, kontaktiere uns und wir prüfen deinen Fall fair.",
+  "Is my payment information secure?": "Sind meine Zahlungsdaten sicher?",
+  "Yes. All payments are processed securely through our trusted payment provider. Emailcopilot never stores your full payment card details.":
+    "Ja. Alle Zahlungen werden sicher über unseren vertrauenswürdigen Zahlungsanbieter abgewickelt. Emailcopilot speichert nie deine vollständigen Kartendaten.",
+  "How do I contact billing support?":
+    "Wie erreiche ich den Abrechnungssupport?",
+  "If you have any questions about your subscription, invoices, payments, or billing, our team is here to help.":
+    "Wenn du Fragen zu deinem Abo, Rechnungen, Zahlungen oder zur Abrechnung hast, hilft dir unser Team gerne.",
 };
 
 const fr: Messages = {
@@ -1401,6 +1687,152 @@ const fr: Messages = {
     "Disponibilité : {value} (jours actifs choisis uniquement).",
   "Saving…": "Enregistrement…",
   "Create Schedule": "Créer le planning",
+  // Billing
+  "Could not start checkout. Try again.":
+    "Impossible de lancer le paiement. Veuillez réessayer.",
+  "Subscription canceled. You keep access until the end of your billing period.":
+    "Abonnement résilié. Vous gardez l'accès jusqu'à la fin de votre période de facturation.",
+  "Could not cancel your subscription.":
+    "Impossible de résilier votre abonnement.",
+  "Could not update your payment method. Try again.":
+    "Impossible de mettre à jour votre moyen de paiement. Veuillez réessayer.",
+  "Your payment is still being processed. This page updates as soon as it's confirmed.":
+    "Votre paiement est en cours de traitement. Cette page se met à jour dès sa confirmation.",
+  "Cancel your subscription?": "Résilier votre abonnement ?",
+  "You'll keep access to your current plan until the end of your billing period. Your Copilots and data stay untouched.":
+    "Vous gardez l'accès à votre offre actuelle jusqu'à la fin de votre période de facturation. Vos copilots et vos données restent intacts.",
+  "Canceling...": "Résiliation...",
+  "Cancel plan": "Résilier l'offre",
+  "Keep plan": "Garder l'offre",
+  "Billing summary": "Récapitulatif de facturation",
+  Plan: "Offre",
+  Price: "Prix",
+  "Billing period": "Période de facturation",
+  "Next billing date": "Prochaine date de facturation",
+  "Amount due": "Montant dû",
+  Annual: "Annuel",
+  Monthly: "Mensuel",
+  "Update payment method": "Mettre à jour le moyen de paiement",
+  "Current Plan": "Offre actuelle",
+  "Subscription actions": "Actions de l'abonnement",
+  "Email credits usage": "Utilisation des crédits e-mail",
+  "Emails used": "E-mails utilisés",
+  "{percent} % used": "{percent} % utilisés",
+  "Monthly allowance reached. Sending resumes on {date}.":
+    "Quota mensuel atteint. L'envoi reprend le {date}.",
+  "Monthly allowance reached. Sending resumes when your allowance renews.":
+    "Quota mensuel atteint. L'envoi reprend dès le renouvellement de votre quota.",
+  "Your plan is canceled and stays active until {date}.":
+    "Votre offre est résiliée et reste active jusqu'au {date}.",
+  "Card on file": "Carte enregistrée",
+  "Change plan": "Changer d'offre",
+  "Plan renews on": "Renouvellement le",
+  "Payment method": "Moyen de paiement",
+  Update: "Modifier",
+  "/ year": "/ an",
+  "/ month": "/ mois",
+  "Current plan": "Offre actuelle",
+  "Most Popular": "La plus populaire",
+  "Choose plan": "Choisir l'offre",
+  "Included:": "Inclus :",
+  "Perfect for individuals.": "Parfait pour les indépendants.",
+  "Perfect for growing businesses.":
+    "Parfait pour les entreprises en croissance.",
+  "For power users and teams": "Pour les utilisateurs intensifs et les équipes",
+  "Choose your plan": "Choisissez votre offre",
+  "Billing interval": "Périodicité de facturation",
+  "Save {percent}%": "Économisez {percent} %",
+  "Back to billing": "Retour à la facturation",
+  "Cancel anytime. No long-term commitments.":
+    "Résiliable à tout moment. Sans engagement long.",
+  "Cancel anytime": "Résiliable à tout moment",
+  "No contracts. Upgrade or downgrade anytime.":
+    "Sans contrat. Changez d'offre quand vous voulez.",
+  "Your own email": "Votre propre e-mail",
+  "Every email is sent from your own connected email account.":
+    "Chaque e-mail est envoyé depuis votre propre compte e-mail connecté.",
+  "Secure & reliable": "Sûr et fiable",
+  "Your data is encrypted and never shared.":
+    "Vos données sont chiffrées et jamais partagées.",
+  Invoices: "Factures",
+  "No invoices yet.": "Aucune facture pour l'instant.",
+  "Download invoice": "Télécharger la facture",
+  "View and download your past invoices.":
+    "Consultez et téléchargez vos factures passées.",
+  Invoice: "Facture",
+  Amount: "Montant",
+  Download: "Télécharger",
+  "View all invoices": "Voir toutes les factures",
+  Paid: "Payée",
+  "Need help?": "Besoin d'aide ?",
+  "If you have any question about billing or your subscription we're here to help.":
+    "Une question sur la facturation ou votre abonnement ? Nous sommes là pour vous aider.",
+  "Find answers to common billing questions.":
+    "Trouvez des réponses aux questions fréquentes sur la facturation.",
+  "Contact support": "Contacter le support",
+  "Everything you need to know about payments, subscriptions and invoices.":
+    "Tout ce qu'il faut savoir sur les paiements, abonnements et factures.",
+  "Search billing questions...": "Rechercher dans les questions...",
+  "Search billing questions": "Rechercher dans les questions de facturation",
+  "No questions match your search.":
+    "Aucune question ne correspond à votre recherche.",
+  "We're here to help. Contact our team and we'll get back to you as soon as possible.":
+    "Nous sommes là pour vous aider. Contactez notre équipe, nous vous répondrons au plus vite.",
+  "Still have questions?": "Encore des questions ?",
+  "Email us": "Écrivez-nous",
+  "1 email account": "1 compte e-mail",
+  "3 email accounts": "3 comptes e-mail",
+  "5 email accounts": "5 comptes e-mail",
+  "500 emails/month": "500 e-mails/mois",
+  "1,200 emails/month": "1 200 e-mails/mois",
+  "3,000 emails/month": "3 000 e-mails/mois",
+  "CSV export": "Export CSV",
+  "Email support": "Support par e-mail",
+  "Priority support": "Support prioritaire",
+  "What payment methods do you accept?":
+    "Quels moyens de paiement acceptez-vous ?",
+  "We currently accept all major credit and debit cards. We're always looking to expand our supported payment methods.":
+    "Nous acceptons actuellement toutes les principales cartes de crédit et de débit. Nous cherchons toujours à ajouter d'autres moyens de paiement.",
+  "Can I change my plan at any time?":
+    "Puis-je changer d'offre à tout moment ?",
+  "Yes. You can upgrade or downgrade your plan at any time from the Billing page. Your new subscription starts immediately after payment.":
+    "Oui. Vous pouvez passer à une offre supérieure ou inférieure à tout moment depuis la page Facturation. Votre nouvel abonnement démarre dès le paiement.",
+  "Can I cancel my subscription at any time?":
+    "Puis-je résilier mon abonnement à tout moment ?",
+  "Absolutely. There are no long-term contracts. You can cancel your subscription at any time from your Billing settings, and your plan will remain active until the end of your current billing period.":
+    "Absolument. Il n'y a pas d'engagement long. Vous pouvez résilier à tout moment depuis la Facturation, et votre offre reste active jusqu'à la fin de la période en cours.",
+  "When will I be charged?": "Quand serai-je débité ?",
+  "Your subscription renews automatically on the same day of each billing cycle. You can always view your next billing date and upcoming charge from the Billing page.":
+    "Votre abonnement se renouvelle automatiquement le même jour à chaque cycle. Vous voyez toujours votre prochaine date de facturation et le montant sur la page Facturation.",
+  "What happens if my payment fails?":
+    "Que se passe-t-il si mon paiement échoue ?",
+  "If a payment can't be processed, we'll automatically retry your payment and notify you by email. If payment continues to fail, your subscription may be paused until your payment method is updated.":
+    "Si un paiement ne peut pas être traité, nous réessayons automatiquement et vous prévenons par e-mail. Si le paiement échoue encore, votre abonnement peut être suspendu jusqu'à la mise à jour de votre moyen de paiement.",
+  "Where can I download my invoices?": "Où puis-je télécharger mes factures ?",
+  "All of your invoices are available in the Billing History section of your Billing page. You can download them at any time for your records or accounting.":
+    "Toutes vos factures sont disponibles dans la section Factures de la page Facturation. Vous pouvez les télécharger à tout moment pour votre comptabilité.",
+  "Do you offer annual billing?": "Proposez-vous une facturation annuelle ?",
+  "Yes. You can choose between monthly and annual billing. Annual subscriptions include a discounted rate compared to paying monthly.":
+    "Oui. Vous pouvez choisir entre une facturation mensuelle ou annuelle. L'abonnement annuel est moins cher que le paiement mensuel.",
+  "Will I lose my data if I downgrade?":
+    "Vais-je perdre mes données si je passe à une offre inférieure ?",
+  "No. Your data remains safely stored. If your new plan includes lower limits, some features or usage may be restricted until you're within your new plan's limits or decide to upgrade again.":
+    "Non. Vos données restent stockées en sécurité. Si votre nouvelle offre a des limites plus basses, certaines fonctions ou usages peuvent être restreints jusqu'à ce que vous respectiez les nouvelles limites ou repassiez à une offre supérieure.",
+  "What happens if I reach my monthly email limit?":
+    "Que se passe-t-il si j'atteins ma limite mensuelle d'e-mails ?",
+  "Once you've reached your monthly email allowance, your Copilots will pause sending new emails until your limit resets or you upgrade to a higher plan. Your data, settings, and Copilots remain unchanged.":
+    "Une fois votre quota mensuel atteint, vos copilots n'envoient plus de nouveaux e-mails jusqu'au renouvellement de votre limite ou à un passage à une offre supérieure. Vos données, réglages et copilots restent inchangés.",
+  "How do refunds work?": "Comment fonctionnent les remboursements ?",
+  "We generally don't offer refunds for subscription payments. However, if you've experienced a billing issue or believe you've been charged incorrectly, please contact us and we'll review your case fairly.":
+    "En général, nous ne remboursons pas les paiements d'abonnement. Si vous avez rencontré un problème de facturation ou pensez avoir été débité à tort, contactez-nous et nous examinerons votre cas équitablement.",
+  "Is my payment information secure?":
+    "Mes informations de paiement sont-elles sécurisées ?",
+  "Yes. All payments are processed securely through our trusted payment provider. Emailcopilot never stores your full payment card details.":
+    "Oui. Tous les paiements sont traités en toute sécurité par notre prestataire de paiement de confiance. Emailcopilot ne stocke jamais vos données de carte complètes.",
+  "How do I contact billing support?":
+    "Comment contacter le support facturation ?",
+  "If you have any questions about your subscription, invoices, payments, or billing, our team is here to help.":
+    "Pour toute question sur votre abonnement, vos factures, vos paiements ou la facturation, notre équipe est là pour vous aider.",
 };
 
 const es: Messages = {
@@ -1868,6 +2300,146 @@ const es: Messages = {
     "Disponibilidad: {value} (solo los días activos elegidos).",
   "Saving…": "Guardando…",
   "Create Schedule": "Crear horario",
+  // Billing
+  "Could not start checkout. Try again.":
+    "No se pudo iniciar el pago. Inténtalo de nuevo.",
+  "Subscription canceled. You keep access until the end of your billing period.":
+    "Suscripción cancelada. Mantienes el acceso hasta el final de tu periodo de facturación.",
+  "Could not cancel your subscription.": "No se pudo cancelar tu suscripción.",
+  "Could not update your payment method. Try again.":
+    "No se pudo actualizar tu método de pago. Inténtalo de nuevo.",
+  "Your payment is still being processed. This page updates as soon as it's confirmed.":
+    "Tu pago aún se está procesando. Esta página se actualiza en cuanto se confirme.",
+  "Cancel your subscription?": "¿Cancelar tu suscripción?",
+  "You'll keep access to your current plan until the end of your billing period. Your Copilots and data stay untouched.":
+    "Mantendrás el acceso a tu plan actual hasta el final de tu periodo de facturación. Tus copilots y datos no se tocan.",
+  "Canceling...": "Cancelando...",
+  "Cancel plan": "Cancelar plan",
+  "Keep plan": "Mantener plan",
+  "Billing summary": "Resumen de facturación",
+  Price: "Precio",
+  "Billing period": "Periodo de facturación",
+  "Next billing date": "Próxima fecha de cobro",
+  "Amount due": "Importe a pagar",
+  Annual: "Anual",
+  Monthly: "Mensual",
+  "Update payment method": "Actualizar método de pago",
+  "Current Plan": "Plan actual",
+  "Subscription actions": "Acciones de la suscripción",
+  "Email credits usage": "Uso de créditos de correo",
+  "Emails used": "Correos usados",
+  "{percent} % used": "{percent} % usado",
+  "Monthly allowance reached. Sending resumes on {date}.":
+    "Límite mensual alcanzado. Los envíos se reanudan el {date}.",
+  "Monthly allowance reached. Sending resumes when your allowance renews.":
+    "Límite mensual alcanzado. Los envíos se reanudan cuando se renueve tu cuota.",
+  "Your plan is canceled and stays active until {date}.":
+    "Tu plan está cancelado y sigue activo hasta el {date}.",
+  "Card on file": "Tarjeta registrada",
+  "Change plan": "Cambiar plan",
+  "Plan renews on": "Se renueva el",
+  "Payment method": "Método de pago",
+  Update: "Actualizar",
+  "/ year": "/ año",
+  "/ month": "/ mes",
+  "Current plan": "Plan actual",
+  "Most Popular": "Más popular",
+  "Choose plan": "Elegir plan",
+  "Included:": "Incluye:",
+  "Perfect for individuals.": "Perfecto para profesionales independientes.",
+  "Perfect for growing businesses.": "Perfecto para empresas en crecimiento.",
+  "For power users and teams": "Para usuarios avanzados y equipos",
+  "Choose your plan": "Elige tu plan",
+  "Billing interval": "Periodicidad de facturación",
+  "Save {percent}%": "Ahorra {percent}%",
+  "Back to billing": "Volver a facturación",
+  "Cancel anytime. No long-term commitments.":
+    "Cancela cuando quieras. Sin permanencia.",
+  "Cancel anytime": "Cancela cuando quieras",
+  "No contracts. Upgrade or downgrade anytime.":
+    "Sin contratos. Cambia de plan cuando quieras.",
+  "Your own email": "Tu propio correo",
+  "Every email is sent from your own connected email account.":
+    "Cada correo se envía desde tu propia cuenta de correo conectada.",
+  "Secure & reliable": "Seguro y fiable",
+  "Your data is encrypted and never shared.":
+    "Tus datos están cifrados y nunca se comparten.",
+  Invoices: "Facturas",
+  "No invoices yet.": "Aún no hay facturas.",
+  "Download invoice": "Descargar factura",
+  Date: "Fecha",
+  "View and download your past invoices.":
+    "Consulta y descarga tus facturas anteriores.",
+  Invoice: "Factura",
+  Amount: "Importe",
+  Download: "Descargar",
+  "View all invoices": "Ver todas las facturas",
+  Paid: "Pagada",
+  "Need help?": "¿Necesitas ayuda?",
+  "If you have any question about billing or your subscription we're here to help.":
+    "Si tienes alguna pregunta sobre facturación o tu suscripción, estamos aquí para ayudarte.",
+  "Find answers to common billing questions.":
+    "Encuentra respuestas a preguntas frecuentes de facturación.",
+  "Contact support": "Contactar con soporte",
+  "Everything you need to know about payments, subscriptions and invoices.":
+    "Todo lo que necesitas saber sobre pagos, suscripciones y facturas.",
+  "Search billing questions...": "Buscar preguntas de facturación...",
+  "Search billing questions": "Buscar preguntas de facturación",
+  "No questions match your search.":
+    "Ninguna pregunta coincide con tu búsqueda.",
+  "We're here to help. Contact our team and we'll get back to you as soon as possible.":
+    "Estamos aquí para ayudarte. Contacta con nuestro equipo y te responderemos lo antes posible.",
+  "Still have questions?": "¿Aún tienes preguntas?",
+  "Email us": "Escríbenos",
+  "1 email account": "1 cuenta de correo",
+  "3 email accounts": "3 cuentas de correo",
+  "5 email accounts": "5 cuentas de correo",
+  "500 emails/month": "500 correos/mes",
+  "1,200 emails/month": "1.200 correos/mes",
+  "3,000 emails/month": "3.000 correos/mes",
+  "CSV export": "Exportación CSV",
+  "Email support": "Soporte por correo",
+  "Priority support": "Soporte prioritario",
+  "What payment methods do you accept?": "¿Qué métodos de pago aceptáis?",
+  "We currently accept all major credit and debit cards. We're always looking to expand our supported payment methods.":
+    "Actualmente aceptamos las principales tarjetas de crédito y débito. Siempre buscamos ampliar los métodos de pago.",
+  "Can I change my plan at any time?":
+    "¿Puedo cambiar de plan en cualquier momento?",
+  "Yes. You can upgrade or downgrade your plan at any time from the Billing page. Your new subscription starts immediately after payment.":
+    "Sí. Puedes subir o bajar de plan en cualquier momento desde la página de Facturación. Tu nueva suscripción empieza justo después del pago.",
+  "Can I cancel my subscription at any time?":
+    "¿Puedo cancelar mi suscripción en cualquier momento?",
+  "Absolutely. There are no long-term contracts. You can cancel your subscription at any time from your Billing settings, and your plan will remain active until the end of your current billing period.":
+    "Por supuesto. No hay permanencia. Puedes cancelar en cualquier momento desde Facturación y tu plan seguirá activo hasta el final del periodo actual.",
+  "When will I be charged?": "¿Cuándo se me cobrará?",
+  "Your subscription renews automatically on the same day of each billing cycle. You can always view your next billing date and upcoming charge from the Billing page.":
+    "Tu suscripción se renueva automáticamente el mismo día de cada ciclo. Siempre puedes ver tu próxima fecha de cobro y el importe en la página de Facturación.",
+  "What happens if my payment fails?": "¿Qué pasa si falla mi pago?",
+  "If a payment can't be processed, we'll automatically retry your payment and notify you by email. If payment continues to fail, your subscription may be paused until your payment method is updated.":
+    "Si no se puede procesar un pago, lo reintentaremos automáticamente y te avisaremos por correo. Si sigue fallando, tu suscripción puede pausarse hasta que actualices tu método de pago.",
+  "Where can I download my invoices?": "¿Dónde puedo descargar mis facturas?",
+  "All of your invoices are available in the Billing History section of your Billing page. You can download them at any time for your records or accounting.":
+    "Todas tus facturas están en la sección Facturas de la página de Facturación. Puedes descargarlas cuando quieras para tu contabilidad.",
+  "Do you offer annual billing?": "¿Ofrecéis facturación anual?",
+  "Yes. You can choose between monthly and annual billing. Annual subscriptions include a discounted rate compared to paying monthly.":
+    "Sí. Puedes elegir entre facturación mensual o anual. La suscripción anual sale más barata que pagar mes a mes.",
+  "Will I lose my data if I downgrade?": "¿Perderé mis datos si bajo de plan?",
+  "No. Your data remains safely stored. If your new plan includes lower limits, some features or usage may be restricted until you're within your new plan's limits or decide to upgrade again.":
+    "No. Tus datos siguen guardados de forma segura. Si tu nuevo plan tiene límites más bajos, algunas funciones o usos pueden quedar limitados hasta que estés dentro de los nuevos límites o vuelvas a subir de plan.",
+  "What happens if I reach my monthly email limit?":
+    "¿Qué pasa si alcanzo mi límite mensual de correos?",
+  "Once you've reached your monthly email allowance, your Copilots will pause sending new emails until your limit resets or you upgrade to a higher plan. Your data, settings, and Copilots remain unchanged.":
+    "Cuando alcances tu cuota mensual, tus copilots dejarán de enviar correos nuevos hasta que se renueve tu límite o subas de plan. Tus datos, ajustes y copilots no cambian.",
+  "How do refunds work?": "¿Cómo funcionan los reembolsos?",
+  "We generally don't offer refunds for subscription payments. However, if you've experienced a billing issue or believe you've been charged incorrectly, please contact us and we'll review your case fairly.":
+    "Por lo general no reembolsamos pagos de suscripción. Si has tenido un problema de facturación o crees que se te ha cobrado por error, contáctanos y revisaremos tu caso de forma justa.",
+  "Is my payment information secure?": "¿Están seguros mis datos de pago?",
+  "Yes. All payments are processed securely through our trusted payment provider. Emailcopilot never stores your full payment card details.":
+    "Sí. Todos los pagos se procesan de forma segura a través de nuestro proveedor de pagos de confianza. Emailcopilot nunca guarda los datos completos de tu tarjeta.",
+  "How do I contact billing support?":
+    "¿Cómo contacto con el soporte de facturación?",
+  "If you have any questions about your subscription, invoices, payments, or billing, our team is here to help.":
+    "Si tienes preguntas sobre tu suscripción, facturas, pagos o facturación, nuestro equipo está aquí para ayudarte.",
 };
 
 export const MESSAGES: Record<string, Messages> = { nl, de, fr, es };
