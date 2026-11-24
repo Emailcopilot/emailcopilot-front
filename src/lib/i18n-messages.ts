@@ -213,6 +213,29 @@ const nl: Messages = {
   Replied: "Beantwoord",
   Failed: "Mislukt",
   Skipped: "Overgeslagen",
+  // Overview
+  "Emails Sent": "Verzonden e-mails",
+  Replies: "Antwoorden",
+  "Reply Rate": "Antwoordpercentage",
+  "This metric isn't live yet": "Deze statistiek is nog niet live",
+  "Coming soon": "Binnenkort",
+  "View all": "Bekijk alles",
+  Performance: "Prestaties",
+  "Last 7 days": "Laatste 7 dagen",
+  "Last 14 days": "Laatste 14 dagen",
+  "Last 30 days": "Laatste 30 dagen",
+  "No copilots found": "Geen copilots gevonden",
+  "No departure found": "Nog geen departures",
+  "Quick start": "Snel starten",
+  "Create a copilot": "Maak een copilot",
+  "Add email account": "E-mailaccount toevoegen",
+  "Create a target audience": "Maak een doelgroep",
+  "Create an email template": "Maak een e-mailtemplate",
+  "Create a flight schedule": "Maak een flight schedule",
+  "Your data is encrypted and secure. We only use your email account to send emails on your behalf.":
+    "Je gegevens zijn versleuteld en veilig. We gebruiken je e-mailaccount alleen om namens jou e-mails te versturen.",
+  "Learn more": "Meer informatie",
+  "vs {range}": "t.o.v. {range}",
 };
 
 const de: Messages = {
@@ -421,6 +444,29 @@ const de: Messages = {
   Replied: "Beantwortet",
   Failed: "Fehlgeschlagen",
   Skipped: "Übersprungen",
+  // Overview
+  "Emails Sent": "Gesendete E-Mails",
+  Replies: "Antworten",
+  "Reply Rate": "Antwortrate",
+  "This metric isn't live yet": "Diese Kennzahl ist noch nicht live",
+  "Coming soon": "Demnächst",
+  "View all": "Alle ansehen",
+  Performance: "Leistung",
+  "Last 7 days": "Letzte 7 Tage",
+  "Last 14 days": "Letzte 14 Tage",
+  "Last 30 days": "Letzte 30 Tage",
+  "No copilots found": "Keine Copilots gefunden",
+  "No departure found": "Noch keine Departures",
+  "Quick start": "Schnellstart",
+  "Create a copilot": "Copilot erstellen",
+  "Add email account": "E-Mail-Konto hinzufügen",
+  "Create a target audience": "Zielgruppe erstellen",
+  "Create an email template": "E-Mail-Vorlage erstellen",
+  "Create a flight schedule": "Flight Schedule erstellen",
+  "Your data is encrypted and secure. We only use your email account to send emails on your behalf.":
+    "Deine Daten sind verschlüsselt und sicher. Wir nutzen dein E-Mail-Konto nur, um in deinem Namen E-Mails zu senden.",
+  "Learn more": "Mehr erfahren",
+  "vs {range}": "vs. {range}",
 };
 
 const fr: Messages = {
@@ -629,6 +675,28 @@ const fr: Messages = {
   Replied: "Répondu",
   Failed: "Échec",
   Skipped: "Ignoré",
+  // Overview
+  "Emails Sent": "E-mails envoyés",
+  Replies: "Réponses",
+  "Reply Rate": "Taux de réponse",
+  "This metric isn't live yet": "Cette statistique n'est pas encore disponible",
+  "Coming soon": "Bientôt",
+  "View all": "Tout voir",
+  Performance: "Performances",
+  "Last 7 days": "7 derniers jours",
+  "Last 14 days": "14 derniers jours",
+  "Last 30 days": "30 derniers jours",
+  "No copilots found": "Aucun copilot trouvé",
+  "No departure found": "Aucun départ pour l'instant",
+  "Quick start": "Démarrage rapide",
+  "Create a copilot": "Créer un copilot",
+  "Add email account": "Ajouter un compte e-mail",
+  "Create a target audience": "Créer une audience",
+  "Create an email template": "Créer un modèle d'e-mail",
+  "Create a flight schedule": "Créer un flight schedule",
+  "Your data is encrypted and secure. We only use your email account to send emails on your behalf.":
+    "Vos données sont chiffrées et sécurisées. Nous utilisons votre compte e-mail uniquement pour envoyer des e-mails en votre nom.",
+  "Learn more": "En savoir plus",
 };
 
 const es: Messages = {
@@ -838,6 +906,28 @@ const es: Messages = {
   Replied: "Respondido",
   Failed: "Fallido",
   Skipped: "Omitido",
+  // Overview
+  "Emails Sent": "Correos enviados",
+  Replies: "Respuestas",
+  "Reply Rate": "Tasa de respuesta",
+  "This metric isn't live yet": "Esta métrica aún no está disponible",
+  "Coming soon": "Próximamente",
+  "View all": "Ver todo",
+  Performance: "Rendimiento",
+  "Last 7 days": "Últimos 7 días",
+  "Last 14 days": "Últimos 14 días",
+  "Last 30 days": "Últimos 30 días",
+  "No copilots found": "No se encontraron copilots",
+  "No departure found": "Aún no hay salidas",
+  "Quick start": "Inicio rápido",
+  "Create a copilot": "Crear un copilot",
+  "Add email account": "Añadir cuenta de correo",
+  "Create a target audience": "Crear una audiencia",
+  "Create an email template": "Crear una plantilla de correo",
+  "Create a flight schedule": "Crear un flight schedule",
+  "Your data is encrypted and secure. We only use your email account to send emails on your behalf.":
+    "Tus datos están cifrados y seguros. Solo usamos tu cuenta de correo para enviar correos en tu nombre.",
+  "Learn more": "Más información",
 };
 
 export const MESSAGES: Record<string, Messages> = { nl, de, fr, es };
