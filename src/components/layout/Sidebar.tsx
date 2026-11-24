@@ -8,9 +8,11 @@ import { useUser } from "@clerk/nextjs";
 import UserCard from "../ui/UserCard";
 import Logo from "../homepage/Logo";
 import { isNavActive, navGroups } from "@/lib/nav-items";
+import { useI18n } from "@/lib/i18n";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { t } = useI18n();
   //get user from Clerk to show in sidebar
   const { user } = useUser();
   console.log("User in Sidebar:", user); // Debugging line to check user object
@@ -72,7 +74,7 @@ export default function Sidebar() {
                 >
                   {group.label && (
                     <div className="px-3 pb-2 text-xs font-medium uppercase tracking-wider text-gray-400">
-                      {group.label}
+                      {t(group.label)}
                     </div>
                   )}
                   <div className="space-y-1">
@@ -98,7 +100,7 @@ export default function Sidebar() {
                               isActive ? "text-primary" : "text-gray-400"
                             }
                           />
-                          <span>{label}</span>
+                          <span>{t(label)}</span>
                         </Link>
                       );
                     })}
