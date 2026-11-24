@@ -13,6 +13,7 @@ import {
 import ActionMenu from "../ActionMenu";
 import ProgressBar from "../ProgressBar";
 import { emailQuota } from "@/lib/limits";
+import { useI18n } from "@/lib/i18n";
 
 interface CurrentPlanCardProps {
   plan: Plan | null;
@@ -33,6 +34,8 @@ export default function CurrentPlanCard({
   onUpdatePaymentMethod,
   isUpdatingPaymentMethod,
 }: CurrentPlanCardProps) {
+  const { t, locale } = useI18n();
+  const dateLocale = locale === "en" ? "en-US" : locale;
   const PlanIcon = PLAN_ICONS[plan?.id ?? "starter"] ?? PLAN_ICONS.starter;
   const quota = emailQuota(limits);
   const emailsSent = quota?.used ?? 0;
@@ -54,13 +57,13 @@ export default function CurrentPlanCard({
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6">
       <div className="flex items-start justify-between gap-4">
-        <h2 className="text-lg font-bold text-gray-900">Current Plan</h2>
+        <h2 className="text-lg font-bold text-gray-900">{t("Current Plan")}</h2>
         {!isCanceling && (
           <ActionMenu
-            ariaLabel="Subscription actions"
+            ariaLabel={t("Subscription actions")}
             items={[
               {
-                label: "Cancel plan",
+                label: t("Cancel plan"),
                 icon: XCircle,
                 variant: "danger",
                 onSelect: onCancel,
@@ -85,7 +88,7 @@ export default function CurrentPlanCard({
                 <span className="font-semibold text-gray-900">
                   €{displayPrice}
                 </span>{" "}
-                / {billingPeriod}
+                / {t(billingPeriod)}
               </p>
             </div>
           </div>
@@ -97,7 +100,9 @@ export default function CurrentPlanCard({
                   size={18}
                   className="shrink-0 fill-primary text-white"
                 />
-                <span className="text-sm text-gray-700">{formatPlanFeature(feature)}</span>
+                <span className="text-sm text-gray-700">
+                  {t(formatPlanFeature(feature))}
+                </span>
               </li>
             ))}
           </ul>
@@ -107,32 +112,34 @@ export default function CurrentPlanCard({
             onClick={onChangePlan}
             className="btn-cta mt-6 w-full rounded-lg border border-transparent px-4 py-2.5 text-sm font-semibold text-white sm:w-auto sm:self-start sm:px-6"
           >
-            Change plan
+            {t("Change plan")}
           </button>
         </div>
 
         {/* Usage */}
         <div className="rounded-xl border border-gray-200 p-5">
-          <p className="text-sm font-bold text-gray-900">Email credits usage</p>
+          <p className="text-sm font-bold text-gray-900">{t("Email credits usage")}</p>
 
           <p className="mt-3 text-2xl font-bold text-primary">
             {emailsSent}{" "}
             <span className="text-gray-900">/ {emailsLimit}</span>
           </p>
-          <p className="text-xs text-gray-500">Emails used</p>
+          <p className="text-xs text-gray-500">{t("Emails used")}</p>
 
           <div className="mt-4">
             <ProgressBar percent={emailsPercent} />
             <p className="mt-2 text-right text-xs text-gray-500">
-              {Math.round(emailsPercent)} % used
+              {t("{percent} % used", { percent: Math.round(emailsPercent) })}
             </p>
             {quota?.atLimit && (
               <p className="mt-2 text-xs font-medium text-red-600">
-                Monthly allowance reached. Sending resumes
                 {quota.resetAt
-                  ? ` on ${formatBillingDate(quota.resetAt)}`
-                  : " when your allowance renews"}
-                .
+                  ? t("Monthly allowance reached. Sending resumes on {date}.", {
+                      date: formatBillingDate(quota.resetAt, dateLocale),
+                    })
+                  : t(
+                      "Monthly allowance reached. Sending resumes when your allowance renews.",
+                    )}
               </p>
             )}
           </div>
@@ -141,10 +148,10 @@ export default function CurrentPlanCard({
 
           <div className="flex items-center justify-between gap-3">
             <span className="text-sm font-bold text-gray-900">
-              Plan renews on
+              {t("Plan renews on")}
             </span>
             <span className="text-xs text-gray-500">
-              {formatBillingDate(subscription?.currentPeriodEnd)}
+              {formatBillingDate(subscription?.currentPeriodEnd, dateLocale)}
             </span>
           </div>
 
@@ -158,10 +165,10 @@ export default function CurrentPlanCard({
               literal below with those values. */}
           <div className="flex items-center justify-between gap-3">
             <span className="text-sm font-bold text-gray-900">
-              Payment method
+              {t("Payment method")}
             </span>
             <span className="flex items-center gap-2 text-xs text-gray-500">
-              Card on file
+              {t("Card on file")}
               <button
                 type="button"
                 onClick={onUpdatePaymentMethod}
@@ -171,7 +178,7 @@ export default function CurrentPlanCard({
                 {isUpdatingPaymentMethod && (
                   <Loader2 size={12} className="animate-spin" />
                 )}
-                Update
+                {t("Update")}
               </button>
             </span>
           </div>
@@ -180,8 +187,9 @@ export default function CurrentPlanCard({
 
       {isCanceling && (
         <p className="mt-5 rounded-lg bg-warning/10 px-4 py-3 text-sm text-warning">
-          Your plan is canceled and stays active until{" "}
-          {formatBillingDate(subscription?.currentPeriodEnd)}.
+          {t("Your plan is canceled and stays active until {date}.", {
+            date: formatBillingDate(subscription?.currentPeriodEnd, dateLocale),
+          })}
         </p>
       )}
     </div>
