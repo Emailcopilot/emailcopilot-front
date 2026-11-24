@@ -36,7 +36,43 @@ export default function InvoicesCard({
         </div>
       ) : (
         <>
-          <div className="mt-5 overflow-x-auto">
+          {/* Phones: compact list instead of the wide table */}
+          <div className="mt-5 sm:hidden divide-y divide-gray-100 border-y border-gray-100">
+            {visibleInvoices.map((invoice) => (
+              <div
+                key={invoice.id}
+                className="flex items-center justify-between gap-3 py-3"
+              >
+                <div className="min-w-0">
+                  <div className="truncate text-sm text-gray-900">
+                    {formatInvoiceNumber(invoice)}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {formatBillingDate(invoice.paidAt || invoice.createdAt)}
+                  </div>
+                </div>
+                <div className="flex shrink-0 items-center gap-3">
+                  <span className="text-sm font-medium text-gray-900">
+                    {formatAmount(invoice.amount)}
+                  </span>
+                  <InvoiceStatus status={invoice.status} />
+                  {invoice.downloadUrl && (
+                    <a
+                      href={invoice.downloadUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Download invoice"
+                      className="text-primary transition-colors hover:text-primary-hover"
+                    >
+                      <Download size={16} />
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 hidden sm:block overflow-x-auto">
             <table className="w-full min-w-xl">
               <thead>
                 <tr className="border-b border-gray-100">
