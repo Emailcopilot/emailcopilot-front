@@ -1,6 +1,7 @@
 import { ArrowRight, Rocket } from "lucide-react";
 import { useState } from "react";
 import { useCopilotStore } from "@/store/copilotStore";
+import { useI18n } from "@/lib/i18n";
 
 function StepsActions({
   canContinue,
@@ -15,6 +16,7 @@ function StepsActions({
 }) {
   const { mode, editingLive, setRelaunchPending } = useCopilotStore();
   const [relaunching, setRelaunching] = useState(false);
+  const { t } = useI18n();
   const showRelaunch = mode === "edit" && editingLive;
 
   // Saves the current step exactly like "Save & Continue"; the store turns
@@ -49,7 +51,7 @@ function StepsActions({
           className="mr-3 border border-primary text-primary bg-white px-5 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 hover:bg-primary/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Rocket size={15} />
-          {relaunching ? "Re-launching..." : "Re-launch Copilot"}
+          {relaunching ? t("Re-launching...") : t("Re-launch Copilot")}
         </button>
       )}
       <button
@@ -64,11 +66,11 @@ function StepsActions({
         {isLoading ? (
           <span className="flex items-center">
             <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
-            Saving...
+            {t("Saving...")}
           </span>
         ) : (
           <>
-            Save &amp; Continue <ArrowRight size={15} />
+            {t("Save & Continue")} <ArrowRight size={15} />
           </>
         )}
       </button>
