@@ -73,6 +73,96 @@ const nl: Messages = {
   "Permanently delete your account and all associated data. This action cannot be undone.":
     "Verwijder je account en alle bijbehorende gegevens definitief. Dit kan niet ongedaan worden gemaakt.",
   "Delete Account": "Account verwijderen",
+  // Copilots page
+  "1 copilot archived.": "1 copilot gearchiveerd.",
+  "{count} copilots archived.": "{count} copilots gearchiveerd.",
+  "1 copilot could not be archived. Please try again.":
+    "1 copilot kon niet worden gearchiveerd. Probeer het opnieuw.",
+  "{count} copilots could not be archived. Please try again.":
+    "{count} copilots konden niet worden gearchiveerd. Probeer het opnieuw.",
+  "Loading...": "Laden...",
+  "No copilots yet": "Nog geen copilots",
+  "No copilots yet.": "Nog geen copilots.",
+  "Build your first copilot to start sending personalized emails at scale.":
+    "Bouw je eerste copilot en verstuur gepersonaliseerde e-mails op grote schaal.",
+  "No copilots match your filter.": "Geen copilots die aan je filter voldoen.",
+  "Archive 1 copilot? It stops sending.":
+    "1 copilot archiveren? Deze stopt met versturen.",
+  "Archive {count} copilots? They stop sending.":
+    "{count} copilots archiveren? Ze stoppen met versturen.",
+  Cancel: "Annuleren",
+  Archive: "Archiveren",
+  "Archiving...": "Archiveren...",
+  "{count} selected": "{count} geselecteerd",
+  "Workflow status": "Workflowstatus",
+  Sent: "Verzonden",
+  Actions: "Acties",
+  "Select all copilots on this page": "Alle copilots op deze pagina selecteren",
+  "Already archived": "Al gearchiveerd",
+  "Email Account": "E-mailaccount",
+  Audience: "Doelgroep",
+  Schedule: "Planning",
+  Configured: "Ingesteld",
+  Incomplete: "Onvolledig",
+  Selected: "Gekozen",
+  "Not selected": "Niet gekozen",
+  Pending: "In afwachting",
+  Draft: "Concept",
+  "In Flight": "In de lucht",
+  Completed: "Voltooid",
+  Scheduled: "Gepland",
+  Paused: "Gepauzeerd",
+  Archived: "Gearchiveerd",
+  "All status": "Alle statussen",
+  "Search copilots...": "Zoek copilots...",
+  "Last sent": "Laatst verzonden",
+  "Not yet": "Nog niet",
+  "No email account": "Geen e-mailaccount",
+  "No flight schedule": "Geen flight schedule",
+  "Continue setup": "Verder met instellen",
+  "View in Departure": "Bekijk in Departure",
+  Resume: "Hervatten",
+  "Copilot actions": "Copilot-acties",
+  "Copilot resumed successfully.": "Copilot is hervat.",
+  "Error resuming copilot. Please try again.":
+    "Fout bij hervatten van de copilot. Probeer het opnieuw.",
+  "Add an email account and an email template before sending a test email":
+    "Voeg een e-mailaccount en een e-mailtemplate toe voordat je een testmail verstuurt",
+  "Add an email account before sending a test email":
+    "Voeg een e-mailaccount toe voordat je een testmail verstuurt",
+  "Add an email template before sending a test email":
+    "Voeg een e-mailtemplate toe voordat je een testmail verstuurt",
+  "Send a test email to your connected account":
+    "Stuur een testmail naar je gekoppelde account",
+  "Test email request accepted. Check your connected inbox.":
+    "Testmail aangevraagd. Kijk in je gekoppelde inbox.",
+  "Failed to send test email. Please try again.":
+    "Testmail versturen mislukt. Probeer het opnieuw.",
+  "Failed to update status.": "Status bijwerken mislukt.",
+  "Copilot launch request accepted.": "Lancering van de copilot aangevraagd.",
+  "Failed to launch. Please try again.":
+    "Lanceren mislukt. Probeer het opnieuw.",
+  "Archive this copilot?": "Deze copilot archiveren?",
+  "Failed to archive.": "Archiveren mislukt.",
+  "Permanently delete this copilot? This cannot be undone.":
+    "Deze copilot definitief verwijderen? Dit kan niet ongedaan worden gemaakt.",
+  "Failed to delete.": "Verwijderen mislukt.",
+  'Duplicate "{name}"? This will create a new draft copy.':
+    '"{name}" dupliceren? Er wordt een nieuwe conceptkopie gemaakt.',
+  "Copilot duplicated.": "Copilot gedupliceerd.",
+  "Failed to duplicate.": "Dupliceren mislukt.",
+  Edit: "Bewerken",
+  Duplicate: "Dupliceren",
+  "Send Test Email": "Testmail versturen",
+  "Sending...": "Versturen...",
+  "Complete all setup steps before launching":
+    "Rond eerst alle stappen af voordat je lanceert",
+  Launch: "Lanceren",
+  "Launching...": "Lanceren...",
+  Pause: "Pauzeren",
+  "Complete all setup steps before resuming":
+    "Rond eerst alle stappen af voordat je hervat",
+  Delete: "Verwijderen",
 };
 
 const de: Messages = {
@@ -137,6 +227,99 @@ const de: Messages = {
   "Permanently delete your account and all associated data. This action cannot be undone.":
     "Löschen Sie Ihr Konto und alle zugehörigen Daten dauerhaft. Dies kann nicht rückgängig gemacht werden.",
   "Delete Account": "Konto löschen",
+  // Copilots page
+  "1 copilot archived.": "1 Copilot archiviert.",
+  "{count} copilots archived.": "{count} Copilots archiviert.",
+  "1 copilot could not be archived. Please try again.":
+    "1 Copilot konnte nicht archiviert werden. Bitte versuche es erneut.",
+  "{count} copilots could not be archived. Please try again.":
+    "{count} Copilots konnten nicht archiviert werden. Bitte versuche es erneut.",
+  "Loading...": "Wird geladen...",
+  "No copilots yet": "Noch keine Copilots",
+  "No copilots yet.": "Noch keine Copilots.",
+  "Build your first copilot to start sending personalized emails at scale.":
+    "Erstelle deinen ersten Copilot und versende personalisierte E-Mails in großem Umfang.",
+  "No copilots match your filter.": "Keine Copilots entsprechen deinem Filter.",
+  "Archive 1 copilot? It stops sending.":
+    "1 Copilot archivieren? Er versendet dann nichts mehr.",
+  "Archive {count} copilots? They stop sending.":
+    "{count} Copilots archivieren? Sie versenden dann nichts mehr.",
+  Cancel: "Abbrechen",
+  Archive: "Archivieren",
+  "Archiving...": "Wird archiviert...",
+  "{count} selected": "{count} ausgewählt",
+  "Workflow status": "Workflow-Status",
+  Sent: "Gesendet",
+  Actions: "Aktionen",
+  "Select all copilots on this page":
+    "Alle Copilots auf dieser Seite auswählen",
+  "Already archived": "Bereits archiviert",
+  "Email Account": "E-Mail-Konto",
+  Account: "Konto",
+  Audience: "Zielgruppe",
+  Template: "Vorlage",
+  Schedule: "Zeitplan",
+  Configured: "Eingerichtet",
+  Incomplete: "Unvollständig",
+  Selected: "Ausgewählt",
+  "Not selected": "Nicht ausgewählt",
+  Pending: "Ausstehend",
+  Draft: "Entwurf",
+  "In Flight": "In der Luft",
+  Completed: "Abgeschlossen",
+  Scheduled: "Geplant",
+  Paused: "Pausiert",
+  Archived: "Archiviert",
+  "All status": "Alle Status",
+  "Search copilots...": "Copilots suchen...",
+  "Last sent": "Zuletzt gesendet",
+  "Not yet": "Noch nicht",
+  "No email account": "Kein E-Mail-Konto",
+  "No flight schedule": "Kein Flight Schedule",
+  "Continue setup": "Einrichtung fortsetzen",
+  "View in Departure": "In Departure ansehen",
+  Resume: "Fortsetzen",
+  "Copilot actions": "Copilot-Aktionen",
+  "Copilot resumed successfully.": "Copilot wurde fortgesetzt.",
+  "Error resuming copilot. Please try again.":
+    "Fehler beim Fortsetzen des Copilots. Bitte versuche es erneut.",
+  "Add an email account and an email template before sending a test email":
+    "Füge ein E-Mail-Konto und eine E-Mail-Vorlage hinzu, bevor du eine Test-E-Mail sendest",
+  "Add an email account before sending a test email":
+    "Füge ein E-Mail-Konto hinzu, bevor du eine Test-E-Mail sendest",
+  "Add an email template before sending a test email":
+    "Füge eine E-Mail-Vorlage hinzu, bevor du eine Test-E-Mail sendest",
+  "Send a test email to your connected account":
+    "Sende eine Test-E-Mail an dein verbundenes Konto",
+  "Test email request accepted. Check your connected inbox.":
+    "Test-E-Mail angefordert. Sieh in deinem verbundenen Posteingang nach.",
+  "Failed to send test email. Please try again.":
+    "Test-E-Mail konnte nicht gesendet werden. Bitte versuche es erneut.",
+  "Failed to update status.": "Status konnte nicht aktualisiert werden.",
+  "Copilot launch request accepted.": "Start des Copilots angefordert.",
+  "Failed to launch. Please try again.":
+    "Start fehlgeschlagen. Bitte versuche es erneut.",
+  "Archive this copilot?": "Diesen Copilot archivieren?",
+  "Failed to archive.": "Archivieren fehlgeschlagen.",
+  "Permanently delete this copilot? This cannot be undone.":
+    "Diesen Copilot endgültig löschen? Dies kann nicht rückgängig gemacht werden.",
+  "Failed to delete.": "Löschen fehlgeschlagen.",
+  'Duplicate "{name}"? This will create a new draft copy.':
+    '„{name}" duplizieren? Es wird eine neue Entwurfskopie erstellt.',
+  "Copilot duplicated.": "Copilot dupliziert.",
+  "Failed to duplicate.": "Duplizieren fehlgeschlagen.",
+  Edit: "Bearbeiten",
+  Duplicate: "Duplizieren",
+  "Send Test Email": "Test-E-Mail senden",
+  "Sending...": "Wird gesendet...",
+  "Complete all setup steps before launching":
+    "Schließe zuerst alle Schritte ab, bevor du startest",
+  Launch: "Starten",
+  "Launching...": "Wird gestartet...",
+  Pause: "Pausieren",
+  "Complete all setup steps before resuming":
+    "Schließe zuerst alle Schritte ab, bevor du fortsetzt",
+  Delete: "Löschen",
 };
 
 const fr: Messages = {
@@ -201,6 +384,99 @@ const fr: Messages = {
   "Permanently delete your account and all associated data. This action cannot be undone.":
     "Supprimez définitivement votre compte et toutes les données associées. Cette action est irréversible.",
   "Delete Account": "Supprimer le compte",
+  // Copilots page
+  "1 copilot archived.": "1 copilot archivé.",
+  "{count} copilots archived.": "{count} copilots archivés.",
+  "1 copilot could not be archived. Please try again.":
+    "1 copilot n'a pas pu être archivé. Veuillez réessayer.",
+  "{count} copilots could not be archived. Please try again.":
+    "{count} copilots n'ont pas pu être archivés. Veuillez réessayer.",
+  "Loading...": "Chargement...",
+  "No copilots yet": "Aucun copilot pour l'instant",
+  "No copilots yet.": "Aucun copilot pour l'instant.",
+  "Build your first copilot to start sending personalized emails at scale.":
+    "Créez votre premier copilot pour envoyer des e-mails personnalisés à grande échelle.",
+  "No copilots match your filter.":
+    "Aucun copilot ne correspond à votre filtre.",
+  "Archive 1 copilot? It stops sending.":
+    "Archiver 1 copilot ? Il arrêtera d'envoyer.",
+  "Archive {count} copilots? They stop sending.":
+    "Archiver {count} copilots ? Ils arrêteront d'envoyer.",
+  Cancel: "Annuler",
+  Archive: "Archiver",
+  "Archiving...": "Archivage...",
+  "{count} selected": "{count} sélectionné(s)",
+  "Workflow status": "Statut du workflow",
+  Sent: "Envoyés",
+  Status: "Statut",
+  "Select all copilots on this page":
+    "Sélectionner tous les copilots de cette page",
+  "Already archived": "Déjà archivé",
+  "Email Account": "Compte e-mail",
+  Account: "Compte",
+  Template: "Modèle",
+  Schedule: "Planning",
+  Configured: "Configuré",
+  Incomplete: "Incomplet",
+  Selected: "Sélectionné",
+  "Not selected": "Non sélectionné",
+  Pending: "En attente",
+  Draft: "Brouillon",
+  "In Flight": "En vol",
+  Completed: "Terminé",
+  Scheduled: "Planifié",
+  Paused: "En pause",
+  Archived: "Archivé",
+  "All status": "Tous les statuts",
+  "Search copilots...": "Rechercher des copilots...",
+  "Last sent": "Dernier envoi",
+  "Not yet": "Pas encore",
+  "No email account": "Aucun compte e-mail",
+  "No flight schedule": "Aucun flight schedule",
+  "Continue setup": "Continuer la configuration",
+  "View in Departure": "Voir dans Departure",
+  Resume: "Reprendre",
+  "Copilot actions": "Actions du copilot",
+  "Copilot resumed successfully.": "Copilot repris.",
+  "Error resuming copilot. Please try again.":
+    "Erreur lors de la reprise du copilot. Veuillez réessayer.",
+  "Add an email account and an email template before sending a test email":
+    "Ajoutez un compte e-mail et un modèle d'e-mail avant d'envoyer un e-mail de test",
+  "Add an email account before sending a test email":
+    "Ajoutez un compte e-mail avant d'envoyer un e-mail de test",
+  "Add an email template before sending a test email":
+    "Ajoutez un modèle d'e-mail avant d'envoyer un e-mail de test",
+  "Send a test email to your connected account":
+    "Envoyer un e-mail de test à votre compte connecté",
+  "Test email request accepted. Check your connected inbox.":
+    "E-mail de test demandé. Consultez votre boîte de réception connectée.",
+  "Failed to send test email. Please try again.":
+    "Échec de l'envoi de l'e-mail de test. Veuillez réessayer.",
+  "Failed to update status.": "Échec de la mise à jour du statut.",
+  "Copilot launch request accepted.": "Lancement du copilot demandé.",
+  "Failed to launch. Please try again.":
+    "Échec du lancement. Veuillez réessayer.",
+  "Archive this copilot?": "Archiver ce copilot ?",
+  "Failed to archive.": "Échec de l'archivage.",
+  "Permanently delete this copilot? This cannot be undone.":
+    "Supprimer définitivement ce copilot ? Cette action est irréversible.",
+  "Failed to delete.": "Échec de la suppression.",
+  'Duplicate "{name}"? This will create a new draft copy.':
+    "Dupliquer « {name} » ? Une nouvelle copie en brouillon sera créée.",
+  "Copilot duplicated.": "Copilot dupliqué.",
+  "Failed to duplicate.": "Échec de la duplication.",
+  Edit: "Modifier",
+  Duplicate: "Dupliquer",
+  "Send Test Email": "Envoyer un e-mail de test",
+  "Sending...": "Envoi...",
+  "Complete all setup steps before launching":
+    "Terminez toutes les étapes avant de lancer",
+  Launch: "Lancer",
+  "Launching...": "Lancement...",
+  Pause: "Mettre en pause",
+  "Complete all setup steps before resuming":
+    "Terminez toutes les étapes avant de reprendre",
+  Delete: "Supprimer",
 };
 
 const es: Messages = {
@@ -265,6 +541,100 @@ const es: Messages = {
   "Permanently delete your account and all associated data. This action cannot be undone.":
     "Elimina tu cuenta y todos los datos asociados de forma permanente. Esta acción no se puede deshacer.",
   "Delete Account": "Eliminar cuenta",
+  // Copilots page
+  "1 copilot archived.": "1 copilot archivado.",
+  "{count} copilots archived.": "{count} copilots archivados.",
+  "1 copilot could not be archived. Please try again.":
+    "No se pudo archivar 1 copilot. Inténtalo de nuevo.",
+  "{count} copilots could not be archived. Please try again.":
+    "No se pudieron archivar {count} copilots. Inténtalo de nuevo.",
+  "Loading...": "Cargando...",
+  "No copilots yet": "Aún no hay copilots",
+  "No copilots yet.": "Aún no hay copilots.",
+  "Build your first copilot to start sending personalized emails at scale.":
+    "Crea tu primer copilot para enviar correos personalizados a gran escala.",
+  "No copilots match your filter.": "Ningún copilot coincide con tu filtro.",
+  "Archive 1 copilot? It stops sending.":
+    "¿Archivar 1 copilot? Dejará de enviar.",
+  "Archive {count} copilots? They stop sending.":
+    "¿Archivar {count} copilots? Dejarán de enviar.",
+  Cancel: "Cancelar",
+  Archive: "Archivar",
+  "Archiving...": "Archivando...",
+  "{count} selected": "{count} seleccionados",
+  "Workflow status": "Estado del flujo",
+  Sent: "Enviados",
+  Status: "Estado",
+  Actions: "Acciones",
+  "Select all copilots on this page":
+    "Seleccionar todos los copilots de esta página",
+  "Already archived": "Ya archivado",
+  "Email Account": "Cuenta de correo",
+  Account: "Cuenta",
+  Audience: "Audiencia",
+  Template: "Plantilla",
+  Schedule: "Horario",
+  Configured: "Configurado",
+  Incomplete: "Incompleto",
+  Selected: "Seleccionado",
+  "Not selected": "No seleccionado",
+  Pending: "Pendiente",
+  Draft: "Borrador",
+  "In Flight": "En vuelo",
+  Completed: "Completado",
+  Scheduled: "Programado",
+  Paused: "En pausa",
+  Archived: "Archivado",
+  "All status": "Todos los estados",
+  "Search copilots...": "Buscar copilots...",
+  "Last sent": "Último envío",
+  "Not yet": "Aún no",
+  "No email account": "Sin cuenta de correo",
+  "No flight schedule": "Sin flight schedule",
+  "Continue setup": "Continuar configuración",
+  "View in Departure": "Ver en Departure",
+  Resume: "Reanudar",
+  "Copilot actions": "Acciones del copilot",
+  "Copilot resumed successfully.": "Copilot reanudado.",
+  "Error resuming copilot. Please try again.":
+    "Error al reanudar el copilot. Inténtalo de nuevo.",
+  "Add an email account and an email template before sending a test email":
+    "Añade una cuenta de correo y una plantilla antes de enviar un correo de prueba",
+  "Add an email account before sending a test email":
+    "Añade una cuenta de correo antes de enviar un correo de prueba",
+  "Add an email template before sending a test email":
+    "Añade una plantilla de correo antes de enviar un correo de prueba",
+  "Send a test email to your connected account":
+    "Envía un correo de prueba a tu cuenta conectada",
+  "Test email request accepted. Check your connected inbox.":
+    "Correo de prueba solicitado. Revisa tu bandeja de entrada conectada.",
+  "Failed to send test email. Please try again.":
+    "No se pudo enviar el correo de prueba. Inténtalo de nuevo.",
+  "Failed to update status.": "No se pudo actualizar el estado.",
+  "Copilot launch request accepted.": "Lanzamiento del copilot solicitado.",
+  "Failed to launch. Please try again.":
+    "No se pudo lanzar. Inténtalo de nuevo.",
+  "Archive this copilot?": "¿Archivar este copilot?",
+  "Failed to archive.": "No se pudo archivar.",
+  "Permanently delete this copilot? This cannot be undone.":
+    "¿Eliminar este copilot de forma permanente? No se puede deshacer.",
+  "Failed to delete.": "No se pudo eliminar.",
+  'Duplicate "{name}"? This will create a new draft copy.':
+    '¿Duplicar "{name}"? Se creará una nueva copia en borrador.',
+  "Copilot duplicated.": "Copilot duplicado.",
+  "Failed to duplicate.": "No se pudo duplicar.",
+  Edit: "Editar",
+  Duplicate: "Duplicar",
+  "Send Test Email": "Enviar correo de prueba",
+  "Sending...": "Enviando...",
+  "Complete all setup steps before launching":
+    "Completa todos los pasos antes de lanzar",
+  Launch: "Lanzar",
+  "Launching...": "Lanzando...",
+  Pause: "Pausar",
+  "Complete all setup steps before resuming":
+    "Completa todos los pasos antes de reanudar",
+  Delete: "Eliminar",
 };
 
 export const MESSAGES: Record<string, Messages> = { nl, de, fr, es };
