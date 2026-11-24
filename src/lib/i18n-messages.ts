@@ -236,6 +236,10 @@ const nl: Messages = {
     "Je gegevens zijn versleuteld en veilig. We gebruiken je e-mailaccount alleen om namens jou e-mails te versturen.",
   "Learn more": "Meer informatie",
   "vs {range}": "t.o.v. {range}",
+  // Overview (daily stats not live yet)
+  "All time": "Totaal",
+  "Emails sent and replies per day will appear here soon.":
+    "Verzonden e-mails en antwoorden per dag verschijnen hier binnenkort.",
 };
 
 const de: Messages = {
@@ -467,6 +471,10 @@ const de: Messages = {
     "Deine Daten sind verschlüsselt und sicher. Wir nutzen dein E-Mail-Konto nur, um in deinem Namen E-Mails zu senden.",
   "Learn more": "Mehr erfahren",
   "vs {range}": "vs. {range}",
+  // Overview (daily stats not live yet)
+  "All time": "Gesamt",
+  "Emails sent and replies per day will appear here soon.":
+    "Gesendete E-Mails und Antworten pro Tag erscheinen hier bald.",
 };
 
 const fr: Messages = {
@@ -697,6 +705,10 @@ const fr: Messages = {
   "Your data is encrypted and secure. We only use your email account to send emails on your behalf.":
     "Vos données sont chiffrées et sécurisées. Nous utilisons votre compte e-mail uniquement pour envoyer des e-mails en votre nom.",
   "Learn more": "En savoir plus",
+  // Overview (daily stats not live yet)
+  "All time": "Au total",
+  "Emails sent and replies per day will appear here soon.":
+    "Les e-mails envoyés et les réponses par jour apparaîtront bientôt ici.",
 };
 
 const es: Messages = {
@@ -928,6 +940,10 @@ const es: Messages = {
   "Your data is encrypted and secure. We only use your email account to send emails on your behalf.":
     "Tus datos están cifrados y seguros. Solo usamos tu cuenta de correo para enviar correos en tu nombre.",
   "Learn more": "Más información",
+  // Overview (daily stats not live yet)
+  "All time": "En total",
+  "Emails sent and replies per day will appear here soon.":
+    "Los correos enviados y las respuestas por día aparecerán aquí pronto.",
 };
 
 export const MESSAGES: Record<string, Messages> = { nl, de, fr, es };
