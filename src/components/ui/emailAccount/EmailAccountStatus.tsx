@@ -1,6 +1,10 @@
+"use client";
+
 import { AccountStatus } from "@/lib/types";
+import { useI18n } from "@/lib/i18n";
 
 function EmailAccountStatus({ status }: { status: AccountStatus }) {
+  const { t } = useI18n();
   const handleStatusChange = (newStatus: AccountStatus) => {
     switch (newStatus) {
       case "active":
@@ -22,7 +26,7 @@ function EmailAccountStatus({ status }: { status: AccountStatus }) {
         handleStatusChange(status).bg
       }`}
     >
-      {handleStatusChange(status).label}
+      {t(handleStatusChange(status).label)}
     </span>
   );
 }
