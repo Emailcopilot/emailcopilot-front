@@ -400,6 +400,67 @@ const nl: Messages = {
   "No saved templates yet.": "Nog geen opgeslagen templates.",
   "View more ({count} more)": "Meer bekijken (nog {count})",
   "Save changes": "Wijzigingen opslaan",
+  // Flight schedule
+  Mon: "Ma",
+  Tue: "Di",
+  Wed: "Wo",
+  Thu: "Do",
+  Fri: "Vr",
+  Sat: "Za",
+  Sun: "Zo",
+  "No active days": "Geen actieve dagen",
+  "No Flight Schedules Found": "Geen flight schedules gevonden",
+  "No Flight Schedules Yet": "Nog geen flight schedules",
+  "Create a flight schedule for easier access later":
+    "Maak een flight schedule aan om hem later snel te gebruiken",
+  "Your Flight Schedules ({count})": "Jouw flight schedules ({count})",
+  "Search flight schedule...": "Zoek flight schedule...",
+  "Search flight schedules by name": "Zoek flight schedules op naam",
+  "Loading flight schedules…": "Flight schedules laden…",
+  "Flight schedule name": "Naam flight schedule",
+  Days: "Dagen",
+  Time: "Tijd",
+  "Used by": "Gebruikt door",
+  "Flight schedule actions": "Flight schedule-acties",
+  "Failed to load flight schedules.": "Flight schedules laden mislukt.",
+  "Flight schedule updated.": "Flight schedule bijgewerkt.",
+  "Flight schedule created.": "Flight schedule aangemaakt.",
+  "Are you sure you want to delete this flight schedule?":
+    "Weet je zeker dat je deze flight schedule wilt verwijderen?",
+  "Flight schedule deleted.": "Flight schedule verwijderd.",
+  "Failed to delete flight schedule.": "Flight schedule verwijderen mislukt.",
+  "Flight schedule duplicated.": "Flight schedule gedupliceerd.",
+  "Failed to duplicate flight schedule.": "Flight schedule dupliceren mislukt.",
+  "Configure when and how emails are sent.":
+    "Stel in wanneer en hoe e-mails worden verstuurd.",
+  "Schedule Name": "Naam schema",
+  "Daily Send Limit": "Dagelijkse verzendlimiet",
+  "Maximum number of new emails to send per day.":
+    "Maximaal aantal nieuwe e-mails per dag.",
+  "Recommended: 20–50 per day": "Aanbevolen: 20–50 per dag",
+  "Unlimited sending": "Onbeperkt versturen",
+  "Active Days": "Actieve dagen",
+  "Choose which days emails can be sent.":
+    "Kies op welke dagen e-mails verstuurd mogen worden.",
+  "Sending Hours": "Verzendtijden",
+  "Set the daily time window for sending emails.":
+    "Stel het dagelijkse tijdvenster in voor het versturen.",
+  From: "Van",
+  To: "Tot",
+  "Sending hours are off": "Verzendtijden staan uit",
+  "Timezone for sending and scheduling.": "Tijdzone voor versturen en plannen.",
+  "Please select at least one active day.": "Kies minstens één actieve dag.",
+  "Failed to save flight schedule. Please try again.":
+    "Flight schedule opslaan mislukt. Probeer het opnieuw.",
+  "Edit Flight Schedule": "Flight schedule bewerken",
+  "New Flight Schedule": "Nieuwe flight schedule",
+  "e.g. Mornings, Afternoons, Weekend…": "bijv. Ochtenden, Middagen, Weekend…",
+  "Your copilot will send as many emails as possible within the active hours each day.":
+    "Je copilot verstuurt zoveel mogelijk e-mails binnen de actieve uren van elke dag.",
+  "Availability: {value} (selected active days only).":
+    "Beschikbaarheid: {value} (alleen gekozen actieve dagen).",
+  "Saving…": "Opslaan…",
+  "Create Schedule": "Schema maken",
 };
 
 const de: Messages = {
@@ -807,6 +868,72 @@ const de: Messages = {
   "No saved templates yet.": "Noch keine gespeicherten Vorlagen.",
   "View more ({count} more)": "Mehr ansehen ({count} weitere)",
   "Save changes": "Änderungen speichern",
+  // Flight schedule
+  Mon: "Mo",
+  Tue: "Di",
+  Wed: "Mi",
+  Thu: "Do",
+  Fri: "Fr",
+  Sat: "Sa",
+  Sun: "So",
+  "No active days": "Keine aktiven Tage",
+  "No Flight Schedules Found": "Keine Flight Schedules gefunden",
+  "No Flight Schedules Yet": "Noch keine Flight Schedules",
+  "Create a flight schedule for easier access later":
+    "Erstelle einen Flight Schedule, um ihn später schnell zu nutzen",
+  "Your Flight Schedules ({count})": "Deine Flight Schedules ({count})",
+  "Search flight schedule...": "Flight Schedule suchen...",
+  "Search flight schedules by name": "Flight Schedules nach Namen suchen",
+  "Loading flight schedules…": "Flight Schedules werden geladen…",
+  "Flight schedule name": "Name des Flight Schedule",
+  Days: "Tage",
+  Time: "Zeit",
+  "Used by": "Verwendet von",
+  "Flight schedule actions": "Flight-Schedule-Aktionen",
+  "Failed to load flight schedules.":
+    "Flight Schedules konnten nicht geladen werden.",
+  "Flight schedule updated.": "Flight Schedule aktualisiert.",
+  "Flight schedule created.": "Flight Schedule erstellt.",
+  "Are you sure you want to delete this flight schedule?":
+    "Möchtest du diesen Flight Schedule wirklich löschen?",
+  "Flight schedule deleted.": "Flight Schedule gelöscht.",
+  "Failed to delete flight schedule.":
+    "Flight Schedule konnte nicht gelöscht werden.",
+  "Flight schedule duplicated.": "Flight Schedule dupliziert.",
+  "Failed to duplicate flight schedule.":
+    "Flight Schedule konnte nicht dupliziert werden.",
+  "Configure when and how emails are sent.":
+    "Lege fest, wann und wie E-Mails gesendet werden.",
+  "Schedule Name": "Name des Zeitplans",
+  "Daily Send Limit": "Tägliches Sendelimit",
+  "Maximum number of new emails to send per day.":
+    "Maximale Anzahl neuer E-Mails pro Tag.",
+  "Recommended: 20–50 per day": "Empfohlen: 20–50 pro Tag",
+  "Unlimited sending": "Unbegrenzt senden",
+  "Active Days": "Aktive Tage",
+  "Choose which days emails can be sent.":
+    "Wähle, an welchen Tagen E-Mails gesendet werden dürfen.",
+  "Sending Hours": "Sendezeiten",
+  "Set the daily time window for sending emails.":
+    "Lege das tägliche Zeitfenster für den Versand fest.",
+  From: "Von",
+  To: "Bis",
+  "Sending hours are off": "Sendezeiten sind aus",
+  "Timezone for sending and scheduling.": "Zeitzone für Versand und Planung.",
+  "Please select at least one active day.":
+    "Bitte wähle mindestens einen aktiven Tag.",
+  "Failed to save flight schedule. Please try again.":
+    "Flight Schedule konnte nicht gespeichert werden. Bitte versuche es erneut.",
+  "Edit Flight Schedule": "Flight Schedule bearbeiten",
+  "New Flight Schedule": "Neuer Flight Schedule",
+  "e.g. Mornings, Afternoons, Weekend…":
+    "z. B. Vormittags, Nachmittags, Wochenende…",
+  "Your copilot will send as many emails as possible within the active hours each day.":
+    "Dein Copilot sendet innerhalb der aktiven Stunden jedes Tages so viele E-Mails wie möglich.",
+  "Availability: {value} (selected active days only).":
+    "Verfügbarkeit: {value} (nur gewählte aktive Tage).",
+  "Saving…": "Wird gespeichert…",
+  "Create Schedule": "Zeitplan erstellen",
 };
 
 const fr: Messages = {
@@ -1208,6 +1335,72 @@ const fr: Messages = {
   "No saved templates yet.": "Aucun modèle enregistré.",
   "View more ({count} more)": "Voir plus ({count} de plus)",
   "Save changes": "Enregistrer les modifications",
+  // Flight schedule
+  Mon: "Lun",
+  Tue: "Mar",
+  Wed: "Mer",
+  Thu: "Jeu",
+  Fri: "Ven",
+  Sat: "Sam",
+  Sun: "Dim",
+  "No active days": "Aucun jour actif",
+  "No Flight Schedules Found": "Aucun flight schedule trouvé",
+  "No Flight Schedules Yet": "Aucun flight schedule pour l'instant",
+  "Create a flight schedule for easier access later":
+    "Créez un flight schedule pour le réutiliser facilement",
+  "Your Flight Schedules ({count})": "Vos flight schedules ({count})",
+  "Search flight schedule...": "Rechercher un flight schedule...",
+  "Search flight schedules by name": "Rechercher des flight schedules par nom",
+  "Loading flight schedules…": "Chargement des flight schedules…",
+  "Flight schedule name": "Nom du flight schedule",
+  Days: "Jours",
+  Time: "Heure",
+  "Used by": "Utilisé par",
+  "Flight schedule actions": "Actions du flight schedule",
+  "Failed to load flight schedules.":
+    "Échec du chargement des flight schedules.",
+  "Flight schedule updated.": "Flight schedule mis à jour.",
+  "Flight schedule created.": "Flight schedule créé.",
+  "Are you sure you want to delete this flight schedule?":
+    "Voulez-vous vraiment supprimer ce flight schedule ?",
+  "Flight schedule deleted.": "Flight schedule supprimé.",
+  "Failed to delete flight schedule.":
+    "Échec de la suppression du flight schedule.",
+  "Flight schedule duplicated.": "Flight schedule dupliqué.",
+  "Failed to duplicate flight schedule.":
+    "Échec de la duplication du flight schedule.",
+  "Configure when and how emails are sent.":
+    "Définissez quand et comment les e-mails sont envoyés.",
+  "Schedule Name": "Nom du planning",
+  "Daily Send Limit": "Limite d'envoi quotidienne",
+  "Maximum number of new emails to send per day.":
+    "Nombre maximal de nouveaux e-mails par jour.",
+  "Recommended: 20–50 per day": "Recommandé : 20–50 par jour",
+  "Unlimited sending": "Envoi illimité",
+  "Active Days": "Jours actifs",
+  "Choose which days emails can be sent.":
+    "Choisissez les jours d'envoi des e-mails.",
+  "Sending Hours": "Heures d'envoi",
+  "Set the daily time window for sending emails.":
+    "Définissez la plage horaire quotidienne d'envoi.",
+  From: "De",
+  To: "À",
+  "Sending hours are off": "Les heures d'envoi sont désactivées",
+  "Timezone for sending and scheduling.":
+    "Fuseau horaire pour l'envoi et la planification.",
+  "Please select at least one active day.":
+    "Veuillez choisir au moins un jour actif.",
+  "Failed to save flight schedule. Please try again.":
+    "Échec de l'enregistrement du flight schedule. Veuillez réessayer.",
+  "Edit Flight Schedule": "Modifier le flight schedule",
+  "New Flight Schedule": "Nouveau flight schedule",
+  "e.g. Mornings, Afternoons, Weekend…": "ex. Matins, Après-midis, Week-end…",
+  "Your copilot will send as many emails as possible within the active hours each day.":
+    "Votre copilot enverra autant d'e-mails que possible pendant les heures actives de chaque jour.",
+  "Availability: {value} (selected active days only).":
+    "Disponibilité : {value} (jours actifs choisis uniquement).",
+  "Saving…": "Enregistrement…",
+  "Create Schedule": "Créer le planning",
 };
 
 const es: Messages = {
@@ -1609,6 +1802,72 @@ const es: Messages = {
   "No saved templates yet.": "Aún no hay plantillas guardadas.",
   "View more ({count} more)": "Ver más ({count} más)",
   "Save changes": "Guardar cambios",
+  // Flight schedule
+  Mon: "Lun",
+  Tue: "Mar",
+  Wed: "Mié",
+  Thu: "Jue",
+  Fri: "Vie",
+  Sat: "Sáb",
+  Sun: "Dom",
+  "No active days": "Sin días activos",
+  "No Flight Schedules Found": "No se encontraron flight schedules",
+  "No Flight Schedules Yet": "Aún no hay flight schedules",
+  "Create a flight schedule for easier access later":
+    "Crea un flight schedule para reutilizarlo fácilmente",
+  "Your Flight Schedules ({count})": "Tus flight schedules ({count})",
+  "Search flight schedule...": "Buscar flight schedule...",
+  "Search flight schedules by name": "Buscar flight schedules por nombre",
+  "Loading flight schedules…": "Cargando flight schedules…",
+  "Flight schedule name": "Nombre del flight schedule",
+  Days: "Días",
+  Time: "Hora",
+  "Used by": "Usado por",
+  "Flight schedule actions": "Acciones del flight schedule",
+  "Failed to load flight schedules.":
+    "No se pudieron cargar los flight schedules.",
+  "Flight schedule updated.": "Flight schedule actualizado.",
+  "Flight schedule created.": "Flight schedule creado.",
+  "Are you sure you want to delete this flight schedule?":
+    "¿Seguro que quieres eliminar este flight schedule?",
+  "Flight schedule deleted.": "Flight schedule eliminado.",
+  "Failed to delete flight schedule.":
+    "No se pudo eliminar el flight schedule.",
+  "Flight schedule duplicated.": "Flight schedule duplicado.",
+  "Failed to duplicate flight schedule.":
+    "No se pudo duplicar el flight schedule.",
+  "Configure when and how emails are sent.":
+    "Configura cuándo y cómo se envían los correos.",
+  "Schedule Name": "Nombre del horario",
+  "Daily Send Limit": "Límite diario de envío",
+  "Maximum number of new emails to send per day.":
+    "Número máximo de correos nuevos por día.",
+  "Recommended: 20–50 per day": "Recomendado: 20–50 por día",
+  "Unlimited sending": "Envío ilimitado",
+  "Active Days": "Días activos",
+  "Choose which days emails can be sent.":
+    "Elige qué días se pueden enviar correos.",
+  "Sending Hours": "Horas de envío",
+  "Set the daily time window for sending emails.":
+    "Define la franja horaria diaria de envío.",
+  From: "Desde",
+  To: "Hasta",
+  "Sending hours are off": "Las horas de envío están desactivadas",
+  "Timezone for sending and scheduling.":
+    "Zona horaria para enviar y programar.",
+  "Please select at least one active day.": "Elige al menos un día activo.",
+  "Failed to save flight schedule. Please try again.":
+    "No se pudo guardar el flight schedule. Inténtalo de nuevo.",
+  "Edit Flight Schedule": "Editar flight schedule",
+  "New Flight Schedule": "Nuevo flight schedule",
+  "e.g. Mornings, Afternoons, Weekend…":
+    "p. ej. Mañanas, Tardes, Fin de semana…",
+  "Your copilot will send as many emails as possible within the active hours each day.":
+    "Tu copilot enviará tantos correos como pueda dentro de las horas activas de cada día.",
+  "Availability: {value} (selected active days only).":
+    "Disponibilidad: {value} (solo los días activos elegidos).",
+  "Saving…": "Guardando…",
+  "Create Schedule": "Crear horario",
 };
 
 export const MESSAGES: Record<string, Messages> = { nl, de, fr, es };
