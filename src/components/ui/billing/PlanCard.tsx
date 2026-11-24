@@ -9,6 +9,7 @@ import {
   planTagline,
 } from "@/lib/helpers";
 import type { BillingInterval } from "./PlanSelector";
+import { useI18n } from "@/lib/i18n";
 
 interface PlanCardProps {
   plan: Plan;
@@ -27,9 +28,10 @@ export default function PlanCard({
   highlighted,
   onChoose,
 }: PlanCardProps) {
+  const { t } = useI18n();
   const isAnnual = interval === "annual";
   const price = isAnnual ? planAnnualPrice(plan) : plan.price;
-  const period = isAnnual ? "/ year" : "/ month";
+  const period = isAnnual ? t("/ year") : t("/ month");
 
   return (
     <div
@@ -43,14 +45,14 @@ export default function PlanCard({
     >
       {highlighted && (
         <span className="absolute left-1/2 top-0 -translate-x-1/2 whitespace-nowrap rounded-b-lg bg-primary px-6 py-1.5 text-sm font-semibold text-white">
-          {isCurrent ? "Current plan" : "Most Popular"}
+          {isCurrent ? t("Current plan") : t("Most Popular")}
         </span>
       )}
 
       <h3 className="text-lg font-bold text-gray-900">
         {handlePlanNameChange(plan.name)}
       </h3>
-      <p className="mt-1 text-sm text-gray-500">{planTagline(plan.id)}</p>
+      <p className="mt-1 text-sm text-gray-500">{t(planTagline(plan.id))}</p>
 
       <div className="mt-4 flex items-baseline gap-2">
         <span className="text-4xl font-bold text-gray-900">€{isAnnual ? Math.floor(price) : price}</span>
@@ -68,10 +70,10 @@ export default function PlanCard({
         } disabled:opacity-60`}
       >
         {isSubscribing && <Loader2 size={14} className="animate-spin" />}
-        {isCurrent ? "Current plan" : "Choose plan"}
+        {isCurrent ? t("Current plan") : t("Choose plan")}
       </button>
 
-      <p className="mt-6 text-sm font-bold text-gray-900">Included:</p>
+      <p className="mt-6 text-sm font-bold text-gray-900">{t("Included:")}</p>
       <ul className="mt-4 space-y-3.5">
         {plan.features.map((feature) => (
           <li key={feature} className="flex items-center gap-3">
@@ -79,7 +81,9 @@ export default function PlanCard({
               size={18}
               className="shrink-0 fill-primary text-white"
             />
-            <span className="text-sm text-gray-700">{formatPlanFeature(feature)}</span>
+            <span className="text-sm text-gray-700">
+              {t(formatPlanFeature(feature))}
+            </span>
           </li>
         ))}
       </ul>
