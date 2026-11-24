@@ -21,6 +21,7 @@ import { currentPlanId, emailQuota, higherTiers } from "@/lib/limits";
 import { useBilling } from "@/lib/useBilling";
 import { useSetupFeedbackActions } from "@/lib/SetupFeedbackProvider";
 import EmailLimitDialog from "@/components/ui/limits/EmailLimitDialog";
+import { useI18n } from "@/lib/i18n";
 
 export default function CopilotMenu({
   copilot,
@@ -31,6 +32,7 @@ export default function CopilotMenu({
   onRefresh: () => void;
   onClose?: () => void;
 }) {
+  const { t } = useI18n();
   const feedback = useSetupFeedbackActions();
   const [runningScrape, setRunningScrape] = useState(false);
   const [sendingTest, setSendingTest] = useState(false);
@@ -55,28 +57,29 @@ export default function CopilotMenu({
     copilot.templateId != null &&
     copilot.flightScheduleId != null;
 
-  const missingForTestEmail = [
-    copilot.emailAccountId == null && "an email account",
-    copilot.templateId == null && "an email template",
-  ].filter(Boolean) as string[];
-
-  const canTestEmail = missingForTestEmail.length === 0;
+  const noAccount = copilot.emailAccountId == null;
+  const noTemplate = copilot.templateId == null;
+  const canTestEmail = !noAccount && !noTemplate;
+  const missingText =
+    noAccount && noTemplate
+      ? t("Add an email account and an email template before sending a test email")
+      : noAccount
+        ? t("Add an email account before sending a test email")
+        : t("Add an email template before sending a test email");
   const testEmailTooltip = canTestEmail
-    ? "Send a test email to your connected account"
-    : `Add ${missingForTestEmail.join(" and ")} before sending a test email`;
+    ? t("Send a test email to your connected account")
+    : missingText;
 
   async function handleTestEmail(event?: MouseEvent<HTMLButtonElement>) {
     if (sendingTest || feedback.isBusy() || (event?.detail ?? 0) > 1) return;
     if (!canTestEmail) {
-      toast.error(
-        `Add ${missingForTestEmail.join(" and ")} before sending a test email.`,
-      );
+      toast.error(`${missingText}.`);
       return;
     }
     try {
       setSendingTest(true);
       await feedback.testEmail(() => copilot.id, () => {
-        toast.success("Test email request accepted. Check your connected inbox.");
+        toast.success(t("Test email request accepted. Check your connected inbox."));
       }, async () => {
         if (copilot.flightScheduleId == null) return null;
         // Read the saved schedule through the existing API; no backend changes.
@@ -89,7 +92,7 @@ export default function CopilotMenu({
       });
     } catch (error) {
       toast.error(
-        apiErrorMessage(error, "Failed to send test email. Please try again."),
+        apiErrorMessage(error, t("Failed to send test email. Please try again.")),
       );
     } finally {
       setSendingTest(false);
@@ -107,7 +110,7 @@ export default function CopilotMenu({
       onRefresh();
       onClose?.();
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Failed to update status."));
+      toast.error(apiErrorMessage(error, t("Failed to update status.")));
     }
   }
 
@@ -123,44 +126,46 @@ export default function CopilotMenu({
         await copilotsApi.run(copilot.id);
         return copilot.id;
       }, () => {
-        toast.success("Copilot launch request accepted.");
+        toast.success(t("Copilot launch request accepted."));
         onRefresh();
         onClose?.();
       });
     } catch (error) {
-      toast.error(apiErrorMessage(error, "Failed to run scrape."));
+      toast.error(apiErrorMessage(error, t("Failed to launch. Please try again.")));
     } finally {
       setRunningScrape(false);
     }
   }
 
   async function handleArchive() {
-    if (!confirm("Archive this copilot?")) return;
+    if (!confirm(t("Archive this copilot?"))) return;
     try {
       await copilotsApi.updateStatus(copilot.id, "archived");
       onRefresh();
       onClose?.();
     } catch {
-      toast.error("Failed to archive.");
+      toast.error(t("Failed to archive."));
     }
   }
 
   async function handleDelete() {
-    if (!confirm("Permanently delete this copilot? This cannot be undone."))
+    if (!confirm(t("Permanently delete this copilot? This cannot be undone.")))
       return;
     try {
       await copilotsApi.delete(copilot.id);
       onRefresh();
       onClose?.();
     } catch {
-      toast.error("Failed to delete.");
+      toast.error(t("Failed to delete."));
     }
   }
 
   function handleDuplicate() {
     if (
       !confirm(
-        `Duplicate "${copilot.name}"? This will create a new draft copy.`,
+        t('Duplicate "{name}"? This will create a new draft copy.', {
+          name: copilot.name ?? "",
+        }),
       )
     )
       return;
@@ -168,10 +173,10 @@ export default function CopilotMenu({
       .duplicate(copilot.id)
       .then(() => {
         onRefresh();
-        toast.success("Copilot duplicated.");
+        toast.success(t("Copilot duplicated."));
       })
       .catch((error) => {
-        toast.error(apiErrorMessage(error, "Failed to duplicate."));
+        toast.error(apiErrorMessage(error, t("Failed to duplicate.")));
       })
       .finally(() => {
         onClose?.();
@@ -187,13 +192,13 @@ export default function CopilotMenu({
           onClick={() => onClose?.()}
           className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
         >
-          <Pencil size={13} /> Edit
+          <Pencil size={13} /> {t("Edit")}
         </Link>
         <button
           onClick={handleDuplicate}
           className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
         >
-          <Copy size={13} /> Duplicate
+          <Copy size={13} /> {t("Duplicate")}
         </button>
         <Link
           href={`/dashboard/departure?copilotId=${copilot.id}&name=${encodeURIComponent(copilot.name ?? "")}`}
@@ -209,7 +214,7 @@ export default function CopilotMenu({
             className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors aria-disabled:opacity-50 aria-disabled:cursor-not-allowed"
           >
             <Mail size={13} className={sendingTest ? "animate-pulse" : ""} />
-            {sendingTest ? "Sending..." : "Send Test Email"}
+            {sendingTest ? t("Sending...") : t("Send Test Email")}
           </button>
         </span>
         {showLaunchButton && (
@@ -218,7 +223,7 @@ export default function CopilotMenu({
             title={
               isComplete
                 ? undefined
-                : "Complete all setup steps before launching"
+                : t("Complete all setup steps before launching")
             }
           >
             <button
@@ -230,7 +235,7 @@ export default function CopilotMenu({
                 size={13}
                 className={runningScrape ? "animate-pulse" : ""}
               />
-              {runningScrape ? "Running..." : "Launch"}
+              {runningScrape ? t("Launching...") : t("Launch")}
             </button>
           </span>
         )}
@@ -239,7 +244,7 @@ export default function CopilotMenu({
             onClick={() => toggleStatus("paused")}
             className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            <Pause size={13} /> Pause
+            <Pause size={13} /> {t("Pause")}
           </button>
         ) : showResumeButton ? (
           <span
@@ -247,7 +252,7 @@ export default function CopilotMenu({
             title={
               isComplete
                 ? undefined
-                : "Complete all setup steps before resuming"
+                : t("Complete all setup steps before resuming")
             }
           >
             <button
@@ -255,7 +260,7 @@ export default function CopilotMenu({
               disabled={!isComplete}
               className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Play size={13} /> Resume
+              <Play size={13} /> {t("Resume")}
             </button>
           </span>
         ) : null}
@@ -264,7 +269,7 @@ export default function CopilotMenu({
             onClick={handleArchive}
             className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            <Archive size={13} /> Archive
+            <Archive size={13} /> {t("Archive")}
           </button>
         )}
         <div className="border-t border-gray-100 my-1" />
@@ -272,7 +277,7 @@ export default function CopilotMenu({
           onClick={handleDelete}
           className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
         >
-          <Trash2 size={13} /> Delete
+          <Trash2 size={13} /> {t("Delete")}
         </button>
       </div>
 
