@@ -3,10 +3,12 @@ import CopilotStatus from "../CopilotStatus";
 
 import { useCopilotStore } from "@/store/copilotStore";
 import NoData from "./NoData";
+import { useI18n } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
 import { sortCopilotsArchivedLast } from "@/lib/sort-copilots";
 
 export default function CopilotsCard() {
+  const { t } = useI18n();
   const { copilots } = useCopilotStore();
   const router = useRouter();
   const visibleCopilots = sortCopilotsArchivedLast(copilots).slice(0, 3);
@@ -20,13 +22,13 @@ export default function CopilotsCard() {
             href="/dashboard/copilots"
             className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
           >
-            View all
+            {t("View all")}
           </Link>
         )}
       </div>
 
       {copilots.length === 0 ? (
-        <NoData title="No copilots found" />
+        <NoData title={t("No copilots found")} />
       ) : (
         <table className="w-full">
           <tbody>
