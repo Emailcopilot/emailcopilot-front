@@ -14,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import CopilotStatus from "../CopilotStatus";
+import { useI18n } from "@/lib/i18n";
 import {
   Copilot,
   OverallStatus,
@@ -112,12 +113,15 @@ export const handleCardProp = (status: string) => {
   }
 };
 
-/** "24 Nov, 14:45", or "Not yet" when nothing was sent. */
-function formatLastSent(date: string | null | undefined): string {
-  if (!date) return "Not yet";
+/** "24 Nov, 14:45" (in the app language), or null when nothing was sent. */
+function formatLastSent(
+  date: string | null | undefined,
+  locale: string,
+): string | null {
+  if (!date) return null;
   const d = new Date(date);
-  if (Number.isNaN(d.getTime())) return "Not yet";
-  return d.toLocaleString("en-GB", {
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleString(locale === "en" ? "en-GB" : locale, {
     day: "numeric",
     month: "short",
     hour: "2-digit",
@@ -151,6 +155,7 @@ function CopilotCard({
   onRefresh,
   className = "",
 }: CopilotCardProps) {
+  const { t, locale } = useI18n();
   const [isLoading, setIsLoading] = React.useState(false);
   const [showEmailLimit, setShowEmailLimit] = React.useState(false);
   const { limits, plans } = useBilling();
@@ -166,12 +171,12 @@ function CopilotCard({
     try {
       await copilotsApi.run(copilot.id);
 
-      toast.success("Copilot resumed successfully.");
+      toast.success(t("Copilot resumed successfully."));
       if (onRefresh) {
         onRefresh();
       }
     } catch (error) {
-      toast.error("Error resuming copilot. Please try again.");
+      toast.error(t("Error resuming copilot. Please try again."));
       console.error("Error resuming copilot:", error);
     } finally {
       setIsLoading(false);
@@ -226,7 +231,7 @@ function CopilotCard({
             e.stopPropagation();
             onActionsClick?.();
           }}
-          aria-label="Copilot actions"
+          aria-label={t("Copilot actions")}
           className="shrink-0 text-gray-300 transition-colors hover:text-gray-500"
         >
           {showMenu ? <X size={18} /> : <MoreVertical size={18} />}
@@ -236,15 +241,15 @@ function CopilotCard({
       {/* 2. How is it going */}
       <div className="grid grid-cols-2 gap-2 rounded-lg bg-gray-50 px-3 py-2.5">
         <div>
-          <div className="text-[11px] text-gray-400">Sent</div>
+          <div className="text-[11px] text-gray-400">{t("Sent")}</div>
           <div className="text-[15px] font-semibold text-gray-900">
             {(copilot.emailsSent ?? 0).toLocaleString("en-US")}
           </div>
         </div>
         <div>
-          <div className="text-[11px] text-gray-400">Last sent</div>
+          <div className="text-[11px] text-gray-400">{t("Last sent")}</div>
           <div className="mt-0.5 text-[13px] font-medium text-gray-900">
-            {formatLastSent(copilot.lastRunAt)}
+            {formatLastSent(copilot.lastRunAt, locale) ?? t("Not yet")}
           </div>
         </div>
       </div>
@@ -254,13 +259,13 @@ function CopilotCard({
         <div className="flex min-w-0 items-center gap-1.5">
           <Mail size={14} className="shrink-0 text-gray-400" />
           <span className="truncate">
-            {copilot.emailAccount?.email || "No email account"}
+            {copilot.emailAccount?.email || t("No email account")}
           </span>
         </div>
         <div className="flex min-w-0 items-center gap-1.5">
           <Calendar size={14} className="shrink-0 text-gray-400" />
           <span className="truncate">
-            {copilot.flightSchedule?.name || "No flight schedule"}
+            {copilot.flightSchedule?.name || t("No flight schedule")}
           </span>
         </div>
       </div>
@@ -276,7 +281,7 @@ function CopilotCard({
           disabled={isLoading}
           className="inline-flex items-center gap-2 text-[13px] font-medium text-primary transition-colors hover:text-primary-hover disabled:opacity-50"
         >
-          {isLoading ? "Loading..." : label}
+          {isLoading ? t("Loading...") : t(label)}
           <MoveRight size={14} />
         </button>
       </div>
