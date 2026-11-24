@@ -16,6 +16,7 @@ import { targetAudiencesApi } from "@/lib/api";
 import { toast } from "sonner";
 import Switcher from "../../Switcher";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
 // ── TagInput ─────────────────────────────────────────────────────────────────
 
 interface TagInputProps {
@@ -247,11 +248,13 @@ export default function Step3ScrapeProfile() {
   const [loading, setLoading] = useState(false);
   const [enableCity, setEnableCity] = useState(false);
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
   const { data: profiles = [], isLoading: loadingProfiles } =
     useWizardTargetAudiences();
 
   // show alert when user tries to leave the page with unsaved changes
   useEffect(() => {
+    if (isDemo) return;
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
 
@@ -263,7 +266,7 @@ export default function Step3ScrapeProfile() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [isDemo]);
 
   // If a target audience was already linked (edit/duplicate mode) or the user
   // picks an existing profile, hydrate the form fields from that profile so
@@ -310,6 +313,10 @@ export default function Step3ScrapeProfile() {
   const canContinue = !!copilotData.targetAudienceId || industries.length > 0;
 
   const handleONpress = async () => {
+    if (isDemo) {
+      setStep(4);
+      return;
+    }
     // If a profile is selected, persist the link and proceed.
     if (copilotData.targetAudienceId) {
       setLoading(true);

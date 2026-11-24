@@ -19,6 +19,7 @@ import ScheduleList from "./ScheduleList";
 import { useUser } from "@clerk/nextjs";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
 
 const DAYS = [
   { value: 1, label: "Mon" },
@@ -64,8 +65,13 @@ function pickFields(s: Partial<ScheduleFields>): ScheduleFields {
 }
 
 export default function ScheduleStep() {
-  const { copilotData, updateCopilotData, updateFlightSchedule, setStep, persistDraft } =
-    useCopilotStore();
+  const {
+    copilotData,
+    updateCopilotData,
+    updateFlightSchedule,
+    setStep,
+    persistDraft,
+  } = useCopilotStore();
 
   const schedule = copilotData.flightSchedule;
   const selectedId = copilotData.flightScheduleId;
@@ -74,6 +80,7 @@ export default function ScheduleStep() {
   const [loading, setLoading] = useState(false);
   const [saveAsDefault, setSaveAsDefault] = useState(true);
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
   // Open by default when nothing is linked yet (edit mode hydrates later).
   const [listOpen, setListOpen] = useState(!copilotData.flightScheduleId);
 
@@ -87,7 +94,7 @@ export default function ScheduleStep() {
   useEffect(() => {
     if (!isLoaded || preselectedTimeZone.current) return;
     preselectedTimeZone.current = true;
-    if (selectedId) return;
+    if (selectedId || isDemo) return;
 
     const current = schedule.timezone;
     if (current !== DEFAULT_TIMEZONE && isValidTimeZone(current)) return;
@@ -98,15 +105,14 @@ export default function ScheduleStep() {
   }, [
     isLoaded,
     selectedId,
+    isDemo,
     schedule.timezone,
     updateFlightSchedule,
     user?.id,
   ]);
 
   // Local text for the daily limit so the field can be cleared/typed freely.
-  const [limitText, setLimitText] = useState(
-    String(schedule.sendLimit ?? 30),
-  );
+  const [limitText, setLimitText] = useState(String(schedule.sendLimit ?? 30));
 
   useEffect(() => {
     setLimitText(String(schedule.sendLimit ?? 30));
@@ -114,9 +120,10 @@ export default function ScheduleStep() {
 
   // Baseline = the linked saved schedule (null = custom, nothing linked).
   // dirty = user changed the form after (or without) selecting a schedule.
-  const [baseline, setBaseline] = useState<{ id: number; data: ScheduleFields } | null>(
-    selectedId ? { id: selectedId, data: pickFields(schedule) } : null,
-  );
+  const [baseline, setBaseline] = useState<{
+    id: number;
+    data: ScheduleFields;
+  } | null>(selectedId ? { id: selectedId, data: pickFields(schedule) } : null);
   const prevSelectedIdRef = useRef(selectedId);
 
   useEffect(() => {
@@ -135,13 +142,12 @@ export default function ScheduleStep() {
     JSON.stringify(pickFields(schedule)) !== JSON.stringify(baseline.data);
   // Renaming a linked schedule is an explicit "save as new": the typed name
   // is kept verbatim instead of getting a v2/v3 suffix.
-  const nameEdited =
-    baseline !== null && schedule.name !== baseline.data.name;
+  const nameEdited = baseline !== null && schedule.name !== baseline.data.name;
 
   // Only warn about unsaved changes when the form actually differs from the
   // linked schedule (or is a filled-in custom schedule).
   useEffect(() => {
-    if (!dirty) return;
+    if (!dirty || isDemo) return;
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = "";
@@ -150,7 +156,7 @@ export default function ScheduleStep() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [dirty]);
+  }, [dirty, isDemo]);
 
   const toggleDay = (day: number) => {
     let newDays;
@@ -170,6 +176,11 @@ export default function ScheduleStep() {
   const handleSave = async () => {
     if (schedule.activeDays.length === 0) {
       toast.error(t("Please select at least one active day."));
+      return;
+    }
+
+    if (isDemo) {
+      setStep(6);
       return;
     }
 
@@ -321,9 +332,10 @@ export default function ScheduleStep() {
                       }}
                       onBlur={() => {
                         const n = parseInt(limitText, 10);
-                        const final = Number.isNaN(n) || n < 1
-                          ? schedule.sendLimit ?? 30
-                          : n;
+                        const final =
+                          Number.isNaN(n) || n < 1
+                            ? (schedule.sendLimit ?? 30)
+                            : n;
                         setLimitText(String(final));
                         if (final !== schedule.sendLimit) {
                           updateFlightSchedule({ sendLimit: final });
@@ -430,7 +442,9 @@ export default function ScheduleStep() {
               </span>
             </h3>
             <p className="text-xs text-slate-500">
-              {t("Set the daily time window when your copilot can send emails.")}
+              {t(
+                "Set the daily time window when your copilot can send emails.",
+              )}
             </p>
           </div>
           <div className="col-span-1 lg:col-span-4 flex items-start gap-4 flex-1 pt-1">
@@ -465,7 +479,9 @@ export default function ScheduleStep() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-slate-700">{t("To")}</span>
+                  <span className="text-sm font-medium text-slate-700">
+                    {t("To")}
+                  </span>
                   <div className="relative">
                     <select
                       value={schedule.sendingHours.end}

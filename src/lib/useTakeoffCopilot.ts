@@ -4,6 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { copilotsApi } from "./api";
 import { useCopilotStore } from "@/store/copilotStore";
 import type { TemplateStep } from "./types/templates";
+import { useDemoMode } from "./demo/demo-mode";
+import {
+  getDemoCopilotById,
+  isDemoCopilotId,
+  toDemoTakeoffCopilot,
+} from "./demo/demo-data";
 
 export interface TakeoffEmailAccount {
   id: number;
@@ -57,13 +63,29 @@ export interface TakeoffCopilot {
 
 export function useTakeoffCopilot() {
   const draftId = useCopilotStore((s) => s.draftId);
+  const copilotData = useCopilotStore((s) => s.copilotData);
+  const { isDemo } = useDemoMode();
+  const demoCopilot =
+    isDemo && isDemoCopilotId(draftId) ? getDemoCopilotById(draftId) : undefined;
+
   return useQuery({
-    queryKey: ["takeoff-copilot", draftId],
-    queryFn: () =>
-      copilotsApi
+    queryKey: [
+      "takeoff-copilot",
+      draftId,
+      isDemo ? "demo" : "live",
+      isDemo
+        ? `${copilotData.name}|${copilotData.emailAccountId}|${copilotData.targetAudienceId}|${copilotData.templateId}|${copilotData.flightScheduleId}`
+        : null,
+    ],
+    queryFn: () => {
+      if (demoCopilot) {
+        return Promise.resolve(toDemoTakeoffCopilot(demoCopilot, copilotData));
+      }
+      return copilotsApi
         .getById(draftId as number)
-        .then((r) => r.data as TakeoffCopilot),
-    enabled: draftId != null,
+        .then((r) => r.data as TakeoffCopilot);
+    },
+    enabled: draftId != null && (!isDemo || demoCopilot != null),
     staleTime: 0,
   });
 }

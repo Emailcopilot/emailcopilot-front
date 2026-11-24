@@ -13,7 +13,7 @@ import Step2EmailProfile from "@/components/ui/NewCopilot/StepTwo/Step2EmailProf
 import Step3ScrapeProfile from "@/components/ui/NewCopilot/StepThree/Step3ScrapeProfile";
 import Step4Launch from "@/components/ui/NewCopilot/StepSix/Step4Launch";
 import TargetAudienceSummary from "@/components/ui/NewCopilot/StepThree/TargetAudienceSummary";
-import { useCopilotStore } from "@/store/copilotStore";
+import { useCopilotStore, type Step } from "@/store/copilotStore";
 import EmailTemplateStep from "@/components/ui/NewCopilot/StepFour/EmailTemplateStep";
 import { copilotsApi } from "@/lib/api";
 import { useUser } from "@clerk/nextjs";
@@ -30,10 +30,17 @@ import { useSetupFeedbackActions } from "@/lib/SetupFeedbackProvider";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { clearDemoPending } from "@/lib/demo/demo-storage";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import {
+  getDemoCopilotById,
+  isDemoCopilotId,
+  toDemoCopilotStoreData,
+} from "@/lib/demo/demo-data";
 
 function NewCopilotPageContent() {
   const feedback = useSetupFeedbackActions();
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
   const router = useRouter();
   const searchParams = useSearchParams();
   const {
@@ -123,6 +130,12 @@ function NewCopilotPageContent() {
     const EmailAccountId = searchParams.get("accountId");
     const connected = searchParams.get("connected");
     const provider = searchParams.get("provider");
+    const stepParam = searchParams.get("step");
+    const parsedStep = stepParam ? parseInt(stepParam, 10) : NaN;
+    const requestedStep =
+      Number.isInteger(parsedStep) && parsedStep >= 1 && parsedStep <= 6
+        ? (parsedStep as Step)
+        : null;
 
     setCopilotNotFound(false);
 
@@ -133,6 +146,33 @@ function NewCopilotPageContent() {
         setLoadingCopilot(false);
         return;
       }
+
+      if (isDemoCopilotId(id)) {
+        if (!isDemo) {
+          router.replace("/dashboard/copilots");
+          return;
+        }
+        const demoCopilot = getDemoCopilotById(id);
+        if (!demoCopilot) {
+          setCopilotNotFound(true);
+          setLoadingCopilot(false);
+          return;
+        }
+        const switchedCopilot = useCopilotStore.getState().draftId !== id;
+        setEditingLive(
+          demoCopilot.status === "active" || demoCopilot.status === "running",
+        );
+        loadCopilot(toDemoCopilotStoreData(demoCopilot), id, "edit");
+        setDraftId(id);
+        if (requestedStep) {
+          setStep(requestedStep);
+        } else if (switchedCopilot) {
+          setStep(1);
+        }
+        setLoadingCopilot(false);
+        return;
+      }
+
       setLoadingCopilot(true);
       copilotsApi
         .getById(id)
@@ -267,6 +307,7 @@ function NewCopilotPageContent() {
     setStep,
     resetStore,
     setEditingLive,
+    isDemo,
   ]);
 
   // Creating is gated by the plan's copilot allowance. Editing or duplicating
@@ -274,6 +315,7 @@ function NewCopilotPageContent() {
   // opens the upgrade dialog instead of letting them fill the whole wizard
   // only to hit the backend's "Plan limit reached" error at save time.
   useEffect(() => {
+    if (isDemo) return;
     if (limits && !limits.hasActivePlan) {
       if (searchParams.get("edit") || searchParams.get("duplicate")) return;
       router.replace("/dashboard/billing?required=plan");
@@ -284,7 +326,7 @@ function NewCopilotPageContent() {
     if (searchParams.get("edit") || searchParams.get("duplicate")) return;
 
     router.replace("/dashboard/copilots?limit=copilots");
-  }, [limits, quota?.atLimit, searchParams, router]);
+  }, [limits, quota?.atLimit, searchParams, router, isDemo]);
 
   const getPageTitle = () => {
     if (mode === "edit") return t("Edit Copilot");
@@ -293,6 +335,10 @@ function NewCopilotPageContent() {
   };
 
   const handleSaveDraftStep = useCallback(async () => {
+    if (isDemo) {
+      toast.info(t("Demo mode is read only. Create your own item to start."));
+      return;
+    }
     try {
       await persistDraft();
       toast.success(
@@ -310,9 +356,13 @@ function NewCopilotPageContent() {
       }
       toast.error(t("Failed to save draft. Please try again."));
     }
-  }, [persistDraft, router, t]);
+  }, [persistDraft, router, t, isDemo]);
 
   const handleLaunch = useCallback(async () => {
+    if (isDemo) {
+      toast.info(t("Demo mode is read only. Create your own item to start."));
+      return;
+    }
     if (feedback.isBusy()) return;
     try {
       setLaunching(true);
@@ -358,12 +408,13 @@ function NewCopilotPageContent() {
     } finally {
       setLaunching(false);
     }
-  }, [copilotData, draftId, router, resetStore, user, feedback, t]);
+  }, [copilotData, draftId, router, resetStore, user, feedback, t, isDemo]);
 
   // "Re-launch" from any step: the step has just saved, now put it live again.
   useEffect(() => {
     if (!relaunchRequested) return;
     clearRelaunchRequest();
+    if (isDemo) return;
     if (mailQuota?.atLimit) {
       toast.error(
         t(
@@ -377,7 +428,7 @@ function NewCopilotPageContent() {
         toast.success(t("Copilot re-launched."));
       }
     });
-  }, [relaunchRequested, clearRelaunchRequest, mailQuota?.atLimit, handleLaunch, t]);
+  }, [relaunchRequested, clearRelaunchRequest, mailQuota?.atLimit, handleLaunch, t, isDemo]);
 
   if (copilotNotFound) {
     return <CopilotNotFound />;
@@ -401,7 +452,7 @@ function NewCopilotPageContent() {
         <div>
           <div className="flex items-center mb-4 gap-2 text-sm font-medium ">
             <Link
-              href="/dashboard/copilots"
+              href={isDemo ? "/dashboard/copilots?demo=true" : "/dashboard/copilots"}
               className="text-primary hover:text-gray-600 text-sm lg:text-base transition-colors"
             >
               Copilots
@@ -428,7 +479,9 @@ function NewCopilotPageContent() {
               <button
                 onClick={() => {
                   resetStore();
-                  router.push("/dashboard/copilots");
+                  router.push(
+                    isDemo ? "/dashboard/copilots?demo=true" : "/dashboard/copilots",
+                  );
                 }}
                 className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
               >

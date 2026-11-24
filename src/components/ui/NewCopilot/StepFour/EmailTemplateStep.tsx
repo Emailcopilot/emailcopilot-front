@@ -26,6 +26,8 @@ import { apiErrorMessage, toEditorContent } from "@/lib/helpers";
 import { toast } from "sonner";
 import SubjectLineInput from "@/components/ui/SubjectLineInput";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { getDemoTemplateById } from "@/lib/demo/demo-data";
 
 const initialEmailBody = `
 <p>Hi,</p>
@@ -43,6 +45,7 @@ const initialEmailBody = `
 export default function EmailTemplateStep() {
   const feedback = useSetupFeedbackActions();
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
   const [activeTab, setActiveTab] = useState<"steps" | "variables">("steps");
   const [activeStep, setActiveStep] = useState(1);
   // const [smartSending, setSmartSending] = useState(true);
@@ -82,6 +85,7 @@ export default function EmailTemplateStep() {
   );
   // show alert when user tries to leave the page with unsaved changes
   useEffect(() => {
+    if (isDemo) return;
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
 
@@ -93,7 +97,7 @@ export default function EmailTemplateStep() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [isDemo]);
   const variablesList = [
     {
       id: 1,
@@ -152,9 +156,30 @@ export default function EmailTemplateStep() {
 
   // Load the copilot's linked template (edit/duplicate mode) once on mount
   const templateHydratedRef = useRef(false);
+  const hydratedDemoTemplateIdRef = useRef<number | null>(null);
   useEffect(() => {
-    if (templateHydratedRef.current) return;
     const id = copilotData.templateId;
+    if (isDemo) {
+      if (!id || !editor || hydratedDemoTemplateIdRef.current === id) return;
+      const tpl = getDemoTemplateById(id);
+      if (!tpl) return;
+      hydratedDemoTemplateIdRef.current = id;
+      templateHydratedRef.current = true;
+      setTemplateName(tpl.name || "");
+      setSubjectInput(tpl.subject || "");
+      editor.commands.setContent(toEditorContent(tpl.body || ""));
+      if (Array.isArray(tpl.variables)) setVariableInput(tpl.variables);
+      setOriginalTemplate({
+        id: String(tpl.id ?? id),
+        body: tpl.body || "",
+        subject: tpl.subject || "",
+        name: tpl.name || "",
+        variables: Array.isArray(tpl.variables) ? tpl.variables : [],
+      });
+      return;
+    }
+
+    if (templateHydratedRef.current) return;
     if (!id) {
       templateHydratedRef.current = true;
       return;
@@ -184,7 +209,7 @@ export default function EmailTemplateStep() {
       .catch((err) => {
         console.error("Failed to load linked template:", err);
       });
-  }, [editor, copilotData.templateId]);
+  }, [editor, copilotData.templateId, isDemo]);
 
   const insertVariable = (variableName: string) => {
     if (lastFocusedField === "body") {
@@ -315,6 +340,10 @@ export default function EmailTemplateStep() {
 
   const handleSave = async () => {
     if (!editor) return;
+    if (isDemo) {
+      setStep(5);
+      return;
+    }
     setLoading(true);
 
     try {
@@ -359,6 +388,10 @@ export default function EmailTemplateStep() {
   };
 
   const handleTestEmail = async (event?: React.MouseEvent<HTMLButtonElement>) => {
+    if (isDemo) {
+      toast.info(t("Demo mode is read only. Create your own item to start."));
+      return;
+    }
     if (!editor || feedback.isBusy() || (event?.detail ?? 0) > 1) return;
 
     if (!copilotData.emailAccountId) {
@@ -801,6 +834,9 @@ export default function EmailTemplateStep() {
                     );
                     if (template.variables)
                       setVariableInput(template.variables);
+                    if (isDemo) {
+                      hydratedDemoTemplateIdRef.current = template.id;
+                    }
                     updateCopilotData({
                       templateId: template.id,
                     });

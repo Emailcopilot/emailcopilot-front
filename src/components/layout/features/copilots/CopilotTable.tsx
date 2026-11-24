@@ -200,16 +200,14 @@ function StepColumn({
   const { setStep } = useCopilotStore();
   return (
     <div
-      onClick={
-        readOnly
-          ? undefined
-          : () => (
-              setStep((index + 1) as Step),
-              router.push(`/dashboard/copilots/new?edit=${copilotId}`)
-            )
-      }
+      onClick={() => {
+        const targetStep = (index + 1) as Step;
+        setStep(targetStep);
+        const demoSuffix = readOnly ? `&step=${targetStep}&demo=true` : "";
+        router.push(`/dashboard/copilots/new?edit=${copilotId}${demoSuffix}`);
+      }}
       title={`${index + 1}. ${t(step.title)}: ${t(step.label)}`}
-      className="flex items-center gap-1.5 group hover:bg-primary/5 border border-gray-100 hover:border-primary rounded-lg px-2 py-1"
+      className="flex cursor-pointer items-center gap-1.5 group hover:bg-primary/5 border border-gray-100 hover:border-primary rounded-lg px-2 py-1"
     >
       <StepIcon state={step.state} />
       <span className="text-[12px] font-medium group-hover:text-primary text-gray-700 whitespace-nowrap">
@@ -390,30 +388,22 @@ function CopilotTable({
               return (
                 <tr
                   key={copilot.id}
-                  onClick={
-                    readOnly
-                      ? undefined
-                      : () =>
-                          router.push(
-                            `/dashboard/copilots/new?edit=${copilot.id}`,
-                          )
-                  }
-                  onKeyDown={
-                    readOnly
-                      ? undefined
-                      : (e) => {
-                          if (
-                            e.key === "Enter" &&
-                            e.target === e.currentTarget
-                          ) {
-                            router.push(
-                              `/dashboard/copilots/new?edit=${copilot.id}`,
-                            );
-                          }
-                        }
-                  }
-                  tabIndex={readOnly ? -1 : 0}
-                  className={`group/row border-b border-[#E2E8F0] align-top last:border-b-0 hover:bg-gray-50 transition-colors focus-visible:outline-2 focus-visible:outline-primary/40 ${readOnly ? "cursor-default" : "cursor-pointer"}`}
+                  onClick={() => {
+                    if (readOnly) useCopilotStore.getState().setStep(1);
+                    router.push(
+                      `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+                    );
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.target === e.currentTarget) {
+                      if (readOnly) useCopilotStore.getState().setStep(1);
+                      router.push(
+                        `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+                      );
+                    }
+                  }}
+                  tabIndex={0}
+                  className="group/row cursor-pointer border-b border-[#E2E8F0] align-top last:border-b-0 hover:bg-gray-50 transition-colors focus-visible:outline-2 focus-visible:outline-primary/40"
                 >
                   {selectable && (
                     <td

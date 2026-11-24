@@ -18,6 +18,7 @@ import {
   setDemoUserId,
   useDemoPending,
 } from "./demo-storage";
+import { isDemoCopilotId } from "./demo-data";
 
 interface DemoModeContextValue {
   isDemo: boolean;
@@ -32,7 +33,6 @@ const DemoModeContext = createContext<DemoModeContextValue>({
 });
 
 const BLOCKED_PREFIXES = [
-  "/dashboard/copilots/new",
   "/dashboard/settings",
   "/dashboard/billing",
 ];
@@ -47,7 +47,17 @@ function isDemoEligible(pathname: string, search: string) {
 
   const params = new URLSearchParams(search);
   if (params.get("new") === "true") return false;
-  if (params.has("edit") || params.has("duplicate")) return false;
+  if (params.has("duplicate")) return false;
+
+  // Real copilot creation/editing stays non-demo; inspecting a demo copilot keeps demo active.
+  if (
+    pathname === "/dashboard/copilots/new" ||
+    pathname.startsWith("/dashboard/copilots/new/")
+  ) {
+    return isDemoCopilotId(params.get("edit"));
+  }
+
+  if (params.has("edit")) return false;
 
   return true;
 }

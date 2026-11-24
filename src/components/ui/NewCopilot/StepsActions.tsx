@@ -2,6 +2,8 @@ import { ArrowRight, Rocket } from "lucide-react";
 import { useState } from "react";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { toast } from "sonner";
 
 function StepsActions({
   canContinue,
@@ -17,12 +19,17 @@ function StepsActions({
   const { mode, editingLive, setRelaunchPending } = useCopilotStore();
   const [relaunching, setRelaunching] = useState(false);
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
   const showRelaunch = mode === "edit" && editingLive;
 
   // Saves the current step exactly like "Save & Continue"; the store turns
   // the step change at the end of that save into a re-launch.
   const handleRelaunch = async () => {
     if (!canContinue || isLoading || relaunching) return;
+    if (isDemo) {
+      toast.info(t("Demo mode is read only. Create your own item to start."));
+      return;
+    }
     setRelaunching(true);
     setRelaunchPending(true);
     try {

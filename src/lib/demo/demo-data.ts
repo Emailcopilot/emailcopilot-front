@@ -1,8 +1,9 @@
 import type { EmailAccount, Lead } from "@/lib/types";
 import type { Template } from "@/lib/types/templates";
 import type { Copilot } from "@/components/layout/features/copilots/CopilotTable";
-import type { TargetAudience } from "@/store/copilotStore";
+import type { CopilotData, TargetAudience } from "@/store/copilotStore";
 import type { FlightScheduleRow } from "@/components/layout/features/flightSchedule/FlightScheduleTable";
+import type { TakeoffCopilot } from "@/lib/useTakeoffCopilot";
 
 function daysAgo(days: number) {
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
@@ -654,3 +655,150 @@ export const DEMO_POPUP_COPILOTS: DemoPopupCopilot[] = DEMO_COPILOTS.map(
       : undefined,
   }),
 );
+
+const DEMO_COPILOT_GOALS: Record<number, string> = {
+  [-101]: "Book qualified product demos with Series A founders.",
+  [-102]: "Generate pipeline with ecommerce marketing leaders.",
+  [-103]: "Start intro conversations with independent UK agency owners.",
+  [-104]: "Build integration and channel partnerships.",
+};
+
+export function isDemoCopilotId(id: number | string | null | undefined): boolean {
+  if (id == null || id === "") return false;
+  return DEMO_COPILOTS.some((copilot) => String(copilot.id) === String(id));
+}
+
+export function getDemoCopilotById(
+  id: number | string | null | undefined,
+): Copilot | undefined {
+  if (id == null || id === "") return undefined;
+  return DEMO_COPILOTS.find((copilot) => String(copilot.id) === String(id));
+}
+
+export function getDemoEmailAccountById(
+  id: number | null | undefined,
+): EmailAccount | undefined {
+  if (id == null) return undefined;
+  return DEMO_EMAIL_ACCOUNTS.find((account) => account.id === id);
+}
+
+export function getDemoTargetAudienceById(
+  id: number | null | undefined,
+): TargetAudience | undefined {
+  if (id == null) return undefined;
+  return DEMO_TARGET_AUDIENCES.find((audience) => audience.id === id);
+}
+
+export function getDemoTemplateById(
+  id: number | null | undefined,
+): Template | undefined {
+  if (id == null) return undefined;
+  return DEMO_TEMPLATES.find((template) => template.id === id);
+}
+
+export function getDemoFlightScheduleById(
+  id: number | null | undefined,
+): FlightScheduleRow | undefined {
+  if (id == null) return undefined;
+  return DEMO_FLIGHT_SCHEDULES.find((schedule) => schedule.id === id);
+}
+
+export function toDemoCopilotStoreData(copilot: Copilot): CopilotData {
+  const audience = getDemoTargetAudienceById(copilot.targetAudienceId);
+  const schedule = getDemoFlightScheduleById(copilot.flightScheduleId);
+
+  return {
+    id: copilot.id,
+    name: copilot.name,
+    description: copilot.description,
+    goal: DEMO_COPILOT_GOALS[copilot.id] ?? copilot.description,
+    status: copilot.status,
+    emailAccountId: copilot.emailAccountId,
+    targetAudienceId: copilot.targetAudienceId,
+    emailsSent: copilot.emailsSent,
+    templateId: copilot.templateId,
+    flightScheduleId: copilot.flightScheduleId,
+    targetProfile: {
+      industries: audience?.name ? [audience.name] : [],
+      countries: audience?.country ? [audience.country] : [],
+      cities: audience?.city ? [audience.city] : [],
+    },
+    flightSchedule: {
+      name: schedule?.name ?? copilot.flightSchedule?.name ?? "Weekday mornings",
+      sendLimit: schedule?.sendLimit ?? copilot.flightSchedule?.sendLimit ?? 30,
+      sendLimitActive:
+        schedule?.sendLimitActive ??
+        copilot.flightSchedule?.sendLimitActive ??
+        true,
+      activeDays: schedule?.activeDays ?? [1, 2, 3, 4, 5],
+      sendingHours: schedule?.sendingHours ?? { start: "09:00", end: "17:00" },
+      sendingHoursActive: schedule?.sendingHoursActive ?? true,
+      timezone: schedule?.timezone ?? "America/New_York",
+    },
+  };
+}
+
+export function toDemoTakeoffCopilot(
+  copilot: Copilot,
+  storeData?: CopilotData,
+): TakeoffCopilot {
+  const emailAccount = getDemoEmailAccountById(
+    storeData?.emailAccountId ?? copilot.emailAccountId,
+  );
+  const targetAudience = getDemoTargetAudienceById(
+    storeData?.targetAudienceId ?? copilot.targetAudienceId,
+  );
+  const template = getDemoTemplateById(
+    storeData?.templateId ?? copilot.templateId,
+  );
+  const schedule =
+    getDemoFlightScheduleById(
+      storeData?.flightScheduleId ?? copilot.flightScheduleId,
+    ) ?? storeData?.flightSchedule;
+
+  return {
+    id: copilot.id,
+    name: storeData?.name ?? copilot.name,
+    description: storeData?.description ?? copilot.description,
+    goal: storeData?.goal ?? DEMO_COPILOT_GOALS[copilot.id] ?? copilot.description,
+    emailAccountId: storeData?.emailAccountId ?? copilot.emailAccountId,
+    targetAudienceId: storeData?.targetAudienceId ?? copilot.targetAudienceId,
+    templateId: storeData?.templateId ?? copilot.templateId,
+    flightScheduleId: storeData?.flightScheduleId ?? copilot.flightScheduleId,
+    emailAccount: emailAccount
+      ? {
+          id: emailAccount.id,
+          profileName: emailAccount.profileName,
+          email: emailAccount.email,
+        }
+      : null,
+    targetAudience: targetAudience
+      ? {
+          id: targetAudience.id,
+          name: targetAudience.name,
+          country: targetAudience.country,
+          city: targetAudience.city,
+          resultsCount: targetAudience.resultsCount,
+        }
+      : null,
+    template: template
+      ? {
+          id: template.id,
+          name: template.name,
+          steps: template.steps,
+        }
+      : null,
+    flightSchedule: schedule
+      ? {
+          name: schedule.name,
+          sendLimit: schedule.sendLimit,
+          sendLimitActive: schedule.sendLimitActive,
+          activeDays: schedule.activeDays,
+          sendingHours: schedule.sendingHours,
+          sendingHoursActive: schedule.sendingHoursActive,
+          timezone: schedule.timezone,
+        }
+      : null,
+    targetProfile: storeData?.targetProfile ?? null,
+  };
+}

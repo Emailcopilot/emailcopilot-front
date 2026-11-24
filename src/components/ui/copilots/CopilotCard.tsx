@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { copilotsApi } from "@/lib/api";
 import { toast } from "sonner";
 import { getCopilotStatusAppearance } from "@/lib/copilot-status-appearance";
+import { useCopilotStore } from "@/store/copilotStore";
 
 export interface CardContent {
   badgeLabel: string;
@@ -192,20 +193,41 @@ function CopilotCard({
   const handleActionButton = (copilot: Copilot) => {
     switch (copilot.status.toLocaleLowerCase()) {
       case "paused":
-        return {
-          action: () => handleResume(),
-          label: "Resume",
-        };
+        return readOnly
+          ? {
+              action: () => {
+                useCopilotStore.getState().setStep(1);
+                router.push(
+                  `/dashboard/copilots/new?edit=${copilot.id}&step=1&demo=true`,
+                );
+              },
+              label: "Continue setup",
+            }
+          : {
+              action: () => handleResume(),
+              label: "Resume",
+            };
       case "draft":
         return {
-          action: () =>
-            router.push(`/dashboard/copilots/new?edit=${copilot.id}`),
+          action: () => {
+            if (readOnly) useCopilotStore.getState().setStep(1);
+            router.push(
+              `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+            );
+          },
           label: "Continue setup",
         };
       default:
         return {
-          action: () => router.push(`/dashboard/departure`),
-          label: "View in Departure",
+          action: () => {
+            if (readOnly) useCopilotStore.getState().setStep(1);
+            router.push(
+              readOnly
+                ? `/dashboard/copilots/new?edit=${copilot.id}&step=1&demo=true`
+                : `/dashboard/departure`,
+            );
+          },
+          label: readOnly ? "Continue setup" : "View in Departure",
         };
     }
   };
@@ -214,22 +236,22 @@ function CopilotCard({
 
   return (
     <div
-      onClick={
-        readOnly
-          ? undefined
-          : () => router.push(`/dashboard/copilots/new?edit=${copilot.id}`)
-      }
-      onKeyDown={
-        readOnly
-          ? undefined
-          : (e) => {
-              if (e.key === "Enter" && e.target === e.currentTarget) {
-                router.push(`/dashboard/copilots/new?edit=${copilot.id}`);
-              }
-            }
-      }
-      tabIndex={readOnly ? -1 : 0}
-      className={`flex h-full w-full flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 relative focus-visible:outline-2 focus-visible:outline-primary/40 ${readOnly ? "cursor-default" : "cursor-pointer"} ${className}`}
+      onClick={() => {
+        if (readOnly) useCopilotStore.getState().setStep(1);
+        router.push(
+          `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+        );
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" && e.target === e.currentTarget) {
+          if (readOnly) useCopilotStore.getState().setStep(1);
+          router.push(
+            `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+          );
+        }
+      }}
+      tabIndex={0}
+      className={`flex h-full w-full flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 relative cursor-pointer focus-visible:outline-2 focus-visible:outline-primary/40 ${className}`}
     >
       {/* 1. What is it: name + status */}
       <div className="flex items-start justify-between gap-2">
@@ -287,22 +309,20 @@ function CopilotCard({
       </div>
 
       {/* 4. What can I do */}
-      {!readOnly && (
-        <div className="mt-auto flex justify-end border-t border-gray-100 pt-2.5">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              action();
-            }}
-            disabled={isLoading}
-            className="inline-flex items-center gap-2 text-[13px] font-medium text-primary transition-colors hover:text-primary-hover disabled:opacity-50"
-          >
-            {isLoading ? t("Loading...") : t(label)}
-            <MoveRight size={14} />
-          </button>
-        </div>
-      )}
+      <div className="mt-auto flex justify-end border-t border-gray-100 pt-2.5">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            action();
+          }}
+          disabled={isLoading}
+          className="inline-flex items-center gap-2 text-[13px] font-medium text-primary transition-colors hover:text-primary-hover disabled:opacity-50"
+        >
+          {isLoading ? t("Loading...") : t(label)}
+          <MoveRight size={14} />
+        </button>
+      </div>
       {showMenu && !readOnly && (
         <div
           className="absolute right-4 top-12 z-20"
