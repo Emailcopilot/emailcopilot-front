@@ -305,6 +305,59 @@ const nl: Messages = {
     "Verificatie van het e-mailaccount mislukt. Controleer of het account goed is ingesteld.",
   // Email accounts (badges)
   "Easy setup": "Snel ingesteld",
+  // Target audiences
+  "Add at least one industry.": "Voeg minstens één branche toe.",
+  "All cities within the selected countries are included.":
+    "Alle steden in de gekozen landen doen mee.",
+  "All cities": "Alle steden",
+  "Audience size isn't live yet": "Doelgroepgrootte is nog niet live",
+  "Choose the industry of your target companies.":
+    "Kies de branche van je doelbedrijven.",
+  City: "Stad",
+  Copy: "Kopie",
+  Country: "Land",
+  "Create a target audience for easier access later":
+    "Maak een doelgroep aan om hem later snel te gebruiken",
+  "Define your Target Audience": "Bepaal je doelgroep",
+  "Delete this target audience?": "Deze doelgroep verwijderen?",
+  "E.g. Tech Leads in Amsterdam": "Bijv. Tech leads in Amsterdam",
+  "Failed to create the target audience.": "Doelgroep aanmaken mislukt.",
+  "Failed to duplicate the target audience.": "Doelgroep dupliceren mislukt.",
+  "Failed to start. Please try again.": "Starten mislukt. Probeer het opnieuw.",
+  "Failed to update the target audience.": "Doelgroep bijwerken mislukt.",
+  "Give your target a name so you can easily identify it later":
+    "Geef je doelgroep een naam zodat je hem later makkelijk terugvindt",
+  "In which cities are your target companies located?":
+    "In welke steden zitten je doelbedrijven?",
+  "In which countries are your target companies located?":
+    "In welke landen zitten je doelbedrijven?",
+  Industry: "Branche",
+  "No Target Audiences Found": "Geen doelgroepen gevonden",
+  "Only companies in the cities you pick below.":
+    "Alleen bedrijven in de steden die je hieronder kiest.",
+  "Row actions": "Rij-acties",
+  "Search target audience...": "Zoek doelgroep...",
+  "Search target audiences by name": "Zoek doelgroepen op naam",
+  "Target Audience Name": "Naam doelgroep",
+  "Target audience created": "Doelgroep aangemaakt",
+  "Target audience duplicated.": "Doelgroep gedupliceerd.",
+  "Target audience name is required.": "Naam van de doelgroep is verplicht.",
+  "Target audience updated": "Doelgroep bijgewerkt",
+  "Target specific cities": "Specifieke steden kiezen",
+  "Your Target Audiences ({count})": "Jouw doelgroepen ({count})",
+  "Target Audience name": "Naam doelgroep",
+  "Est. Audience Size": "Geschatte grootte",
+  "Last updated": "Laatst bijgewerkt",
+  "Type and press Enter to add industries...":
+    "Typ en druk op Enter om branches toe te voegen...",
+  "Search countries...": "Zoek landen...",
+  "Select a country first...": "Kies eerst een land...",
+  "Search cities...": "Zoek steden...",
+  "Please select a country first": "Kies eerst een land",
+  "No cities found": "Geen steden gevonden",
+  "Type to search…": "Typ om te zoeken…",
+  "Tell your copilot who you want to reach and we’ll find the best matches.":
+    "Vertel je copilot wie je wilt bereiken en wij vinden de beste matches.",
 };
 
 const de: Messages = {
@@ -609,6 +662,64 @@ const de: Messages = {
     "Verifizierung des E-Mail-Kontos fehlgeschlagen. Bitte prüfe, ob das Konto richtig eingerichtet ist.",
   // Email accounts (badges)
   "Easy setup": "Schnell eingerichtet",
+  // Target audiences
+  "Add at least one industry.": "Füge mindestens eine Branche hinzu.",
+  "All cities within the selected countries are included.":
+    "Alle Städte in den gewählten Ländern sind enthalten.",
+  "All cities": "Alle Städte",
+  "Audience size isn't live yet": "Zielgruppengröße ist noch nicht live",
+  "Choose the industry of your target companies.":
+    "Wähle die Branche deiner Zielunternehmen.",
+  City: "Stadt",
+  Copy: "Kopie",
+  Country: "Land",
+  "Create a target audience for easier access later":
+    "Erstelle eine Zielgruppe, um sie später schnell zu nutzen",
+  "Define your Target Audience": "Definiere deine Zielgruppe",
+  "Delete this target audience?": "Diese Zielgruppe löschen?",
+  "E.g. Tech Leads in Amsterdam": "z. B. Tech Leads in Amsterdam",
+  "Failed to create the target audience.":
+    "Zielgruppe konnte nicht erstellt werden.",
+  "Failed to duplicate the target audience.":
+    "Zielgruppe konnte nicht dupliziert werden.",
+  "Failed to start. Please try again.":
+    "Start fehlgeschlagen. Bitte versuche es erneut.",
+  "Failed to update the target audience.":
+    "Zielgruppe konnte nicht aktualisiert werden.",
+  "Give your target a name so you can easily identify it later":
+    "Gib deiner Zielgruppe einen Namen, damit du sie später leicht wiederfindest",
+  "In which cities are your target companies located?":
+    "In welchen Städten sitzen deine Zielunternehmen?",
+  "In which countries are your target companies located?":
+    "In welchen Ländern sitzen deine Zielunternehmen?",
+  Industry: "Branche",
+  "No Target Audiences Found": "Keine Zielgruppen gefunden",
+  "Only companies in the cities you pick below.":
+    "Nur Unternehmen in den Städten, die du unten auswählst.",
+  "Row actions": "Zeilenaktionen",
+  "Search target audience...": "Zielgruppe suchen...",
+  "Search target audiences by name": "Zielgruppen nach Namen suchen",
+  "Target Audience Name": "Name der Zielgruppe",
+  "Target audience created": "Zielgruppe erstellt",
+  "Target audience duplicated.": "Zielgruppe dupliziert.",
+  "Target audience name is required.": "Name der Zielgruppe ist erforderlich.",
+  "Target audience updated": "Zielgruppe aktualisiert",
+  "Target specific cities": "Bestimmte Städte wählen",
+  "Your Target Audiences ({count})": "Deine Zielgruppen ({count})",
+  "{count} leads": "{count} Leads",
+  "Target Audience name": "Name der Zielgruppe",
+  "Est. Audience Size": "Geschätzte Größe",
+  "Last updated": "Zuletzt aktualisiert",
+  "Type and press Enter to add industries...":
+    "Tippen und Enter drücken, um Branchen hinzuzufügen...",
+  "Search countries...": "Länder suchen...",
+  "Select a country first...": "Wähle zuerst ein Land...",
+  "Search cities...": "Städte suchen...",
+  "Please select a country first": "Bitte wähle zuerst ein Land",
+  "No cities found": "Keine Städte gefunden",
+  "Type to search…": "Tippen zum Suchen…",
+  "Tell your copilot who you want to reach and we’ll find the best matches.":
+    "Sag deinem Copilot, wen du erreichen willst, und wir finden die besten Treffer.",
 };
 
 const fr: Messages = {
@@ -910,6 +1021,64 @@ const fr: Messages = {
     "La vérification du compte e-mail a échoué. Vérifiez que le compte est correctement configuré.",
   // Email accounts (badges)
   "Easy setup": "Configuration facile",
+  // Target audiences
+  "Add at least one industry.": "Ajoutez au moins un secteur.",
+  "All cities within the selected countries are included.":
+    "Toutes les villes des pays choisis sont incluses.",
+  "All cities": "Toutes les villes",
+  "Audience size isn't live yet":
+    "La taille de l'audience n'est pas encore disponible",
+  "Choose the industry of your target companies.":
+    "Choisissez le secteur de vos entreprises cibles.",
+  City: "Ville",
+  Copy: "Copie",
+  Country: "Pays",
+  "Create a target audience for easier access later":
+    "Créez une audience pour la réutiliser facilement",
+  "Define your Target Audience": "Définissez votre audience",
+  "Delete this target audience?": "Supprimer cette audience ?",
+  "E.g. Tech Leads in Amsterdam": "ex. Responsables tech à Amsterdam",
+  "Failed to create the target audience.":
+    "Échec de la création de l'audience.",
+  "Failed to duplicate the target audience.":
+    "Échec de la duplication de l'audience.",
+  "Failed to start. Please try again.":
+    "Échec du démarrage. Veuillez réessayer.",
+  "Failed to update the target audience.":
+    "Échec de la mise à jour de l'audience.",
+  "Give your target a name so you can easily identify it later":
+    "Donnez un nom à votre audience pour la retrouver facilement",
+  "In which cities are your target companies located?":
+    "Dans quelles villes se trouvent vos entreprises cibles ?",
+  "In which countries are your target companies located?":
+    "Dans quels pays se trouvent vos entreprises cibles ?",
+  Industry: "Secteur",
+  "No Target Audiences Found": "Aucune audience trouvée",
+  "Only companies in the cities you pick below.":
+    "Uniquement les entreprises des villes choisies ci-dessous.",
+  "Row actions": "Actions de la ligne",
+  "Search target audience...": "Rechercher une audience...",
+  "Search target audiences by name": "Rechercher des audiences par nom",
+  "Target Audience Name": "Nom de l'audience",
+  "Target audience created": "Audience créée",
+  "Target audience duplicated.": "Audience dupliquée.",
+  "Target audience name is required.": "Le nom de l'audience est obligatoire.",
+  "Target audience updated": "Audience mise à jour",
+  "Target specific cities": "Cibler des villes précises",
+  "Your Target Audiences ({count})": "Vos audiences ({count})",
+  "Target Audience name": "Nom de l'audience",
+  "Est. Audience Size": "Taille estimée",
+  "Last updated": "Dernière mise à jour",
+  "Type and press Enter to add industries...":
+    "Tapez et appuyez sur Entrée pour ajouter des secteurs...",
+  "Search countries...": "Rechercher des pays...",
+  "Select a country first...": "Choisissez d'abord un pays...",
+  "Search cities...": "Rechercher des villes...",
+  "Please select a country first": "Veuillez d'abord choisir un pays",
+  "No cities found": "Aucune ville trouvée",
+  "Type to search…": "Tapez pour rechercher…",
+  "Tell your copilot who you want to reach and we’ll find the best matches.":
+    "Dites à votre copilot qui vous voulez atteindre et nous trouverons les meilleures correspondances.",
 };
 
 const es: Messages = {
@@ -1212,6 +1381,64 @@ const es: Messages = {
     "La verificación de la cuenta falló. Asegúrate de que la cuenta esté bien configurada.",
   // Email accounts (badges)
   "Easy setup": "Configuración fácil",
+  // Target audiences
+  "Add at least one industry.": "Añade al menos un sector.",
+  "All cities within the selected countries are included.":
+    "Se incluyen todas las ciudades de los países elegidos.",
+  "All cities": "Todas las ciudades",
+  "Audience size isn't live yet":
+    "El tamaño de la audiencia aún no está disponible",
+  "Choose the industry of your target companies.":
+    "Elige el sector de tus empresas objetivo.",
+  City: "Ciudad",
+  Copy: "Copia",
+  Country: "País",
+  "Create a target audience for easier access later":
+    "Crea una audiencia para reutilizarla fácilmente",
+  "Define your Target Audience": "Define tu audiencia",
+  "Delete this target audience?": "¿Eliminar esta audiencia?",
+  "E.g. Tech Leads in Amsterdam": "p. ej. Líderes tech en Ámsterdam",
+  "Failed to create the target audience.": "No se pudo crear la audiencia.",
+  "Failed to duplicate the target audience.":
+    "No se pudo duplicar la audiencia.",
+  "Failed to start. Please try again.":
+    "No se pudo iniciar. Inténtalo de nuevo.",
+  "Failed to update the target audience.":
+    "No se pudo actualizar la audiencia.",
+  "Give your target a name so you can easily identify it later":
+    "Ponle un nombre a tu audiencia para encontrarla fácilmente",
+  "In which cities are your target companies located?":
+    "¿En qué ciudades están tus empresas objetivo?",
+  "In which countries are your target companies located?":
+    "¿En qué países están tus empresas objetivo?",
+  Industry: "Sector",
+  "No Target Audiences Found": "No se encontraron audiencias",
+  "Only companies in the cities you pick below.":
+    "Solo empresas en las ciudades que elijas abajo.",
+  "Row actions": "Acciones de la fila",
+  "Search target audience...": "Buscar audiencia...",
+  "Search target audiences by name": "Buscar audiencias por nombre",
+  "Target Audience Name": "Nombre de la audiencia",
+  "Target audience created": "Audiencia creada",
+  "Target audience duplicated.": "Audiencia duplicada.",
+  "Target audience name is required.":
+    "El nombre de la audiencia es obligatorio.",
+  "Target audience updated": "Audiencia actualizada",
+  "Target specific cities": "Elegir ciudades concretas",
+  "Your Target Audiences ({count})": "Tus audiencias ({count})",
+  "Target Audience name": "Nombre de la audiencia",
+  "Est. Audience Size": "Tamaño estimado",
+  "Last updated": "Última actualización",
+  "Type and press Enter to add industries...":
+    "Escribe y pulsa Enter para añadir sectores...",
+  "Search countries...": "Buscar países...",
+  "Select a country first...": "Elige primero un país...",
+  "Search cities...": "Buscar ciudades...",
+  "Please select a country first": "Elige primero un país",
+  "No cities found": "No se encontraron ciudades",
+  "Type to search…": "Escribe para buscar…",
+  "Tell your copilot who you want to reach and we’ll find the best matches.":
+    "Dile a tu copilot a quién quieres llegar y encontraremos las mejores coincidencias.",
 };
 
 export const MESSAGES: Record<string, Messages> = { nl, de, fr, es };
