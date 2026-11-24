@@ -28,6 +28,8 @@ interface PerformanceChartProps {
   leads?: Lead[];
   range?: DateRange;
   onRangeChange?: (range: DateRange) => void;
+  /** Daily numbers aren't available yet: show a greyed-out placeholder. */
+  comingSoon?: boolean;
 }
 
 interface CustomTooltipPayloadItem {
@@ -121,6 +123,7 @@ export default function PerformanceChart({
   leads = [],
   range: externalRange,
   onRangeChange,
+  comingSoon = false,
 }: PerformanceChartProps) {
   const { t, locale } = useI18n();
   const [internalRange, setInternalRange] =
@@ -157,6 +160,27 @@ export default function PerformanceChart({
       };
     });
   }, [chartItems, activeRange, locale]);
+
+  if (comingSoon) {
+    return (
+      <div
+        className="bg-gray-50 border mb-8 border-gray-200 rounded-xl px-4 sm:px-6 py-5 font-sans w-full max-w-full"
+        title={t("This metric isn't live yet")}
+      >
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-2">
+          <h2 className="text-base font-semibold text-gray-400 flex-1">
+            {t("Performance")}
+          </h2>
+          <span className="rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-500">
+            {t("Coming soon")}
+          </span>
+        </div>
+        <div className="flex h-70 items-center justify-center rounded-lg border border-dashed border-gray-200 px-6 text-center text-sm text-gray-400">
+          {t("Emails sent and replies per day will appear here soon.")}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white border mb-8 border-gray-200 rounded-xl px-4 sm:px-6 py-5 font-sans w-full max-w-full">
