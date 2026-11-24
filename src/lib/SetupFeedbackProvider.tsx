@@ -7,7 +7,6 @@ import { copilotsApi } from "./api";
 import { canPlaceFeedback, hasFeedbackBlocker } from "./setup-feedback-dialogs";
 import { SETUP_FEEDBACK_VERSION, SetupFeedbackController, type FeedbackState, type FeedbackTransport } from "./setup-feedback";
 import { createPreviewFeedbackTransport } from "./setup-feedback-state";
-import { sendTestEmailWithinSchedule } from "./sending-schedule";
 import SetupFeedbackDialog from "@/components/ui/feedback/SetupFeedbackDialog";
 
 const FeedbackContext = createContext<SetupFeedbackController | null>(null);
@@ -135,9 +134,11 @@ export function useSetupFeedbackActions() {
   const controller = useContext(FeedbackContext);
   const actions = useMemo(() => controller ? {
     isBusy: controller.isBusy,
+    // Test emails go only to the user's own inbox, so they are always allowed:
+    // the flight schedule only limits when the copilot itself sends.
     testEmail: (prepare: () => Promise<number> | number, onAccepted: () => void,
-      resolveSchedule: () => unknown | Promise<unknown>) => controller.testEmail(prepare,
-      (id) => sendTestEmailWithinSchedule(resolveSchedule, () => copilotsApi.testEmail(id)), onAccepted),
+      _resolveSchedule?: () => unknown | Promise<unknown>) => controller.testEmail(prepare,
+      (id) => copilotsApi.testEmail(id), onAccepted),
     launch: (operation: () => Promise<number | string>, onAccepted: (id: number | string) => void) => controller.launch(operation, onAccepted),
   } : null, [controller]);
   if (!actions) throw new Error("Setup feedback actions require the authenticated dashboard provider");
