@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import StepsActions from "../StepsActions";
 import { copilotsApi } from "@/lib/api";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n";
 
 export default function Step1Settings() {
   const { copilotData, updateCopilotData, setStep, mode, draftId } =
@@ -13,6 +14,7 @@ export default function Step1Settings() {
   const [isLoading, setIsLoading] = useState(false);
   const submittingRef = useRef(false);
   const router = useRouter();
+  const { t } = useI18n();
   const handleSubmit = async () => {
     if (submittingRef.current) return;
     submittingRef.current = true;
@@ -49,7 +51,7 @@ export default function Step1Settings() {
       
       router.push(`/dashboard/copilots/new?edit=${response.data.id}`);
     } catch {
-      toast.error("Failed to save copilot. Please try again.");
+      toast.error(t("Failed to save copilot. Please try again."));
     } finally {
       submittingRef.current = false;
       setIsLoading(false);
@@ -58,9 +60,9 @@ export default function Step1Settings() {
 
   return (
     <>
-      <h2 className="text-lg font-bold mb-1">Setup Your Copilot</h2>
+      <h2 className="text-lg font-bold mb-1">{t("Setup Your Copilot")}</h2>
       <p className="text-sm text-gray-500 mb-12">
-        Give your Copilot a name and describe its purpose.
+        {t("Give your Copilot a name and describe its purpose.")}
       </p>
 
       <div className="space-y-10">
@@ -71,13 +73,13 @@ export default function Step1Settings() {
               className="block text-sm font-semibold relative text-gray-900 mb-1.5"
               htmlFor="name"
             >
-              Copilot Name
+              {t("Copilot Name")}
               <span className="text-sm font-semibold  text-red-500 absolute">
                 *
               </span>
             </label>
             <p className="mt-1.5 text-xs text-gray-500">
-              Internal name to identify your copilot.
+              {t("Internal name to identify your copilot.")}
             </p>
           </div>
           <div className="lg:col-span-2">
@@ -89,7 +91,7 @@ export default function Step1Settings() {
                 updateCopilotData({ name: e.target.value });
                 console.log("Updated copilot name:", e.target.value);
               }}
-              placeholder="e.g. Private Jet Operators"
+              placeholder={t("e.g. Private Jet Operators")}
               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
           </div>
@@ -102,10 +104,10 @@ export default function Step1Settings() {
               className="block text-sm font-semibold text-gray-900 mb-1.5"
               htmlFor="desc"
             >
-              Description{" "}
+              {t("Description")}
             </label>
             <p className="mt-1.5 text-xs text-gray-500">
-              Describe what this copilot does and who it’s for.
+              {t("Describe what this copilot does and who it’s for.")}
             </p>
           </div>
           <div className="lg:col-span-2">
@@ -116,7 +118,9 @@ export default function Step1Settings() {
               onChange={(e) =>
                 updateCopilotData({ description: e.target.value })
               }
-              placeholder="e.g. Reach out to private jet operators in Amsterdam and introduce our services"
+              placeholder={t(
+                "e.g. Reach out to private jet operators in Amsterdam and introduce our services",
+              )}
               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm resize-none transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
           </div>
@@ -129,11 +133,11 @@ export default function Step1Settings() {
               className="block text-sm font-semibold text-gray-900 mb-1.5"
               htmlFor="goal"
             >
-              Goal
+              {t("Goal")}
             </label>
 
             <p className="mt-1.5 text-xs text-gray-500">
-              What is the main goal of this copilot?
+              {t("What is the main goal of this copilot?")}
             </p>
           </div>
 
@@ -143,7 +147,9 @@ export default function Step1Settings() {
               rows={3}
               value={copilotData.goal}
               onChange={(e) => updateCopilotData({ goal: e.target.value })}
-              placeholder="e.g. Book more appointments and generate qualified leads"
+              placeholder={t(
+                "e.g. Book more appointments and generate qualified leads",
+              )}
               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm resize-none transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             />
           </div>
