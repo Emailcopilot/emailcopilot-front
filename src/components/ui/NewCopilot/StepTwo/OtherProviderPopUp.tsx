@@ -6,6 +6,7 @@ import { emailAccountsApi } from "@/lib/api";
 import { useCopilotStore } from "../../../../store/copilotStore";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n";
 
 interface OtherProviderPopUpProps {
   onClose: (saved?: boolean) => void;
@@ -13,6 +14,7 @@ interface OtherProviderPopUpProps {
 }
 
 function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
+  const { t } = useI18n();
   const { user } = useUser();
   const { updateCopilotData } = useCopilotStore();
   const [saving, setSaving] = useState(false);
@@ -44,7 +46,7 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
 
   const handleAddAccount = async () => {
     if (!form.profileName || !form.email) {
-      toast.error("Profile Name and Email Address are required");
+      toast.error(t("Account name and email address are required."));
       return;
     }
 
@@ -67,7 +69,9 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
       }
     } catch (error) {
       toast.error(
-        editProfile ? "Failed to update profile." : "Failed to create profile.",
+        editProfile
+          ? t("Failed to update the email account.")
+          : t("Failed to add the email account."),
       );
       console.error(error);
     } finally {
@@ -87,18 +91,18 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
       >
         {/* Title */}
         <h2 className="text-lg font-bold text-gray-900">
-          {editProfile ? "Edit Email Account" : "Add Email Account"}
+          {editProfile ? t("Edit Email Account") : t("Add Email Account")}
         </h2>
 
         {/* Profile Name */}
         <div className="space-y-1">
           <label className="block text-xs text-gray-900" htmlFor="profileName">
-            Account Name
+            {t("Account Name")}
           </label>
           <input
             id="profileName"
             type="text"
-            placeholder="e.g. Outreach Account"
+            placeholder={t("e.g. Outreach Account")}
             value={form.profileName}
             onChange={(e) => setForm({ ...form, profileName: e.target.value })}
             className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-colors"
@@ -108,7 +112,7 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
         {/* Email Address */}
         <div className="space-y-1">
           <label className="block text-xs text-gray-900" htmlFor="emailAddress">
-            Email Address
+            {t("Email Address")}
           </label>
           <input
             id="emailAddress"
@@ -123,7 +127,7 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
         {/* Provider */}
         <div className="space-y-1">
           <label className="block text-xs text-gray-900" htmlFor="provider">
-            Provider
+            {t("Provider")}
           </label>
           <div className="relative">
             <select
@@ -148,7 +152,7 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
             <label className="block text-xs text-gray-900" htmlFor="smtpHost">
-              SMTP Host
+              {t("SMTP Host")}
             </label>
             <input
               id="smtpHost"
@@ -161,7 +165,7 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
           </div>
           <div className="space-y-1">
             <label className="block text-xs text-gray-900" htmlFor="port">
-              Port
+              {t("Port")}
             </label>
             <input
               id="port"
@@ -178,7 +182,7 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
         {/* App Password / Token */}
         <div className="space-y-1">
           <label className="block text-xs text-gray-900" htmlFor="appPassword">
-            App Password / Token
+            {t("App Password / Token")}
           </label>
           <input
             id="appPassword"
@@ -193,12 +197,12 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
         {/* Sender Name */}
         <div className="space-y-1">
           <label className="block text-xs text-gray-900" htmlFor="senderName">
-            Your name / Sender Name
+            {t("Your name / Sender Name")}
           </label>
           <input
             id="senderName"
             type="text"
-            placeholder="John Doe"
+            placeholder={t("John Doe")}
             value={form.sendName}
             onChange={(e) => setForm({ ...form, sendName: e.target.value })}
             className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-colors"
@@ -213,7 +217,7 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
             disabled={saving}
             className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-xs text-gray-900 hover:bg-gray-50 transition-colors disabled:opacity-50"
           >
-            Cancel
+            {t("Cancel")}
           </button>
           <button
             type="button"
@@ -232,11 +236,11 @@ function OtherProviderPopUp({ onClose, editProfile }: OtherProviderPopUpProps) {
             {saving && <Loader2 size={16} className="animate-spin" />}
             {saving
               ? editProfile
-                ? "Saving..."
-                : "Adding..."
+                ? t("Saving...")
+                : t("Adding...")
               : editProfile
-                ? "Save Changes"
-                : "Add Account"}
+                ? t("Save Changes")
+                : t("Add Account")}
           </button>
         </div>
       </div>
