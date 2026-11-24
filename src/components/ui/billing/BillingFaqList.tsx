@@ -5,9 +5,40 @@ import { Mail, Search } from "lucide-react";
 import { BILLING_FAQS, BILLING_SUPPORT_EMAIL } from "@/lib/billingFaq";
 import NoData from "../overview/NoData";
 import FaqAccordionItem from "./FaqAccordionItem";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 /** Searchable FAQ accordion plus the "Still have questions?" footer. */
+/** Back link + title of the FAQ page (the page itself is a server component). */
+export function BillingFaqHeader() {
+  const { t } = useI18n();
+  return (
+    <>
+      <Link
+        href="/dashboard/billing"
+        className="mb-4 inline-flex items-center gap-1 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900"
+      >
+        <ChevronLeft size={16} />
+        {t("Back to billing")}
+      </Link>
+
+      <div className="mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+          {t("Billing FAQ")}
+        </h1>
+        <p className="text-gray-500 text-xs sm:text-sm mt-1">
+          {t(
+            "Everything you need to know about payments, subscriptions and invoices.",
+          )}
+        </p>
+      </div>
+    </>
+  );
+}
+
 export default function BillingFaqList() {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [openId, setOpenId] = useState<number | null>(null);
 
@@ -17,10 +48,10 @@ export default function BillingFaqList() {
 
     return BILLING_FAQS.filter(
       (faq) =>
-        faq.question.toLocaleLowerCase().includes(term) ||
-        faq.answer.toLocaleLowerCase().includes(term),
+        t(faq.question).toLocaleLowerCase().includes(term) ||
+        t(faq.answer).toLocaleLowerCase().includes(term),
     );
-  }, [query]);
+  }, [query, t]);
 
   return (
     <>
@@ -33,15 +64,15 @@ export default function BillingFaqList() {
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search billing questions..."
-          aria-label="Search billing questions"
+          placeholder={t("Search billing questions...")}
+          aria-label={t("Search billing questions")}
           className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-9 pr-3 text-sm focus:outline-primary focus:ring-2 focus:ring-primary"
         />
       </div>
 
       <div className="mt-8 space-y-3">
         {results.length === 0 ? (
-          <NoData title="No questions match your search." />
+          <NoData title={t("No questions match your search.")} />
         ) : (
           results.map((faq) => (
             <FaqAccordionItem
@@ -63,11 +94,12 @@ export default function BillingFaqList() {
             </div>
             <div>
               <p className="text-base font-bold text-gray-900">
-                Still have questions?
+                {t("Still have questions?")}
               </p>
               <p className="mt-1 text-sm text-gray-500">
-                We&apos;re here to help. Contact our team and we&apos;ll get
-                back to you as soon as possible.
+                {t(
+                  "We're here to help. Contact our team and we'll get back to you as soon as possible.",
+                )}
               </p>
             </div>
           </div>
@@ -77,7 +109,7 @@ export default function BillingFaqList() {
               href={`mailto:${BILLING_SUPPORT_EMAIL}`}
               className="btn-cta rounded-lg border border-transparent px-5 py-2 text-sm font-semibold text-white"
             >
-              Email us
+              {t("Email us")}
             </a>
             <span className="text-xs font-medium text-gray-900">
               {BILLING_SUPPORT_EMAIL}
