@@ -4,6 +4,7 @@ import { Trash2, Edit2, Mail, MoreVertical, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useEmailAccountStore } from "@/store/emailAccountStore";
+import { useI18n } from "@/lib/i18n";
 
 export default function EmailAccountList({
     setSelectedProfileName,
@@ -13,6 +14,7 @@ export default function EmailAccountList({
     const { copilotData, updateCopilotData } = useCopilotStore();
     const { accounts, isLoading, deleteAccount, setEditingAccount, setShowModal } = useEmailAccountStore();
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+    const { t } = useI18n();
 
     useEffect(() => {
         const handleWindowClick = () => setOpenMenuId(null);
@@ -23,7 +25,7 @@ export default function EmailAccountList({
     }, [openMenuId]);
 
     const handleDelete = async (id: number) => {
-        if (!confirm("Are you sure you want to delete this account?")) return;
+        if (!confirm(t("Are you sure you want to delete this account?"))) return;
         await deleteAccount(id);
         if (copilotData.emailAccountId === id) {
             updateCopilotData({ emailAccountId: null });
@@ -91,7 +93,7 @@ export default function EmailAccountList({
                                             }}
                                             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
                                         >
-                                            <Edit2 size={14} /> Edit
+                                            <Edit2 size={14} /> {t("Edit")}
                                         </button>
                                         <button
                                             type="button"
@@ -102,7 +104,7 @@ export default function EmailAccountList({
                                             }}
                                             className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
                                         >
-                                            <Trash2 size={14} /> Delete
+                                            <Trash2 size={14} /> {t("Delete")}
                                         </button>
                                     </div>
                                 )}
