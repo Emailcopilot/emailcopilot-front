@@ -1,6 +1,7 @@
 "use client";
 import { Trash2, Pen } from "lucide-react";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
+import { useI18n } from "@/lib/i18n";
 // ─── Types matching backend schema ────────────────────────────────────────────
 
 export interface Schedule {
@@ -34,13 +35,13 @@ const DAY_LABELS: Record<number, string> = {
   7: "Sun",
 };
 
-function formatActiveDays(days: number[]): string {
+function formatActiveDays(days: number[], t: (text: string) => string): string {
   const sorted = [...days].sort();
-  if (sorted.length === 7) return "All days";
+  if (sorted.length === 7) return t("All days");
   if (sorted.length === 5 && [1, 2, 3, 4, 5].every((d) => sorted.includes(d))) {
-    return "Weekdays";
+    return t("Weekdays");
   }
-  return sorted.map((d) => DAY_LABELS[d] ?? d).join(", ");
+  return sorted.map((d) => (DAY_LABELS[d] ? t(DAY_LABELS[d]) : d)).join(", ");
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -60,23 +61,27 @@ function FlightScheduleCard({
     activeDays,
     timezone,
   } = schedules;
+  const { t } = useI18n();
 
   const fields = [
     {
-      label: "Daily send limit",
+      label: t("Daily send limit"),
       value:
         sendLimitActive && sendLimit != null
-          ? `${sendLimit} / day`
-          : "Unlimited",
+          ? t("{n} / day", { n: sendLimit })
+          : t("Unlimited"),
     },
     {
-      label: "Sending hours",
+      label: t("Sending hours"),
       value: sendingHoursActive
-        ? `From ${sendingHours.start} to ${sendingHours.end}`
-        : formatAllDayAvailability(activeDays),
+        ? t("From {start} to {end}", {
+            start: sendingHours.start,
+            end: sendingHours.end,
+          })
+        : t(formatAllDayAvailability(activeDays)),
     },
-    { label: "Active days", value: formatActiveDays(activeDays) },
-    { label: "Default timezone", value: timezone },
+    { label: t("Active days"), value: formatActiveDays(activeDays, t) },
+    { label: t("Default timezone"), value: timezone },
   ];
 
   return (
@@ -104,7 +109,7 @@ function FlightScheduleCard({
             className="w-fit rounded-lg flex gap-2 items-center  bg-success/5 py-1 px-3 text-sm font-medium text-success hover:bg-success/10 transition-colors"
           >
             <Pen size={14} color="#1d8a68" />
-            Edit
+            {t("Edit")}
           </button>
           <button
             onClick={() => {
@@ -113,7 +118,7 @@ function FlightScheduleCard({
             className="w-fit rounded-lg flex gap-2 items-center bg-error/5 py-1 px-3 text-sm font-medium text-error hover:bg-error/10 transition-colors"
           >
             <Trash2 size={14} color="#d9485f" />
-            Delete
+            {t("Delete")}
           </button>
         </div>
       )}
