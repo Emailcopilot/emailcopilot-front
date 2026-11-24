@@ -31,7 +31,7 @@ export default function DepartureCard() {
           <tbody>
             {leads.slice(0, 3).map((item) => (
               <tr key={item.id}>
-                <td className="py-3 text-sm font-semibold text-gray-900">
+                <td className="py-3 pr-3 text-sm font-semibold text-gray-900 max-w-0 w-full truncate">
                   {item.copilotName}
                 </td>
                 <td className="py-3 text-xs text-gray-500 text-right pr-3 whitespace-nowrap w-[1%]">
