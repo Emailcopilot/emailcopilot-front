@@ -18,12 +18,14 @@ import CopilotsCard from "@/components/ui/overview/CopilotsCard";
 import CopilotFooter from "@/components/ui/NewCopilot/CopilotFooter";
 import { useLeadStore } from "@/store/leadStore";
 import { useCopilotStore } from "@/store/copilotStore";
+import { useI18n } from "@/lib/i18n";
 
 export default function OverviewPage() {
   const { leads, getAllLeads } = useLeadStore();
   const { copilots, getAllCopilots } = useCopilotStore();
 
   const router = useRouter();
+  const { t, locale } = useI18n();
 
   const [period, setPeriod] = useState<DateRange>("Last 7 days");
 
@@ -63,8 +65,14 @@ export default function OverviewPage() {
     sentStats.total > 0 ? (replyStats.total / sentStats.total) * 100 : 0;
 
   const comparisonLabel = useMemo(
-    () => "vs " + getDateRange(periodToDays(period)),
-    [period],
+    () =>
+      t("vs {range}", {
+        range: getDateRange(
+          periodToDays(period),
+          locale === "en" ? "en-US" : locale,
+        ),
+      }),
+    [period, t, locale],
   );
 
   const stats = [
