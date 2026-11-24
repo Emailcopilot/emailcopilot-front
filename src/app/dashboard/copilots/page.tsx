@@ -18,9 +18,11 @@ import { copilotQuota, currentPlanId, higherTiers } from "@/lib/limits";
 import { useBilling, billingKeys } from "@/lib/useBilling";
 import { useQueryClient } from "@tanstack/react-query";
 import { sortCopilotsArchivedLast } from "@/lib/sort-copilots";
+import { useI18n } from "@/lib/i18n";
 
 export default function CopilotsPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const queryClient = useQueryClient();
   const { limits, plans, refetchLimits } = useBilling();
   const quota = copilotQuota(limits);
@@ -139,11 +141,17 @@ export default function CopilotsPage() {
     const archived = ids.length - failedIds.length;
     if (archived > 0)
       toast.success(
-        `${archived} copilot${archived === 1 ? "" : "s"} archived.`,
+        archived === 1
+          ? t("1 copilot archived.")
+          : t("{count} copilots archived.", { count: archived }),
       );
     if (failedIds.length > 0)
       toast.error(
-        `${failedIds.length} copilot${failedIds.length === 1 ? "" : "s"} could not be archived. Please try again.`,
+        failedIds.length === 1
+          ? t("1 copilot could not be archived. Please try again.")
+          : t("{count} copilots could not be archived. Please try again.", {
+              count: failedIds.length,
+            }),
       );
     // Keep the ones that failed selected so the user can retry.
     setSelectedIds(new Set(failedIds));
@@ -179,30 +187,31 @@ export default function CopilotsPage() {
       <div className="min-h-0 [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:flex-1 [@media(min-height:1081px)]:flex-col">
         {loading ? (
           <div className="flex items-center justify-center h-48 text-gray-400 text-sm">
-            Loading...
+            {t("Loading...")}
           </div>
         ) : copilots.length === 0 ? (
           <div className="  p-14 text-center ">
             <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Send size={22} className="text-gray-500" />
             </div>
-            <h2 className="font-bold text-gray-900 mb-2">No copilots yet</h2>
+            <h2 className="font-bold text-gray-900 mb-2">{t("No copilots yet")}</h2>
             <p className="text-sm text-gray-500 mb-5 max-w-xs mx-auto">
-              Build your first copilot to start sending personalized emails at
-              scale.
+              {t(
+                "Build your first copilot to start sending personalized emails at scale.",
+              )}
             </p>
             <button
               type="button"
               onClick={handleCreate}
               className="inline-flex items-center gap-2 btn-cta text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
             >
-              <Plus size={15} /> Create New Copilot
+              <Plus size={15} /> {t("Create New Copilot")}
             </button>
           </div>
         ) : paginatedData.length === 0 ? (
           <div className="  p-10 text-center ">
             <p className="text-sm text-gray-500">
-              No copilots match your filter.
+              {t("No copilots match your filter.")}
             </p>
           </div>
         ) : viewMode === "grid" ? (
@@ -257,8 +266,11 @@ export default function CopilotsPage() {
           {confirmArchive ? (
             <>
               <span className="whitespace-nowrap">
-                Archive {selectedIds.size} copilot
-                {selectedIds.size === 1 ? "" : "s"}? They stop sending.
+                {selectedIds.size === 1
+                  ? t("Archive 1 copilot? It stops sending.")
+                  : t("Archive {count} copilots? They stop sending.", {
+                      count: selectedIds.size,
+                    })}
               </span>
               <button
                 type="button"
@@ -266,7 +278,7 @@ export default function CopilotsPage() {
                 disabled={archiving}
                 className="rounded-lg px-3 py-1.5 font-medium text-gray-300 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50"
               >
-                Cancel
+                {t("Cancel")}
               </button>
               <button
                 type="button"
@@ -279,13 +291,13 @@ export default function CopilotsPage() {
                 ) : (
                   <Archive size={14} />
                 )}
-                {archiving ? "Archiving..." : "Archive"}
+                {archiving ? t("Archiving...") : t("Archive")}
               </button>
             </>
           ) : (
             <>
               <span className="whitespace-nowrap font-medium">
-                {selectedIds.size} selected
+                {t("{count} selected", { count: selectedIds.size })}
               </span>
               <span className="h-5 w-px bg-white/20" />
               <button
@@ -293,7 +305,7 @@ export default function CopilotsPage() {
                 onClick={() => setConfirmArchive(true)}
                 className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-medium transition-colors hover:bg-white/10"
               >
-                <Archive size={14} /> Archive
+                <Archive size={14} /> {t("Archive")}
               </button>
               <button
                 type="button"
