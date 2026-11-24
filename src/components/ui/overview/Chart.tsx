@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useI18n } from "@/lib/i18n";
 import {
   AreaChart,
   Area,
@@ -121,6 +122,7 @@ export default function PerformanceChart({
   range: externalRange,
   onRangeChange,
 }: PerformanceChartProps) {
+  const { t, locale } = useI18n();
   const [internalRange, setInternalRange] =
     React.useState<DateRange>("Last 7 days");
 
@@ -145,33 +147,30 @@ export default function PerformanceChart({
     const items = chartItems.slice(-days);
 
     return items.map((item) => {
-      const month = item.date.toLocaleDateString("en-US", {
-        month: "short",
-      });
-
-      const day = item.date.getDate();
-
       return {
-        date: `${month} ${day}`,
+        date: item.date.toLocaleDateString(
+          locale === "en" ? "en-US" : locale,
+          { month: "short", day: "numeric" },
+        ),
         emailsSent: item.emailsSent,
         replies: item.replies,
       };
     });
-  }, [chartItems, activeRange]);
+  }, [chartItems, activeRange, locale]);
 
   return (
     <div className="bg-white border mb-8 border-gray-200 rounded-xl px-4 sm:px-6 py-5 font-sans w-full max-w-full">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-2">
         <h2 className="text-base font-semibold text-gray-900 flex-1">
-          Performance
+          {t("Performance")}
         </h2>
 
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex gap-2 items-center justify-center whitespace-nowrap">
             <div className="w-5 border-b-2 border-primary" />
-            <p className="text-gray-800 text-xs">Emails Sent</p>
+            <p className="text-gray-800 text-xs">{t("Emails Sent")}</p>
             <div className="w-5 border-b-2 border-dashed border-success" />
-            <p className="text-gray-800 text-xs">Replies</p>
+            <p className="text-gray-800 text-xs">{t("Replies")}</p>
           </div>
 
           <select
@@ -179,9 +178,9 @@ export default function PerformanceChart({
             onChange={(e) => handleRangeChange(e.target.value as DateRange)}
             className="text-xs text-gray-700 border border-gray-200 rounded-md px-2 py-1 bg-white cursor-pointer"
           >
-            <option>Last 7 days</option>
-            <option>Last 14 days</option>
-            <option>Last 30 days</option>
+            <option value="Last 7 days">{t("Last 7 days")}</option>
+            <option value="Last 14 days">{t("Last 14 days")}</option>
+            <option value="Last 30 days">{t("Last 30 days")}</option>
           </select>
         </div>
       </div>
@@ -217,7 +216,7 @@ export default function PerformanceChart({
           <Area
             type="monotone"
             dataKey="emailsSent"
-            name="Emails sent"
+            name={t("Emails Sent")}
             stroke="#3b82f6"
             strokeWidth={2}
             fill="url(#emailGradient)"
@@ -228,7 +227,7 @@ export default function PerformanceChart({
           <Line
             type="monotone"
             dataKey="replies"
-            name="Replies"
+            name={t("Replies")}
             stroke="#1d8a68"
             strokeWidth={1.5}
             strokeDasharray="4 4"
