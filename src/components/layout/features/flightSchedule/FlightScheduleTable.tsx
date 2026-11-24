@@ -2,7 +2,6 @@
 
 import { Search, Plus, Calendar } from "lucide-react";
 import FlightScheduleMenu from "@/components/ui/flightSchedule/FlightScheduleMenu";
-import CopilotStatus from "@/components/ui/CopilotStatus";
 import type { Schedule } from "@/components/ui/flightSchedule/FlightScheduleCard";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
 
@@ -72,6 +71,34 @@ function formatTime(schedule: Schedule): string {
   return `${schedule.sendingHours.start} - ${schedule.sendingHours.end}`;
 }
 
+/**
+ * Schedules have no status of their own: show whether any copilot uses it.
+ * Same badge shape as the copilot/lead status badges.
+ */
+function ScheduleStatus({
+  usedBy,
+  isSmall = false,
+}: {
+  usedBy: number;
+  isSmall?: boolean;
+}) {
+  const inUse = usedBy > 0;
+  return (
+    <span
+      className={`inline-flex w-fit items-center rounded-md font-medium whitespace-nowrap ${
+        isSmall ? "text-[10px] px-2 py-1" : "text-[12px] px-3 py-2"
+      }`}
+      style={
+        inUse
+          ? { backgroundColor: "#E3FCEF", color: "#1D8A68" }
+          : { backgroundColor: "#F1F5F9", color: "#64748B" }
+      }
+    >
+      {inUse ? "In use" : "Not in use"}
+    </span>
+  );
+}
+
 function formatUsedBy(count: number): string {
   return `${count} ${count === 1 ? "copilot" : "copilots"}`;
 }
@@ -121,7 +148,7 @@ function ScheduleRow({
         </span>
 
         <span>
-          <CopilotStatus status="draft" />
+          <ScheduleStatus usedBy={schedule.usedBy} />
         </span>
 
         <div className="flex items-center">{actions}</div>
@@ -135,7 +162,7 @@ function ScheduleRow({
               <span className="font-semibold truncate text-sm text-[#0F172A]">
                 {schedule.name || "—"}
               </span>
-              <CopilotStatus status="draft" isSmall />
+              <ScheduleStatus usedBy={schedule.usedBy} isSmall />
             </div>
             <div className="truncate text-xs text-[#59637C]">
               {formatDays(schedule.activeDays)} · {formatTime(schedule)}
