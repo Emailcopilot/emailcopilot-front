@@ -5,7 +5,7 @@ import { useDemoMode } from "@/lib/demo/demo-mode";
 import { useI18n } from "@/lib/i18n";
 
 export function DemoModeBanner() {
-  const { isDemo, exitDemo } = useDemoMode();
+  const { isDemo, clearDemoPending } = useDemoMode();
   const { t } = useI18n();
 
   if (!isDemo) return null;
@@ -22,7 +22,7 @@ export function DemoModeBanner() {
       </div>
       <button
         type="button"
-        onClick={() => exitDemo()}
+        onClick={() => clearDemoPending()}
         className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold transition-colors hover:bg-amber-100"
       >
         <span className="hidden sm:inline">{t("Exit demo")}</span>

@@ -29,6 +29,7 @@ import { useBilling } from "@/lib/useBilling";
 import { useSetupFeedbackActions } from "@/lib/SetupFeedbackProvider";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { clearDemoPending } from "@/lib/demo/demo-storage";
 
 function NewCopilotPageContent() {
   const feedback = useSetupFeedbackActions();
@@ -338,8 +339,10 @@ function NewCopilotPageContent() {
         const response = await copilotsApi.create(payload);
         const id = Number(response.data?.id);
         if (!Number.isSafeInteger(id) || id < 1) throw new Error("The launch response did not include a valid copilot ID.");
+        clearDemoPending();
         return id;
       }, () => {
+        clearDemoPending();
         toast.success(t("Copilot launch accepted."));
         resetStore();
         router.push("/dashboard/copilots");

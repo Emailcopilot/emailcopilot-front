@@ -9,6 +9,8 @@ import { copilotsApi, templatesApi } from "@/lib/api";
 import { useRowsPerPage } from "@/lib/hooks";
 import { toast } from "sonner";
 import { translate as tr } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_TEMPLATES } from "@/lib/demo/demo-data";
 import type {
   Template,
   TemplateStep,
@@ -20,6 +22,7 @@ const BASE_PER_PAGE = 20;
 export default function TemplatesPage() {
   // Taller viewports (>1080p) show more rows per page instead of whitespace
   const perPage = useRowsPerPage(BASE_PER_PAGE);
+  const { isDemo, exitDemo, clearDemoPending } = useDemoMode();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -65,12 +68,17 @@ export default function TemplatesPage() {
   }
 
   useEffect(() => {
+    if (isDemo) {
+      setTemplates(DEMO_TEMPLATES);
+      setLoading(false);
+      return;
+    }
     fetchTemplates();
     const params = new URLSearchParams(window.location.search);
     if (params.get("new") === "true") {
       setShowModal(true);
     }
-  }, []);
+  }, [isDemo]);
 
   const filtered = templates.filter((t) =>
     t.name.toLowerCase().includes(search.toLowerCase()),
@@ -98,6 +106,7 @@ export default function TemplatesPage() {
       } else {
         await templatesApi.create({ ...form, variables: vars, steps });
       }
+      clearDemoPending();
       setShowModal(false);
       setEditingTemplate(null);
       setForm({ name: "", subject: "", body: "", category: "Cold Outreach" });
@@ -110,10 +119,12 @@ export default function TemplatesPage() {
   }
 
   async function handleDelete(id: number) {
+    if (isDemo) return;
     // needs sonner to be implemented
     if (!confirm(tr("Delete this template?"))) return;
     try {
       await templatesApi.delete(id);
+      clearDemoPending();
       fetchTemplates();
     } catch {
       toast.error(tr("Failed to delete."));
@@ -121,8 +132,10 @@ export default function TemplatesPage() {
   }
 
   async function handleDuplicate(id: number) {
+    if (isDemo) return;
     try {
       await templatesApi.duplicate(id);
+      clearDemoPending();
       fetchTemplates();
     } catch {
       toast.error(tr("Failed to duplicate."));
@@ -130,6 +143,7 @@ export default function TemplatesPage() {
   }
 
   function openEdit(t: Template) {
+    if (isDemo) return;
     setEditingTemplate(t);
     setForm({
       name: t.name,
@@ -141,6 +155,9 @@ export default function TemplatesPage() {
   }
 
   function openCreate() {
+    if (isDemo) {
+      exitDemo();
+    }
     setEditingTemplate(null);
     setForm({ name: "", subject: "", body: "", category: "Cold Outreach" });
     setShowModal(true);
@@ -171,6 +188,7 @@ export default function TemplatesPage() {
           onDuplicate={handleDuplicate}
           onCreateNew={openCreate}
           loading={loading}
+          readOnly={isDemo}
         />
 
         {filtered.length > 0 && (

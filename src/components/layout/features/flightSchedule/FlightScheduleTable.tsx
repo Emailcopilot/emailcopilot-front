@@ -20,6 +20,7 @@ interface FlightScheduleTableProps {
   onDuplicate: (schedule: Schedule) => void;
   onCreateNew: () => void;
   loading?: boolean;
+  readOnly?: boolean;
 }
 
 const TABLE_HEADERS = [
@@ -106,11 +107,13 @@ function ScheduleRow({
   onEdit,
   onDelete,
   onDuplicate,
+  readOnly = false,
 }: {
   schedule: FlightScheduleRow;
   onEdit: (schedule: Schedule) => void;
   onDelete: (schedule: Schedule) => void;
   onDuplicate: (schedule: Schedule) => void;
+  readOnly?: boolean;
 }) {
   const { t } = useI18n();
   const actions = (
@@ -150,7 +153,7 @@ function ScheduleRow({
           <ScheduleStatus usedBy={schedule.usedBy} />
         </span>
 
-        <div className="flex items-center">{actions}</div>
+        <div className="flex items-center">{!readOnly && actions}</div>
       </div>
 
       {/* Mobile Row */}
@@ -170,7 +173,7 @@ function ScheduleRow({
               {schedule.timezone || "—"} · {formatUsedBy(schedule.usedBy, t)}
             </div>
           </div>
-          <div className="relative shrink-0">{actions}</div>
+          {!readOnly && <div className="relative shrink-0">{actions}</div>}
         </div>
       </div>
     </>
@@ -233,6 +236,7 @@ export default function FlightScheduleTable({
   onDuplicate,
   onCreateNew,
   loading = false,
+  readOnly = false,
 }: FlightScheduleTableProps) {
   const { t } = useI18n();
   return (
@@ -269,7 +273,7 @@ export default function FlightScheduleTable({
             key={col}
             className="font-normal text-xs leading-5 text-[#94A3B8]"
           >
-            {t(col)}
+            {readOnly && col === "Actions" ? null : t(col)}
           </span>
         ))}
       </div>
@@ -293,6 +297,7 @@ export default function FlightScheduleTable({
               onEdit={onEdit}
               onDelete={onDelete}
               onDuplicate={onDuplicate}
+              readOnly={readOnly}
             />
           ))}
         </div>

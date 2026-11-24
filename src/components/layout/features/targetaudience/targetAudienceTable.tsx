@@ -14,6 +14,7 @@ export interface TargetAudienceTableProps {
   onDelete?: (audience: TargetAudience) => void;
   onDuplicate?: (audience: TargetAudience) => void;
   onCreateNew?: () => void;
+  readOnly?: boolean;
 }
 
 function formatCount(value: number | null | undefined): string {
@@ -71,6 +72,7 @@ function AudienceRow({
   onEdit,
   onDelete,
   onDuplicate,
+  readOnly = false,
 }: {
   audience: TargetAudience;
   openMenuId: number | null;
@@ -78,6 +80,7 @@ function AudienceRow({
   onEdit?: (audience: TargetAudience) => void;
   onDelete?: (audience: TargetAudience) => void;
   onDuplicate?: (audience: TargetAudience) => void;
+  readOnly?: boolean;
 }) {
   const { t, locale } = useI18n();
   const dateLocale = locale === "en" ? "en-US" : locale;
@@ -158,7 +161,7 @@ function AudienceRow({
           {formatDate(audience.updatedAt, dateLocale)}
         </span>
 
-        <div className="flex items-center relative">{menu}</div>
+        <div className="flex items-center relative">{!readOnly && menu}</div>
       </div>
 
       {/* Mobile Row */}
@@ -190,7 +193,7 @@ function AudienceRow({
               {formatDate(audience.updatedAt, dateLocale)}
             </div>
           </div>
-          <div className="relative shrink-0">{menu}</div>
+          {!readOnly && <div className="relative shrink-0">{menu}</div>}
         </div>
       </div>
     </>
@@ -241,6 +244,7 @@ function TargetAudienceTable({
   onRowMenuClick,
   onDuplicate,
   onCreateNew,
+  readOnly = false,
 }: TargetAudienceTableProps) {
   const { t } = useI18n();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
@@ -290,7 +294,7 @@ function TargetAudienceTable({
                   : "text-[#94A3B8]"
               }`}
             >
-              {t(col)}
+              {readOnly && col === "Actions" ? null : t(col)}
             </span>
           ))}
         </div>
@@ -309,6 +313,7 @@ function TargetAudienceTable({
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onDuplicate={onDuplicate}
+                readOnly={readOnly}
               />
             ))}
           </div>

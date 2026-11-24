@@ -11,9 +11,12 @@ import TargetAudienceForm from "@/components/layout/features/targetaudience/Targ
 import type { TargetAudience } from "@/store/copilotStore";
 import DashboardHeader from "@/components/layout/DashboardHeader";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_TARGET_AUDIENCES } from "@/lib/demo/demo-data";
 
 export default function ScrapeProfilesPage() {
   const { t } = useI18n();
+  const { isDemo, exitDemo, clearDemoPending } = useDemoMode();
   const [profiles, setProfiles] = useState<TargetAudience[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -26,9 +29,15 @@ export default function ScrapeProfilesPage() {
   const { user } = useUser();
 
   useEffect(() => {
+    if (isDemo) {
+      setProfiles(DEMO_TARGET_AUDIENCES);
+      setLoading(false);
+      return;
+    }
     fetchProfiles();
-  }, []);
+  }, [isDemo]);
   useEffect(() => {
+    if (isDemo) return;
     const checkNewParam = () => {
       const params = new URLSearchParams(window.location.search);
       const isNew = params.get("new") === "true";
@@ -38,7 +47,7 @@ export default function ScrapeProfilesPage() {
       }
     };
     checkNewParam();
-  }, []);
+  }, [isDemo]);
 
   async function fetchProfiles() {
     try {
@@ -66,6 +75,7 @@ export default function ScrapeProfilesPage() {
   }
 
   async function handleDelete(id: number) {
+    if (isDemo) return;
     if (!confirm(t("Delete this target audience?"))) return;
     try {
       await targetAudiencesApi.delete(id);
@@ -76,6 +86,7 @@ export default function ScrapeProfilesPage() {
   }
 
   async function handleDuplicate(audience: TargetAudience) {
+    if (isDemo) return;
     try {
       await targetAudiencesApi.create({
         name: `${audience.name} (${t("Copy")})`,
@@ -83,6 +94,7 @@ export default function ScrapeProfilesPage() {
         country: audience.country || "",
         city: audience.city || "",
       });
+      clearDemoPending();
       toast.success(t("Target audience duplicated."));
       fetchProfiles();
     } catch {
@@ -90,7 +102,16 @@ export default function ScrapeProfilesPage() {
     }
   }
   async function handleEdit(audience: TargetAudience) {
+    if (isDemo) return;
     setEditingAudience(audience);
+    setShowModal(true);
+  }
+
+  function openCreate() {
+    if (isDemo) {
+      exitDemo();
+    }
+    setEditingAudience(null);
     setShowModal(true);
   }
 
@@ -119,10 +140,7 @@ export default function ScrapeProfilesPage() {
         description="Define who you want to reach with your copilot."
         actionLabel="Create New Target Audience"
         mobileActionLabel="Add"
-        onAction={() => {
-          setEditingAudience(null);
-          setShowModal(true);
-        }}
+        onAction={openCreate}
       />
 
       {loading ? (
@@ -135,10 +153,8 @@ export default function ScrapeProfilesPage() {
           onEdit={handleEdit}
           onDelete={(audience) => handleDelete(audience.id)}
           onDuplicate={handleDuplicate}
-          onCreateNew={() => {
-            setEditingAudience(null);
-            setShowModal(true);
-          }}
+          onCreateNew={openCreate}
+          readOnly={isDemo}
         />
       )}
 
@@ -153,6 +169,7 @@ export default function ScrapeProfilesPage() {
             onSuccess={() => {
               setShowModal(false);
               setEditingAudience(null);
+              clearDemoPending();
               fetchProfiles();
             }}
           />

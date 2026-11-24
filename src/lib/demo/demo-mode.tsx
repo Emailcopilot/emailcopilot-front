@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   createContext,
@@ -53,7 +53,7 @@ function isDemoEligible(pathname: string, search: string) {
 }
 
 export function DemoModeProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useUser();
+  const { userId } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -73,10 +73,11 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
   const isDemo = (urlDemo || autoDemo) && !dismissed;
 
   const previousDemoParam = useRef(demoParam);
+  const prevUrlDemoRef = useRef(false);
 
   useEffect(() => {
-    setDemoUserId(user?.id ?? null);
-  }, [user?.id]);
+    setDemoUserId(userId ?? null);
+  }, [userId]);
 
   useEffect(() => {
     setDismissed(false);
@@ -89,8 +90,13 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
   }, [demoParam]);
 
   useEffect(() => {
-    if (urlDemo) {
-      if (!pending) setStoredDemoPending(true);
+    if (!userId) return;
+
+    const enteredUrlDemo = urlDemo && !prevUrlDemoRef.current;
+    prevUrlDemoRef.current = urlDemo;
+
+    if (enteredUrlDemo && !explicitOff) {
+      setStoredDemoPending(true);
       return;
     }
 
@@ -98,7 +104,7 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
       clearStoredDemoPending();
       setDismissed(true);
     }
-  }, [urlDemo, explicitOff, pending]);
+  }, [urlDemo, explicitOff, userId]);
 
   useEffect(() => {
     if (!autoDemo || urlDemo) return;

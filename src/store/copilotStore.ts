@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { copilotsApi } from "@/lib/api";
+import { clearDemoPending } from "@/lib/demo/demo-storage";
 
 export type Step = 1 | 2 | 3 | 4 | 5 | 6;
 export type CopilotStatusType =
@@ -239,6 +240,7 @@ export const useCopilotStore = create<CopilotStore>((set, get) => ({
     }
     const res = await copilotsApi.create(fullPayload);
     const id = res.data.id;
+    clearDemoPending();
     set({ draftId: id });
     return id;
   },
