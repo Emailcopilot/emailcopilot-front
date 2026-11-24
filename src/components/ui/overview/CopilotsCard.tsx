@@ -4,9 +4,15 @@ import CopilotStatus from "../CopilotStatus";
 import { useCopilotStore } from "@/store/copilotStore";
 import NoData from "./NoData";
 import { useRouter } from "next/navigation";
+import type { Copilot } from "@/components/layout/features/copilots/CopilotTable";
 
-export default function CopilotsCard() {
-  const { copilots } = useCopilotStore();
+export default function CopilotsCard({
+  copilots: demoCopilots,
+}: {
+  copilots?: Copilot[];
+}) {
+  const { copilots: storeCopilots } = useCopilotStore();
+  const copilots = demoCopilots ?? storeCopilots;
   const router = useRouter();
 
   return (

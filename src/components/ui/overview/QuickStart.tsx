@@ -10,6 +10,7 @@ import {
   ChevronRight,
   LucideIcon,
 } from "lucide-react";
+import { useDemoMode } from "@/lib/demo/demo-mode";
 
 interface QuickStartItem {
   label: string;
@@ -42,6 +43,8 @@ const quickStartItems: QuickStartItem[] = [
 ];
 
 export default function QuickStart() {
+  const { isDemo, exitDemo } = useDemoMode();
+
   return (
     <div className="bg-white border border-gray-100 rounded-lg p-5  w-full col-span-1 lg:col-span-2 xl:col-span-1 ">
       <h2 className="text-lg font-bold text-gray-900 mb-3">Quick start</h2>
@@ -51,6 +54,11 @@ export default function QuickStart() {
           <li key={label}>
             <Link
               href={href}
+              onClick={(event) => {
+                if (!isDemo) return;
+                event.preventDefault();
+                exitDemo(href);
+              }}
               className="flex items-center justify-between py-2 group"
             >
               <span className="flex items-center gap-3">

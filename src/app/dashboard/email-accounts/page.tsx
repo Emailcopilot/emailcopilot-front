@@ -13,6 +13,12 @@ import ProvidersOption from "@/components/layout/features/emailAccount/Providers
 import { useEmailAccountStore } from "@/store/emailAccountStore";
 import OtherProviderPopUp from "@/components/ui/NewCopilot/StepTwo/OtherProviderPopUp";
 
+import DashboardHeader from "@/components/layout/DashboardHeader";
+import DashboardContainer from "@/components/layout/DashboardContainer";
+import EmailAccountsTable from "@/components/layout/features/emailAccount/EmailAccountTable";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_EMAIL_ACCOUNTS } from "@/lib/demo/demo-data";
+
 export default function EmailProfilesPage() {
   const {
     fetchAccounts,
@@ -26,12 +32,16 @@ export default function EmailProfilesPage() {
   const [showProvders, setShowProviders] = useState(false);
 
   const { user } = useUser();
+  const { isDemo, exitDemo, clearDemoPending } = useDemoMode();
 
   useEffect(() => {
+    if (isDemo) return;
     fetchAccounts();
-  }, [fetchAccounts]);
+  }, [fetchAccounts, isDemo]);
 
   useEffect(() => {
+    if (isDemo) return;
+
     const checkNewParam = () => {
       const params = new URLSearchParams(window.location.search);
       const isNew = params.get("new") === "true";
@@ -42,7 +52,9 @@ export default function EmailProfilesPage() {
       }
     };
     checkNewParam();
-  }, [setEditingAccount, setShowModal]);
+  }, [setEditingAccount, setShowModal, isDemo]);
+
+  const displayAccounts = isDemo ? DEMO_EMAIL_ACCOUNTS : accounts;
 
   return (
     <DashboardContainer>
@@ -50,7 +62,14 @@ export default function EmailProfilesPage() {
         title="Email Accounts"
         description="Manage the email accounts used for outreach."
         actionLabel="Add Email Account"
-        onAction={() => setShowProviders(true)}
+        onAction={() => {
+          if (isDemo) {
+            exitDemo();
+            setShowProviders(true);
+            return;
+          }
+          setShowProviders(true);
+        }}
         showAction={!showProvders}
       />
 
@@ -78,8 +97,16 @@ export default function EmailProfilesPage() {
         </div>
       ) : (
         <EmailAccountsTable
-          accounts={accounts}
-          onCreateNew={() => setShowProviders(true)}
+          accounts={displayAccounts}
+          onCreateNew={() => {
+            if (isDemo) {
+              exitDemo();
+              setShowProviders(true);
+              return;
+            }
+            setShowProviders(true);
+          }}
+          readOnly={isDemo}
         />
       )}
 
@@ -92,6 +119,7 @@ export default function EmailProfilesPage() {
             setEditingAccount(null);
             if (saved) {
               fetchAccounts();
+              clearDemoPending();
             }
           }}
           editProfile={currentAccount || undefined}

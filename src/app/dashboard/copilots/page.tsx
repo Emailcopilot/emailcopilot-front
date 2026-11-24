@@ -16,10 +16,13 @@ import CopilotLimitDialog from "@/components/ui/limits/CopilotLimitDialog";
 import { copilotQuota, currentPlanId, higherTiers } from "@/lib/limits";
 import { useBilling, billingKeys } from "@/lib/useBilling";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_COPILOTS } from "@/lib/demo/demo-data";
 
 export default function CopilotsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { isDemo, exitDemo } = useDemoMode();
   const { limits, plans, refetchLimits } = useBilling();
   const quota = copilotQuota(limits);
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
@@ -34,8 +37,14 @@ export default function CopilotsPage() {
   const perPage = useRowsPerPage(20);
 
   useEffect(() => {
+    if (isDemo) {
+      setCopilots(DEMO_COPILOTS);
+      setLoading(false);
+      return;
+    }
+
     fetchCopilots();
-  }, []);
+  }, [isDemo]);
 
   // Deep link from the wizard's own guard (/dashboard/copilots?limit=copilots).
   useEffect(() => {
@@ -67,6 +76,11 @@ export default function CopilotsPage() {
   const tiers = higherTiers(plans, planId);
 
   async function handleCreate() {
+    if (isDemo) {
+      exitDemo("/dashboard/copilots/new");
+      return;
+    }
+
     if (limits && !limits.hasActivePlan) {
       router.push("/dashboard/billing?required=plan");
       return;
@@ -178,10 +192,15 @@ export default function CopilotsPage() {
             <CopilotCardsList
               copilots={paginatedData}
               onRefresh={fetchCopilots}
+              readOnly={isDemo}
             />
           </div>
         ) : (
-          <CopilotTable copilots={paginatedData} onRefresh={fetchCopilots} />
+          <CopilotTable
+            copilots={paginatedData}
+            onRefresh={fetchCopilots}
+            readOnly={isDemo}
+          />
         )}
       </div>
 

@@ -20,12 +20,15 @@ import { useLeadStore } from "@/store/leadStore";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { decodeJwtPayload, getDisplayUsername } from "@/lib/userDisplay";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_COPILOTS, DEMO_LEADS } from "@/lib/demo/demo-data";
 
 export default function OverviewPage() {
   const { leads, getAllLeads } = useLeadStore();
   const { copilots, getAllCopilots } = useCopilotStore();
   const { user, isLoaded } = useUser();
   const { getToken } = useAuth();
+  const { isDemo, exitDemo } = useDemoMode();
 
   const router = useRouter();
 
@@ -55,12 +58,18 @@ export default function OverviewPage() {
   }, [getToken, isLoaded, user]);
 
   useEffect(() => {
+    if (isDemo) return;
     getAllLeads();
     getAllCopilots();
-    console.log("Leads fetched from the overview page :", leads);
-  }, []);
+  }, [getAllCopilots, getAllLeads, isDemo]);
 
-  const leadChartItems = useMemo(() => buildLeadChartItems(leads, 60), [leads]);
+  const displayLeads = isDemo ? DEMO_LEADS : leads;
+  const displayCopilots = isDemo ? DEMO_COPILOTS : copilots;
+
+  const leadChartItems = useMemo(
+    () => buildLeadChartItems(displayLeads, 60),
+    [displayLeads],
+  );
 
   const sentStats = useMemo(
     () =>
@@ -118,7 +127,7 @@ export default function OverviewPage() {
     },
     {
       label: "Copilots",
-      value: copilots?.length ?? 0,
+      value: displayCopilots?.length ?? 0,
       change: 0,
       comparisonLabel,
       icon: Bot,
@@ -135,7 +144,13 @@ export default function OverviewPage() {
         }
         description={`Here's what's happening with your outreach today`}
         actionLabel="Create New Copilot"
-        onAction={() => router.push("/dashboard/copilots/new")}
+        onAction={() => {
+          if (isDemo) {
+            exitDemo("/dashboard/copilots/new");
+            return;
+          }
+          router.push("/dashboard/copilots/new");
+        }}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
@@ -151,13 +166,13 @@ export default function OverviewPage() {
         ))}
       </div>
       <Chart
-        leads={leads}
+        leads={displayLeads}
         range={period}
         onRangeChange={(newRange) => setPeriod(newRange)}
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
-        <CopilotsCard />
-        <DepartureCard />
+        <CopilotsCard copilots={isDemo ? DEMO_COPILOTS : undefined} />
+        <DepartureCard leads={isDemo ? DEMO_LEADS : undefined} />
         <QuickStart />
       </div>
       <CopilotFooter />

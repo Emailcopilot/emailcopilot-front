@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { toast } from "sonner";
 import { emailAccountsApi } from "@/lib/api";
 import { EmailAccount } from "@/lib/types";
+import { clearDemoPending } from "@/lib/demo/demo-storage";
 
 type EmailAccountPayload = Record<string, unknown>;
 

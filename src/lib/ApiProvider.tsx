@@ -4,6 +4,7 @@
 import { useAuth } from "@clerk/nextjs";
 import { useEffect, useRef } from "react";
 import api from "./api";
+import { isDemoMutationBlocked } from "./demo/demo-storage";
 
 export function ApiProvider({ children }: { children: React.ReactNode }) {
     const { getToken, isLoaded, isSignedIn } = useAuth();
@@ -13,6 +14,18 @@ export function ApiProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         interceptorRef.current = api.interceptors.request.use(
             async (config) => {
+                const method = (config.method ?? "get").toLowerCase();
+                if (
+                    isDemoMutationBlocked() &&
+                    !["get", "head", "options"].includes(method)
+                ) {
+                    return Promise.reject(
+                        new Error(
+                            "Demo mode is read only. Create your own item to start.",
+                        ),
+                    );
+                }
+
                 const token = await getToken();
                 console.log("Attaching token to request:", token); // Debugging line to check token value
                 if (token) config.headers.Authorization = `Bearer ${token}`;

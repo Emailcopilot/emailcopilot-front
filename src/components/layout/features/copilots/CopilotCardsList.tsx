@@ -20,6 +20,7 @@ export interface CopilotCardsListProps {
   onTakeOff?: (copilot: Copilot) => void;
   /** Called when menu actions require a refresh (e.g., delete, archive, status change). */
   onRefresh?: () => void;
+  readOnly?: boolean;
   className?: string;
 }
 
@@ -28,6 +29,7 @@ function CopilotCardsList({
 
   onTakeOff,
   onRefresh,
+  readOnly = false,
   className = "",
 }: CopilotCardsListProps) {
   const [menuCopilotId, setMenuCopilotId] = React.useState<number | null>(null);
@@ -56,6 +58,7 @@ function CopilotCardsList({
           showMenu={menuCopilotId === copilot.id}
           onMenuClose={() => setMenuCopilotId(null)}
           onRefresh={onRefresh || (() => {})}
+          readOnly={readOnly}
         />
       ))}
     </div>

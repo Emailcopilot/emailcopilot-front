@@ -18,6 +18,7 @@ import {
 interface EmailAccountsTableProps {
   accounts?: EmailAccount[];
   onCreateNew?: () => void;
+  readOnly?: boolean;
 }
 
 /**
@@ -141,7 +142,7 @@ const TABLE_HEADERS = [
 
 const COLUMNS = "1.4fr 1.2fr 0.8fr 0.8fr 0.6fr 0.8fr 0.4fr";
 
-function AccountRow({ account }: { account: EmailAccount }) {
+function AccountRow({ account, readOnly }: { account: EmailAccount; readOnly?: boolean }) {
   const providerMeta = getProviderMeta(account.provider);
   return (
     <>
@@ -176,7 +177,7 @@ function AccountRow({ account }: { account: EmailAccount }) {
         </span>
 
         <div className="flex items-center">
-          <EmailAccountMenu account={account} />
+          {!readOnly && <EmailAccountMenu account={account} />}
         </div>
       </div>
 
@@ -201,7 +202,7 @@ function AccountRow({ account }: { account: EmailAccount }) {
               <EmailAccountStatus status={account.status} />
             </div>
           </div>
-          <EmailAccountMenu account={account} />
+          {!readOnly && <EmailAccountMenu account={account} />}
         </div>
       </div>
     </>
@@ -260,6 +261,7 @@ function EmptyState({
 export default function EmailAccountsTable({
   accounts = [],
   onCreateNew,
+  readOnly = false,
 }: EmailAccountsTableProps) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -328,7 +330,7 @@ export default function EmailAccountsTable({
               key={col}
               className="font-normal text-xs leading-5 text-[#94A3B8]"
             >
-              {col}
+              {readOnly && col === "Actions" ? null : col}
             </span>
           ))}
         </div>
@@ -342,7 +344,7 @@ export default function EmailAccountsTable({
         ) : (
           <div>
             {paginated.map((account) => (
-              <AccountRow key={account.id} account={account} />
+              <AccountRow key={account.id} account={account} readOnly={readOnly} />
             ))}
           </div>
         )}

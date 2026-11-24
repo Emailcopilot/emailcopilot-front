@@ -262,6 +262,7 @@ export interface CopilotTableProps {
   onActionsClick?: (copilot: Copilot) => void;
   /** Called when menu actions require a refresh (e.g., delete, archive, status change). */
   onRefresh?: () => void;
+  readOnly?: boolean;
   className?: string;
 }
 
@@ -271,6 +272,7 @@ function CopilotTable({
 
   onActionsClick,
   onRefresh,
+  readOnly = false,
   className = "",
 }: CopilotTableProps) {
   const [menuCopilotId, setMenuCopilotId] = React.useState<number | null>(null);
@@ -327,7 +329,7 @@ function CopilotTable({
                 Status
               </th>
               <th className="sticky top-0 z-40 rounded-tr-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] w-16 px-5 py-2.5 text-right uppercase font-normal text-xs leading-5 text-[#94A3B8]">
-                Actions
+                {readOnly ? null : "Actions"}
               </th>
             </tr>
           </thead>
@@ -340,16 +342,30 @@ function CopilotTable({
               return (
                 <tr
                   key={copilot.id}
-                  onClick={() =>
-                    router.push(`/dashboard/copilots/new?edit=${copilot.id}`)
+                  onClick={
+                    readOnly
+                      ? undefined
+                      : () =>
+                          router.push(
+                            `/dashboard/copilots/new?edit=${copilot.id}`,
+                          )
                   }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && e.target === e.currentTarget) {
-                      router.push(`/dashboard/copilots/new?edit=${copilot.id}`);
-                    }
-                  }}
-                  tabIndex={0}
-                  className="group/row cursor-pointer border-b border-[#E2E8F0] align-top last:border-b-0 hover:bg-gray-50 transition-colors focus-visible:outline-2 focus-visible:outline-primary/40"
+                  onKeyDown={
+                    readOnly
+                      ? undefined
+                      : (e) => {
+                          if (
+                            e.key === "Enter" &&
+                            e.target === e.currentTarget
+                          ) {
+                            router.push(
+                              `/dashboard/copilots/new?edit=${copilot.id}`,
+                            );
+                          }
+                        }
+                  }
+                  tabIndex={readOnly ? -1 : 0}
+                  className={`group/row border-b border-[#E2E8F0] align-top last:border-b-0 hover:bg-gray-50 transition-colors focus-visible:outline-2 focus-visible:outline-primary/40 ${readOnly ? "cursor-default" : "cursor-pointer"}`}
                 >
                   <td className="px-5 py-4 align-middle">
                     <div className="max-w-55">
@@ -385,53 +401,57 @@ function CopilotTable({
                     className="px-5 py-4 text-right align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        if (menuCopilotId === copilot.id) {
-                          setMenuCopilotId(null);
-                          setMenuPos(null);
-                          return;
-                        }
-                        const r = e.currentTarget.getBoundingClientRect();
-                        const MENU_H = 216;
-                        const top =
-                          r.bottom + 6 + MENU_H > window.innerHeight
-                            ? Math.max(8, r.top - MENU_H - 6)
-                            : r.bottom + 6;
-                        setMenuPos({
-                          top,
-                          right: Math.max(8, window.innerWidth - r.right),
-                        });
-                        setMenuCopilotId(copilot.id);
-                      }}
-                      className="text-gray-500 transition-colors hover:text-gray-800 p-1.5 rounded-md hover:bg-gray-100"
-                      aria-label="Copilot actions"
-                    >
-                      {menuCopilotId === copilot.id ? (
-                        <X size={20} strokeWidth={2.5} />
-                      ) : (
-                        <MoreVertical size={20} strokeWidth={2.75} />
-                      )}
-                    </button>
-                    {menuCopilotId === copilot.id &&
-                      menuPos &&
-                      createPortal(
-                        <div
-                          className="fixed z-[100]"
-                          style={{ top: menuPos.top, right: menuPos.right }}
-                        >
-                          <CopilotMenu
-                            copilot={copilot}
-                            onRefresh={onRefresh || (() => {})}
-                            onClose={() => {
+                    {!readOnly && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            if (menuCopilotId === copilot.id) {
                               setMenuCopilotId(null);
                               setMenuPos(null);
-                            }}
-                          />
-                        </div>,
-                        document.body,
-                      )}
+                              return;
+                            }
+                            const r = e.currentTarget.getBoundingClientRect();
+                            const MENU_H = 216;
+                            const top =
+                              r.bottom + 6 + MENU_H > window.innerHeight
+                                ? Math.max(8, r.top - MENU_H - 6)
+                                : r.bottom + 6;
+                            setMenuPos({
+                              top,
+                              right: Math.max(8, window.innerWidth - r.right),
+                            });
+                            setMenuCopilotId(copilot.id);
+                          }}
+                          className="text-gray-500 transition-colors hover:text-gray-800 p-1.5 rounded-md hover:bg-gray-100"
+                          aria-label="Copilot actions"
+                        >
+                          {menuCopilotId === copilot.id ? (
+                            <X size={20} strokeWidth={2.5} />
+                          ) : (
+                            <MoreVertical size={20} strokeWidth={2.75} />
+                          )}
+                        </button>
+                        {menuCopilotId === copilot.id &&
+                          menuPos &&
+                          createPortal(
+                            <div
+                              className="fixed z-[100]"
+                              style={{ top: menuPos.top, right: menuPos.right }}
+                            >
+                              <CopilotMenu
+                                copilot={copilot}
+                                onRefresh={onRefresh || (() => {})}
+                                onClose={() => {
+                                  setMenuCopilotId(null);
+                                  setMenuPos(null);
+                                }}
+                              />
+                            </div>,
+                            document.body,
+                          )}
+                      </>
+                    )}
                   </td>
                 </tr>
               );

@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { useLeadStore } from "@/store/leadStore";
 import { formatDateTime } from "@/lib/helpers";
+import type { Lead } from "@/lib/types";
 import NoData from "./NoData";
 import LeadStatus from "../departure/LeadStatus";
 
-export default function DepartureCard() {
-  const { leads } = useLeadStore();
+export default function DepartureCard({
+  leads: demoLeads,
+}: {
+  leads?: Lead[];
+}) {
+  const { leads: storeLeads } = useLeadStore();
+  const leads = demoLeads ?? storeLeads;
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-5  w-full ">

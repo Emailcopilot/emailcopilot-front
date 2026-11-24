@@ -134,6 +134,7 @@ export interface CopilotCardProps {
   showMenu?: boolean;
   onMenuClose?: () => void;
   onRefresh?: () => void;
+  readOnly?: boolean;
   className?: string;
 }
 
@@ -145,6 +146,7 @@ function CopilotCard({
   showMenu = false,
   onMenuClose,
   onRefresh,
+  readOnly = false,
   className = "",
 }: CopilotCardProps) {
   const { percent, total } = computeProgress(copilot);
@@ -204,30 +206,40 @@ function CopilotCard({
 
   return (
     <div
-      onClick={() => router.push(`/dashboard/copilots/new?edit=${copilot.id}`)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && e.target === e.currentTarget) {
-          router.push(`/dashboard/copilots/new?edit=${copilot.id}`);
-        }
-      }}
-      tabIndex={0}
-      className={`flex w-full flex-col gap-3 rounded-md border border-gray-200 bg-white p-4 relative cursor-pointer focus-visible:outline-2 focus-visible:outline-primary/40 ${className}`}
+      onClick={
+        readOnly
+          ? undefined
+          : () => router.push(`/dashboard/copilots/new?edit=${copilot.id}`)
+      }
+      onKeyDown={
+        readOnly
+          ? undefined
+          : (e) => {
+              if (e.key === "Enter" && e.target === e.currentTarget) {
+                router.push(`/dashboard/copilots/new?edit=${copilot.id}`);
+              }
+            }
+      }
+      tabIndex={readOnly ? -1 : 0}
+      className={`flex w-full flex-col gap-3 rounded-md border border-gray-200 bg-white p-4 relative focus-visible:outline-2 focus-visible:outline-primary/40 ${readOnly ? "cursor-default" : "cursor-pointer"} ${className}`}
     >
       <div className="flex items-start justify-between">
         <h3 className="text-[15px] font-semibold text-gray-900">
           {copilot.name}
         </h3>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onActionsClick?.();
-          }}
-          aria-label="Copilot actions"
-          className="text-gray-300 transition-colors hover:text-gray-500"
-        >
-          {showMenu ? <X size={18} /> : <MoreVertical size={18} />}
-        </button>
+        {!readOnly && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onActionsClick?.();
+            }}
+            aria-label="Copilot actions"
+            className="text-gray-300 transition-colors hover:text-gray-500"
+          >
+            {showMenu ? <X size={18} /> : <MoreVertical size={18} />}
+          </button>
+        )}
       </div>
 
       <CopilotStatus status={copilot.status} />
@@ -259,20 +271,22 @@ function CopilotCard({
         </span>
       </div>
 
-      <button
-        type="button"
-        // disabled={!handleCardProp(copilot.status).buttonEnabled}
-        onClick={(e) => {
-          e.stopPropagation();
-          action();
-        }}
-        className={`mt-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-[14px] font-medium transition-colors border ${"cursor-pointer border-primary text-primary bg-white hover:bg-primary hover:text-white"}`}
-      >
-        {!isLoading && handleCardProp(copilot.status).icon}
+      {!readOnly && (
+        <button
+          type="button"
+          // disabled={!handleCardProp(copilot.status).buttonEnabled}
+          onClick={(e) => {
+            e.stopPropagation();
+            action();
+          }}
+          className={`mt-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-[14px] font-medium transition-colors border ${"cursor-pointer border-primary text-primary bg-white hover:bg-primary hover:text-white"}`}
+        >
+          {!isLoading && handleCardProp(copilot.status).icon}
 
-        <span>{isLoading ? "Loading..." : label}</span>
-      </button>
-      {showMenu && (
+          <span>{isLoading ? "Loading..." : label}</span>
+        </button>
+      )}
+      {showMenu && !readOnly && (
         <div
           className="absolute right-4 top-12 z-20"
           onClick={(e) => e.stopPropagation()}

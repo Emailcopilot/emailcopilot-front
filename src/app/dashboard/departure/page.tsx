@@ -17,6 +17,14 @@ import { useDebounce, useRowsPerPage } from "@/lib/hooks";
 import DashboardHeader from "@/components/layout/DashboardHeader";
 import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import {
+  DEMO_LEADS,
+  DEMO_TEMPLATES,
+  DEMO_EMAIL_PREVIEW,
+  DEMO_POPUP_COPILOTS,
+} from "@/lib/demo/demo-data";
+import type { DemoPopupCopilot } from "@/lib/demo/demo-data";
 
 const MOCK_META: PaginatedMeta = {
   total: 50,
@@ -141,6 +149,7 @@ function LeadsPageContent() {
   const [copilotName, setCopilotName] = useState<string | null>("All Copilots");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const searchParams = useSearchParams();
+  const { isDemo } = useDemoMode();
   const [search, setSearch] = useState("");
   const [activeLeadId, setActiveLeadId] = useState<number | null>(null);
   const [templateData, setTemplateData] = useState<{
@@ -161,6 +170,11 @@ function LeadsPageContent() {
     abortControllerRef.current = abortController;
 
     if (lead.templateId) {
+      if (isDemo) {
+        setTemplateData(getDemoTemplateById(lead.templateId) ?? DEMO_EMAIL_PREVIEW);
+        return;
+      }
+
       try {
         const res = await templatesApi.getById(lead.templateId, {
           signal: abortController.signal,
@@ -223,6 +237,42 @@ function LeadsPageContent() {
     try {
       setLoading(true);
 
+      if (isDemo) {
+        let data = DEMO_LEADS;
+
+        if (targetCopilotId != null) {
+          data = data.filter(
+            (lead) =>
+              lead.id === targetCopilotId ||
+              lead.copilotName === String(targetCopilotId),
+          );
+        }
+
+        const trimmedSearch = targetSearch.trim();
+        if (trimmedSearch) {
+          const lower = trimmedSearch.toLowerCase();
+          data = data.filter(
+            (lead) =>
+              lead.companyName.toLowerCase().includes(lower) ||
+              lead.email.toLowerCase().includes(lower) ||
+              lead.copilotName?.toLowerCase().includes(lower),
+          );
+        }
+
+        if (seq !== requestSeqRef.current) return;
+
+        const start = (targetPage - 1) * targetLimit;
+        setLeads(data.slice(start, start + targetLimit));
+        setMeta({
+          total: data.length,
+          page: targetPage,
+          limit: targetLimit,
+          totalPages: Math.max(1, Math.ceil(data.length / targetLimit)),
+        });
+        setLoading(false);
+        return;
+      }
+
       const trimmedSearch = targetSearch.trim();
       const res = await leadsApi.getAll({
         page: targetPage,
@@ -244,7 +294,7 @@ function LeadsPageContent() {
 
   useEffect(() => {
     fetchLeads(page, effectiveLimit, copilotId, debouncedSearchTerm);
-  }, [page, effectiveLimit, copilotId, debouncedSearchTerm]);
+  }, [page, effectiveLimit, copilotId, debouncedSearchTerm, isDemo]);
 
   // When the viewport-derived size changes and the user hasn't picked a
   // manual size, restart from page 1 so the new size applies from the top.
@@ -261,6 +311,14 @@ function LeadsPageContent() {
     if (!url) return "#";
 
     return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+  };
+
+  const getDemoTemplateById = (id: number | null) => {
+    if (!id) return null;
+    const template = DEMO_TEMPLATES.find((t) => t.id === id);
+    return template
+      ? { subject: template.subject, body: template.body }
+      : null;
   };
 
   const handleLimitChange = (newLimit: number) => {
@@ -564,11 +622,13 @@ function LeadsPageContent() {
                       </td>
                       <td className="px-6 py-5 sticky w-16 align-middle right-0 z-30 transition-colors">
                         <div className="flex items-center justify-center">
-                          <LeadMenu
-                            lead={lead}
-                            onDeleted={handleDeleteLead}
-                            onSuppressionChange={handleSuppressionChange}
-                          />
+                          {!isDemo && (
+                            <LeadMenu
+                              lead={lead}
+                              onDeleted={handleDeleteLead}
+                              onSuppressionChange={handleSuppressionChange}
+                            />
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -605,6 +665,7 @@ function LeadsPageContent() {
 
       <CopilotsPopup
         isOpen={isSidebarOpen}
+        demoCopilots={isDemo ? DEMO_POPUP_COPILOTS : undefined}
         onClose={(selectedId, selectedName) => {
           setIsSidebarOpen(false);
           if (selectedId) {
