@@ -30,7 +30,9 @@ export default function InvoicesCard({
     <div className="rounded-xl border border-gray-200 bg-white p-6">
       <h2 className="text-lg font-bold text-gray-900">{t("Invoices")}</h2>
       <p className="mt-1 text-sm text-gray-500">
-        {t("View and download your past invoices.")}
+        {t(
+          "View your payment attempts and past invoices. Pending or failed entries are not charges.",
+        )}
       </p>
 
       {invoices.length === 0 ? (

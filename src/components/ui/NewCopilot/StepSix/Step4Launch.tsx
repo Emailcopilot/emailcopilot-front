@@ -15,6 +15,7 @@ import {
 import { useCopilotStore } from "@/store/copilotStore";
 import { useTakeoffCopilot } from "@/lib/useTakeoffCopilot";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { copilotsApi, type CopilotTestEmailStatus } from "@/lib/api";
@@ -58,6 +59,7 @@ export default function Step4Launch({
 }: Step4LaunchProps) {
   const feedback = useSetupFeedbackActions();
   const { t, locale } = useI18n();
+  const router = useRouter();
   const { copilotData, setStep, draftId, persistDraft, mode, editingLive } =
     useCopilotStore();
   const isRelaunch = mode === "edit" && editingLive;
@@ -235,6 +237,12 @@ export default function Step4Launch({
   };
 
   const handleLaunch = () => {
+    // No active plan (including a pending checkout): the shell gate owns this
+    // in practice, but never let the wizard park a copilot that cannot send.
+    if (limits && !limits.hasActivePlan) {
+      router.push("/dashboard/billing?required=plan");
+      return;
+    }
     // No allowance left: launching would only park a copilot that cannot send.
     if (mailQuota?.atLimit) {
       setShowEmailLimit(true);
@@ -591,6 +599,10 @@ export default function Step4Launch({
         onSend={() => sendTestEmail(true)}
         onLaunch={() => {
           setShowTestGate(false);
+          if (limits && !limits.hasActivePlan) {
+            router.push("/dashboard/billing?required=plan");
+            return;
+          }
           if (mailQuota?.atLimit) {
             setShowEmailLimit(true);
             return;

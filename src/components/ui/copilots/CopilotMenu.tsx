@@ -14,10 +14,16 @@ import {
 } from "lucide-react";
 import { Copilot } from "@/components/layout/features/copilots/CopilotTable";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { copilotsApi, flightSchedulesApi } from "@/lib/api";
 import { apiErrorMessage } from "@/lib/helpers";
-import { currentPlanId, emailQuota, higherTiers } from "@/lib/limits";
+import {
+  currentPlanId,
+  emailQuota,
+  higherTiers,
+  isCopilotLimitError,
+} from "@/lib/limits";
 import { useBilling } from "@/lib/useBilling";
 import { useSetupFeedbackActions } from "@/lib/SetupFeedbackProvider";
 import EmailLimitDialog from "@/components/ui/limits/EmailLimitDialog";
@@ -37,7 +43,9 @@ export default function CopilotMenu({
   const [runningScrape, setRunningScrape] = useState(false);
   const [sendingTest, setSendingTest] = useState(false);
   const [showEmailLimit, setShowEmailLimit] = useState(false);
+  const router = useRouter();
   const { limits, plans } = useBilling();
+  const hasNoActivePlan = !!limits && !limits.hasActivePlan;
   const mailQuota = emailQuota(limits);
   const mailTiers = higherTiers(plans, currentPlanId(limits));
   const showLaunchButton =
@@ -101,6 +109,10 @@ export default function CopilotMenu({
 
   async function toggleStatus(next: "active" | "paused") {
     if (next === "active" && !isComplete) return;
+    if (next === "active" && hasNoActivePlan) {
+      router.push("/dashboard/billing?required=plan");
+      return;
+    }
     if (next === "active" && mailQuota?.atLimit) {
       setShowEmailLimit(true);
       return;
@@ -116,6 +128,10 @@ export default function CopilotMenu({
 
   async function handleRunScrape() {
     if (!isComplete || feedback.isBusy()) return;
+    if (hasNoActivePlan) {
+      router.push("/dashboard/billing?required=plan");
+      return;
+    }
     if (mailQuota?.atLimit) {
       setShowEmailLimit(true);
       return;
@@ -161,6 +177,10 @@ export default function CopilotMenu({
   }
 
   function handleDuplicate() {
+    if (hasNoActivePlan) {
+      router.push("/dashboard/billing?required=plan");
+      return;
+    }
     if (
       !confirm(
         t('Duplicate "{name}"? This will create a new draft copy.', {
@@ -176,6 +196,11 @@ export default function CopilotMenu({
         toast.success(t("Copilot duplicated."));
       })
       .catch((error) => {
+        // The backend enforces the copilot allowance on duplicate too.
+        if (isCopilotLimitError(error)) {
+          router.push("/dashboard/copilots?limit=copilots");
+          return;
+        }
         toast.error(apiErrorMessage(error, t("Failed to duplicate.")));
       })
       .finally(() => {

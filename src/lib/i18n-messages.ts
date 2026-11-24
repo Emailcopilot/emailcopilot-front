@@ -924,6 +924,43 @@ const nl: Messages = {
   "The recipient's website": "De website van de ontvanger",
   "The recipient's phone number": "Het telefoonnummer van de ontvanger",
   "Your name as the sender": "Je naam als afzender",
+  // Billing UX updates and auth guard
+  "Could not retry payment. Try again.":
+    "Kon de betaling niet opnieuw proberen. Probeer het opnieuw.",
+  "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up.":
+    "Betaling mislukt. Er is niets in rekening gebracht. Je abonnement is nog niet actief. Probeer de betaling hieronder opnieuw om het af te ronden.",
+  "We have not received payment yet. No charge has been made. Refresh to check the latest status.":
+    "We hebben nog geen betaling ontvangen. Er is niets in rekening gebracht. Vernieuw om de laatste status te controleren.",
+  "Refresh status": "Status vernieuwen",
+  "An active plan is required to use the dashboard. Choose a plan below to get started.":
+    "Een actief abonnement is vereist om het dashboard te gebruiken. Kies hieronder een abonnement om te beginnen.",
+  "Payment summary": "Betalingsoverzicht",
+  "Payment failed": "Betaling mislukt",
+  "Awaiting payment": "Wacht op betaling",
+  "Amount charged": "Afgeschreven bedrag",
+  "View your payment attempts and past invoices. Pending or failed entries are not charges.":
+    "Bekijk je betalingspogingen en eerdere facturen. Openstaande of mislukte vermeldingen zijn geen afschrijvingen.",
+  "Starting checkout": "Afrekenen starten",
+  "Retry payment": "Betaling opnieuw proberen",
+  "Continue to checkout": "Doorgaan naar afrekenen",
+  "Review your plan": "Controleer je abonnement",
+  "Your plan and billing interval are ready. Continue to checkout when you are ready.":
+    "Je abonnement en factureringsperiode staan klaar. Ga verder naar afrekenen wanneer je er klaar voor bent.",
+  "Save up to {percent}%": "Bespaar tot {percent}%",
+  "Yearly (save up to {percent}%)": "Jaarlijks (bespaar tot {percent}%)",
+  Yearly: "Jaarlijks",
+  "Payment pending": "Betaling in afwachting",
+  "This plan is not active yet and you have not been charged. Retry the payment to activate it.":
+    "Dit abonnement is nog niet actief en er is niets in rekening gebracht. Probeer de betaling opnieuw om het te activeren.",
+  "We have not received payment yet. Your plan stays inactive until the payment is confirmed.":
+    "We hebben nog geen betaling ontvangen. Je abonnement blijft inactief totdat de betaling is bevestigd.",
+  "Included after payment": "Inbegrepen na betaling",
+  "Choose another plan": "Een ander abonnement kiezen",
+  "We couldn't check your subscription. Please try again.":
+    "We konden je abonnement niet controleren. Probeer het opnieuw.",
+  "Retrying…": "Opnieuw proberen…",
+  "Try again": "Opnieuw proberen",
+  "Couldn't load your plan": "Kon je abonnement niet laden",
 };
 
 const de: Messages = {
@@ -1857,6 +1894,43 @@ const de: Messages = {
   "The recipient's website": "Die Website des Empfängers",
   "The recipient's phone number": "Die Telefonnummer des Empfängers",
   "Your name as the sender": "Dein Name als Absender",
+  // Billing UX updates and auth guard
+  "Could not retry payment. Try again.":
+    "Zahlung konnte nicht erneut versucht werden. Bitte versuche es erneut.",
+  "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up.":
+    "Zahlung fehlgeschlagen. Es wurde nichts abgebucht. Dein Tarif ist noch nicht aktiv. Versuche die Zahlung unten erneut, um die Einrichtung abzuschließen.",
+  "We have not received payment yet. No charge has been made. Refresh to check the latest status.":
+    "Wir haben noch keine Zahlung erhalten. Es wurde nichts abgebucht. Aktualisiere, um den neuesten Status zu prüfen.",
+  "Refresh status": "Status aktualisieren",
+  "An active plan is required to use the dashboard. Choose a plan below to get started.":
+    "Für die Nutzung des Dashboards ist ein aktiver Tarif erforderlich. Wähle unten einen Tarif aus, um loszulegen.",
+  "Payment summary": "Zahlungsübersicht",
+  "Payment failed": "Zahlung fehlgeschlagen",
+  "Awaiting payment": "Zahlung ausstehend",
+  "Amount charged": "Abgebuchter Betrag",
+  "View your payment attempts and past invoices. Pending or failed entries are not charges.":
+    "Sieh dir deine Zahlungsversuche und früheren Rechnungen an. Ausstehende oder fehlgeschlagene Einträge sind keine Abbuchungen.",
+  "Starting checkout": "Checkout wird gestartet",
+  "Retry payment": "Zahlung erneut versuchen",
+  "Continue to checkout": "Weiter zur Kasse",
+  "Review your plan": "Tarif überprüfen",
+  "Your plan and billing interval are ready. Continue to checkout when you are ready.":
+    "Dein Tarif und das Abrechnungsintervall sind bereit. Gehe weiter zur Kasse, wenn du bereit bist.",
+  "Save up to {percent}%": "Bis zu {percent}% sparen",
+  "Yearly (save up to {percent}%)": "Jährlich (bis zu {percent}% sparen)",
+  Yearly: "Jährlich",
+  "Payment pending": "Zahlung ausstehend",
+  "This plan is not active yet and you have not been charged. Retry the payment to activate it.":
+    "Dieser Tarif ist noch nicht aktiv und es wurde nichts abgebucht. Versuche die Zahlung erneut, um ihn zu aktivieren.",
+  "We have not received payment yet. Your plan stays inactive until the payment is confirmed.":
+    "Wir haben noch keine Zahlung erhalten. Dein Tarif bleibt inaktiv, bis die Zahlung bestätigt ist.",
+  "Included after payment": "Nach Zahlung enthalten",
+  "Choose another plan": "Einen anderen Tarif wählen",
+  "We couldn't check your subscription. Please try again.":
+    "Wir konnten dein Abonnement nicht überprüfen. Bitte versuche es erneut.",
+  "Retrying…": "Wird erneut versucht…",
+  "Try again": "Erneut versuchen",
+  "Couldn't load your plan": "Dein Tarif konnte nicht geladen werden",
 };
 
 const fr: Messages = {
@@ -2787,6 +2861,43 @@ const fr: Messages = {
   "The recipient's website": "Le site web du destinataire",
   "The recipient's phone number": "Le numéro de téléphone du destinataire",
   "Your name as the sender": "Votre nom en tant qu'expéditeur",
+  // Billing UX updates and auth guard
+  "Could not retry payment. Try again.":
+    "Impossible de relancer le paiement. Réessayez.",
+  "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up.":
+    "Le paiement a échoué. Vous n'avez pas été débité. Votre formule n'est pas encore active. Relancez le paiement ci-dessous pour finaliser la configuration.",
+  "We have not received payment yet. No charge has been made. Refresh to check the latest status.":
+    "Nous n'avons pas encore reçu le paiement. Aucun débit n'a été effectué. Actualisez pour vérifier le dernier statut.",
+  "Refresh status": "Actualiser le statut",
+  "An active plan is required to use the dashboard. Choose a plan below to get started.":
+    "Un abonnement actif est requis pour utiliser le tableau de bord. Choisissez une formule ci-dessous pour commencer.",
+  "Payment summary": "Récapitulatif du paiement",
+  "Payment failed": "Échec du paiement",
+  "Awaiting payment": "En attente de paiement",
+  "Amount charged": "Montant débité",
+  "View your payment attempts and past invoices. Pending or failed entries are not charges.":
+    "Consultez vos tentatives de paiement et vos factures passées. Les entrées en attente ou échouées ne sont pas des débits.",
+  "Starting checkout": "Ouverture du paiement",
+  "Retry payment": "Réessayer le paiement",
+  "Continue to checkout": "Continuer vers le paiement",
+  "Review your plan": "Vérifiez votre formule",
+  "Your plan and billing interval are ready. Continue to checkout when you are ready.":
+    "Votre formule et votre période de facturation sont prêtes. Passez au paiement lorsque vous êtes prêt.",
+  "Save up to {percent}%": "Économisez jusqu'à {percent}%",
+  "Yearly (save up to {percent}%)": "Annuel (économisez jusqu'à {percent}%)",
+  Yearly: "Annuel",
+  "Payment pending": "Paiement en attente",
+  "This plan is not active yet and you have not been charged. Retry the payment to activate it.":
+    "Cette formule n'est pas encore active et vous n'avez pas été débité. Réessayez le paiement pour l'activer.",
+  "We have not received payment yet. Your plan stays inactive until the payment is confirmed.":
+    "Nous n'avons pas encore reçu le paiement. Votre formule reste inactive jusqu'à confirmation du paiement.",
+  "Included after payment": "Inclus après paiement",
+  "Choose another plan": "Choisir une autre formule",
+  "We couldn't check your subscription. Please try again.":
+    "Nous n'avons pas pu vérifier votre abonnement. Veuillez réessayer.",
+  "Retrying…": "Nouvelle tentative…",
+  "Try again": "Réessayer",
+  "Couldn't load your plan": "Impossible de charger votre formule",
 };
 
 const es: Messages = {
@@ -3710,6 +3821,43 @@ const es: Messages = {
   "The recipient's website": "El sitio web del destinatario",
   "The recipient's phone number": "El número de teléfono del destinatario",
   "Your name as the sender": "Tu nombre como remitente",
+  // Billing UX updates and auth guard
+  "Could not retry payment. Try again.":
+    "No se pudo reintentar el pago. Inténtalo de nuevo.",
+  "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up.":
+    "El pago falló. No se te ha cobrado. Tu plan aún no está activo. Vuelve a intentar el pago abajo para finalizar la configuración.",
+  "We have not received payment yet. No charge has been made. Refresh to check the latest status.":
+    "Aún no hemos recibido el pago. No se ha realizado ningún cargo. Actualiza para consultar el último estado.",
+  "Refresh status": "Actualizar estado",
+  "An active plan is required to use the dashboard. Choose a plan below to get started.":
+    "Se requiere un plan activo para usar el panel. Elige un plan abajo para empezar.",
+  "Payment summary": "Resumen del pago",
+  "Payment failed": "Pago fallido",
+  "Awaiting payment": "Esperando pago",
+  "Amount charged": "Importe cobrado",
+  "View your payment attempts and past invoices. Pending or failed entries are not charges.":
+    "Consulta tus intentos de pago y facturas anteriores. Las entradas pendientes o fallidas no son cargos.",
+  "Starting checkout": "Iniciando pago",
+  "Retry payment": "Reintentar pago",
+  "Continue to checkout": "Continuar al pago",
+  "Review your plan": "Revisa tu plan",
+  "Your plan and billing interval are ready. Continue to checkout when you are ready.":
+    "Tu plan y tu período de facturación están listos. Continúa al pago cuando estés listo.",
+  "Save up to {percent}%": "Ahorra hasta un {percent}%",
+  "Yearly (save up to {percent}%)": "Anual (ahorra hasta un {percent}%)",
+  Yearly: "Anual",
+  "Payment pending": "Pago pendiente",
+  "This plan is not active yet and you have not been charged. Retry the payment to activate it.":
+    "Este plan aún no está activo y no se te ha cobrado. Vuelve a intentar el pago para activarlo.",
+  "We have not received payment yet. Your plan stays inactive until the payment is confirmed.":
+    "Aún no hemos recibido el pago. Tu plan permanecerá inactivo hasta que se confirme el pago.",
+  "Included after payment": "Incluido después del pago",
+  "Choose another plan": "Elegir otro plan",
+  "We couldn't check your subscription. Please try again.":
+    "No pudimos comprobar tu suscripción. Inténtalo de nuevo.",
+  "Retrying…": "Reintentando…",
+  "Try again": "Intentar de nuevo",
+  "Couldn't load your plan": "No se pudo cargar tu plan",
 };
 
 export const MESSAGES: Record<string, Messages> = { nl, de, fr, es };
