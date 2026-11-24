@@ -2,6 +2,7 @@
 
 import { LucideIcon, ArrowUp, ArrowDown, MoveRight } from "lucide-react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 interface StatCardProps {
   icon: LucideIcon;
@@ -21,11 +22,12 @@ export default function StatCard({
   comparisonLabel = "",
   comingSoon = false,
 }: StatCardProps) {
+  const { t } = useI18n();
   if (comingSoon) {
     return (
       <div
         className="bg-gray-50 border border-gray-200 rounded-lg p-5 w-full"
-        title="This metric isn't live yet"
+        title={t("This metric isn't live yet")}
       >
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center w-12 h-12 rounded-md bg-gray-100 shrink-0">
@@ -33,14 +35,14 @@ export default function StatCard({
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-gray-400">{label}</div>
+            <div className="text-sm font-semibold text-gray-400">{t(label)}</div>
             <div className="text-lg font-bold text-gray-300 mt-1">–</div>
           </div>
         </div>
 
         <div className="flex items-center gap-1 mt-6 text-xs">
           <span className="rounded-md bg-gray-100 px-2 py-1 font-medium text-gray-500">
-            Coming soon
+            {t("Coming soon")}
           </span>
         </div>
       </div>
@@ -66,7 +68,7 @@ export default function StatCard({
         </div>
 
         <div>
-          <div className="text-sm font-semibold text-gray-900">{label}</div>
+          <div className="text-sm font-semibold text-gray-900">{t(label)}</div>
           <div className="text-lg font-bold text-gray-900 mt-1">{value}</div>
         </div>
       </div>
@@ -87,7 +89,7 @@ export default function StatCard({
             href="/dashboard/copilots"
             className="text-primary  flex w-full text-sm items-center justify-end gap-2 "
           >
-            View All
+            {t("View all")}
             <MoveRight size={14} />
           </Link>
         )}
