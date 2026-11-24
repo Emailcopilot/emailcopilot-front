@@ -16,6 +16,7 @@ import {
   getTimeZoneOffsetMinutes,
   isValidTimeZone,
 } from "@/lib/helpers";
+import { useI18n } from "@/lib/i18n";
 
 const POPOVER_MAX_HEIGHT = 340;
 
@@ -73,6 +74,7 @@ export default function TimeZoneSelect({
   onChange,
   className,
 }: TimeZoneSelectProps) {
+  const { t } = useI18n();
   // Only the incoming value may be missing from the generated list.
   const [initialValue] = useState(value);
 
@@ -307,7 +309,7 @@ export default function TimeZoneSelect({
                   setHighlighted(0);
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Search timezone..."
+                placeholder={t("Search timezone...")}
                 className="w-full rounded-md border border-slate-200 bg-white py-2 pl-8 pr-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
@@ -325,7 +327,7 @@ export default function TimeZoneSelect({
                 </li>
               ) : filtered.length === 0 ? (
                 <li className="px-3 py-6 text-center text-sm text-slate-500">
-                  No timezone found.
+                  {t("No timezone found.")}
                 </li>
               ) : (
                 filtered.map((timeZone, index) => {

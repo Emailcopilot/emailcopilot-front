@@ -5,6 +5,7 @@ import { MoreVertical, Pencil, ShieldCheck, Trash2, X } from "lucide-react";
 import { useEmailAccountStore } from "@/store/emailAccountStore";
 import { Loader2 } from "lucide-react";
 import { EmailAccount } from "@/lib/types";
+import { useI18n } from "@/lib/i18n";
 
 interface AccountActionsMenuProps {
   account: EmailAccount;
@@ -18,6 +19,7 @@ interface MenuItemConfig {
 }
 
 function EmailAccountMenu({ account }: AccountActionsMenuProps) {
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const {
@@ -88,7 +90,7 @@ function EmailAccountMenu({ account }: AccountActionsMenuProps) {
           onClick={() => setIsOpen((open) => !open)}
           aria-haspopup="menu"
           aria-expanded={isOpen}
-          aria-label="Open account actions"
+          aria-label={t("Open account actions")}
           className="text-gray-300 transition-colors hover:text-gray-500"
         >
           {isOpen ? <X size={18} /> : <MoreVertical size={18} />}
@@ -98,7 +100,7 @@ function EmailAccountMenu({ account }: AccountActionsMenuProps) {
       {isOpen && (
         <div
           role="menu"
-          aria-label="Account actions"
+          aria-label={t("Account actions")}
           className="absolute right-0 z-10 mt-1 w-44 overflow-hidden rounded-xl border border-gray-200 bg-white py-1 shadow-lg"
         >
           {items.map((item) => (
@@ -117,7 +119,7 @@ function EmailAccountMenu({ account }: AccountActionsMenuProps) {
                 }`}
               >
                 <item.icon size={13} />
-                {item.label}
+                {t(item.label)}
               </button>
             </Fragment>
           ))}

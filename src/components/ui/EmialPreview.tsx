@@ -1,6 +1,7 @@
 "use client";
 import { Mail, X } from "lucide-react";
 import { useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 interface EmailPreviewCardProps {
   subject?: string;
@@ -32,6 +33,7 @@ Best regards,
 {{sender_name}}`,
   onClose,
 }: EmailPreviewCardProps) {
+  const { t } = useI18n();
   const [isExpanded, setIsExpanded] = useState(false);
   console.log("body template:", body);
 
@@ -60,13 +62,13 @@ Best regards,
         <div className="p-5 space-y-4 max-h-76 overflow-y-auto">
           {/* Subject line */}
           <div className="space-y-1">
-            <p className="text-xs font-semibold text-gray-900">Subject line</p>
+            <p className="text-xs font-semibold text-gray-900">{t("Subject line")}</p>
             <p className="text-xs text-gray-400">{subject}</p>
           </div>
 
           {/* Email body */}
           <div className="space-y-1">
-            <p className="text-xs font-semibold text-gray-900">Email body</p>
+            <p className="text-xs font-semibold text-gray-900">{t("Email body")}</p>
             <p
               className={`text-xs text-gray-400 whitespace-pre-line leading-relaxed ${
                 isExpanded ? "" : "line-clamp-10"
@@ -85,7 +87,7 @@ Best regards,
             className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-xs font-semibold text-gray-700 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-primary-light)] transition-all"
           >
             <Mail size={14} />
-            {isExpanded ? "Show less" : "View full message"}
+            {isExpanded ? t("Show less") : t("View full message")}
           </button>
         </div>
       </div>

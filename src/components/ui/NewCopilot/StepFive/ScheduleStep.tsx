@@ -14,6 +14,8 @@ import {
 import { toast } from "sonner";
 import TimeZoneSelect from "@/components/ui/TimeZoneSelect";
 import ScheduleList from "./ScheduleList";
+import { formatAllDayAvailability } from "@/lib/sending-schedule";
+import { useI18n } from "@/lib/i18n";
 
 const DAYS = [
   { value: 1, label: "Mon" },
@@ -66,6 +68,7 @@ export default function ScheduleStep() {
   const selectedId = copilotData.flightScheduleId;
 
   const [loading, setLoading] = useState(false);
+  const { t } = useI18n();
   // Open by default when nothing is linked yet (edit mode hydrates later).
   const [listOpen, setListOpen] = useState(!copilotData.flightScheduleId);
 
@@ -148,7 +151,7 @@ export default function ScheduleStep() {
 
   const handleSave = async () => {
     if (schedule.activeDays.length === 0) {
-      toast.error("Please select at least one active day.");
+      toast.error(t("Please select at least one active day."));
       return;
     }
 
@@ -159,7 +162,7 @@ export default function ScheduleStep() {
         await persistDraft();
         setStep(6);
       } catch {
-        toast.error("Failed to save draft. Please try again.");
+        toast.error(t("Failed to save draft. Please try again."));
       } finally {
         setLoading(false);
       }
@@ -206,20 +209,22 @@ export default function ScheduleStep() {
       try {
         await persistDraft();
       } catch {
-        toast.error("Failed to save draft. Please try again.");
+        toast.error(t("Failed to save draft. Please try again."));
         return;
       }
 
       if (selectedId) {
         toast.success(
-          "Changes saved as a new schedule — the original schedule was not changed.",
+          t(
+            "Changes saved as a new schedule — the original schedule was not changed.",
+          ),
         );
       } else {
-        toast.success("Flight schedule created and linked.");
+        toast.success(t("Flight schedule created and linked."));
       }
       setStep(6);
     } catch (error) {
-      toast.error("Failed to create flight schedule. Please try again.");
+      toast.error(t("Failed to create flight schedule. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -230,23 +235,23 @@ export default function ScheduleStep() {
       {/* Header Area */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-900 mb-1">
-          Configure Flight Schedule
+          {t("Configure Flight Schedule")}
         </h1>
         <p className="text-sm text-slate-500">
-          Choose when and how your copilot sends emails.
+          {t("Choose when and how your copilot sends emails.")}
         </p>
       </div>
 
       <div className="flex flex-col gap-8 w-full max-w-4xl">
         <div className="border-b border-slate-100 pb-8">
           <h3 className="text-sm font-bold text-slate-900 mb-2">
-            Schedule Name (if creating new)
+            {t("Schedule Name (if creating new)")}
           </h3>
           <input
             type="text"
             value={schedule.name}
             onChange={(e) => updateFlightSchedule({ name: e.target.value })}
-            placeholder="e.g. My Custom Schedule"
+            placeholder={t("e.g. My Custom Schedule")}
             className="w-full max-w-md px-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white"
           />
         </div>
@@ -255,10 +260,10 @@ export default function ScheduleStep() {
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8">
           <div className=" col-span-1 lg:col-span-2 ">
             <h3 className="text-sm font-bold text-slate-900 mb-1">
-              Daily send limit
+              {t("Daily send limit")}
             </h3>
             <p className="text-xs text-slate-500">
-              Maximum number of new emails to send per day.
+              {t("Maximum number of new emails to send per day.")}
             </p>
           </div>
           <div className="col-span-1 lg:col-span-4 flex items-start gap-4 flex-1 pt-1">
@@ -322,7 +327,7 @@ export default function ScheduleStep() {
                   </div>
                 </div>
                 <div className="text-xs text-slate-400 mt-2">
-                  Recommended: 20-50 per day for best deliverability
+                  {t("Recommended: 20-50 per day for best deliverability")}
                 </div>
               </div>
             ) : (
@@ -330,11 +335,12 @@ export default function ScheduleStep() {
                 <CircleAlert className="w-6 h-6 text-blue-500 shrink-0" />
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 mb-1">
-                    Unlimited sending
+                    {t("Unlimited sending")}
                   </h3>
                   <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                    Your copilot will send as many emails as possible within the
-                    active hours each day.
+                    {t(
+                      "Your copilot will send as many emails as possible within the active hours each day.",
+                    )}
                   </p>
                 </div>
               </div>
@@ -365,10 +371,10 @@ export default function ScheduleStep() {
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8">
           <div className="col-span-1 lg:col-span-2">
             <h3 className="text-sm font-bold text-slate-900 mb-1">
-              Active days
+              {t("Active days")}
             </h3>
             <p className="text-xs text-slate-500">
-              Choose which days your copilot is allowed to send emails.
+              {t("Choose which days your copilot is allowed to send emails.")}
             </p>
           </div>
 
@@ -386,7 +392,7 @@ export default function ScheduleStep() {
                       : "border-slate-200 text-slate-500 bg-white hover:border-slate-300"
                   }`}
                 >
-                  {label}
+                  {t(label)}
                 </button>
               );
             })}
@@ -397,13 +403,13 @@ export default function ScheduleStep() {
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8">
           <div className="col-span-1 lg:col-span-2">
             <h3 className="text-sm font-bold text-slate-900 mb-1 flex items-center pr-2">
-              Sending hours
+              {t("Sending hours")}
               <span className="font-normal text-slate-400 text-xs ml-1">
-                (your timezone)
+                {t("(your timezone)")}
               </span>
             </h3>
             <p className="text-xs text-slate-500">
-              Set the daily time window when your copilot can send emails.
+              {t("Set the daily time window when your copilot can send emails.")}
             </p>
           </div>
           <div className="col-span-1 lg:col-span-4 flex items-start gap-4 flex-1 pt-1">
@@ -411,7 +417,7 @@ export default function ScheduleStep() {
               <div className="flex flex-wrap items-center gap-4 flex-1 pt-1">
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-medium text-slate-700">
-                    From
+                    {t("From")}
                   </span>
                   <div className="relative">
                     <select
@@ -438,7 +444,7 @@ export default function ScheduleStep() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-slate-700">To</span>
+                  <span className="text-sm font-medium text-slate-700">{t("To")}</span>
                   <div className="relative">
                     <select
                       value={schedule.sendingHours.end}
@@ -468,10 +474,12 @@ export default function ScheduleStep() {
                 <CircleAlert className="w-6 h-6 text-blue-500 shrink-0" />
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 mb-1">
-                    Sending hours is off
+                    {t("Sending hours are off")}
                   </h3>
                   <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                    Your copilot can send emails at any time, 24/7.
+                    {t("Availability: {value} (selected active days only).", {
+                      value: t(formatAllDayAvailability(schedule.activeDays)),
+                    })}
                   </p>
                 </div>
               </div>
@@ -505,10 +513,10 @@ export default function ScheduleStep() {
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 pb-2">
           <div className="col-span-1 lg:col-span-2">
             <h3 className="text-sm font-bold text-slate-900 mb-1">
-              Default Timezone
+              {t("Default Timezone")}
             </h3>
             <p className="text-xs text-slate-500">
-              Timezone for sending and scheduling.
+              {t("Timezone for sending and scheduling.")}
             </p>
           </div>
 
@@ -527,34 +535,39 @@ export default function ScheduleStep() {
         <div className="flex items-start gap-3 p-4 rounded-xl border border-gray-200 bg-gray-50 mt-8">
           <CircleAlert className="w-5 h-5 text-gray-500 shrink-0 mt-0.5" />
           <p className="text-xs font-medium text-gray-700 leading-relaxed">
-            Custom schedule — a new schedule will be created and linked when
-            you continue.
+            {t(
+              "Custom schedule — a new schedule will be created and linked when you continue.",
+            )}
           </p>
         </div>
       ) : dirty && nameEdited ? (
         <div className="flex items-start gap-3 p-4 rounded-xl border border-amber-200 bg-amber-50/60 mt-8">
           <CircleAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <p className="text-xs font-medium text-amber-800 leading-relaxed">
-            A new schedule named “
-            {schedule.name.trim() || "Custom Copilot Schedule"}” will be
-            created and linked. The original schedule stays unchanged.
+            {t(
+              "A new schedule named “{name}” will be created and linked. The original schedule stays unchanged.",
+              { name: schedule.name.trim() || "Custom Copilot Schedule" },
+            )}
           </p>
         </div>
       ) : dirty ? (
         <div className="flex items-start gap-3 p-4 rounded-xl border border-amber-200 bg-amber-50/60 mt-8">
           <CircleAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <p className="text-xs font-medium text-amber-800 leading-relaxed">
-            Modified from “{baseline.data.name}” — your changes will be saved
-            as a <strong>new schedule</strong>. The original schedule stays
-            unchanged.
+            {t(
+              "Modified from “{name}” — your changes will be saved as a new schedule. The original schedule stays unchanged.",
+              { name: baseline.data.name },
+            )}
           </p>
         </div>
       ) : (
         <div className="flex items-start gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50/50 mt-8">
           <CircleAlert className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
           <p className="text-xs font-medium text-slate-700 leading-relaxed">
-            Using saved schedule: {baseline.data.name} — nothing will be
-            changed when you continue.
+            {t(
+              "Using saved schedule: {name} — nothing will be changed when you continue.",
+              { name: baseline.data.name },
+            )}
           </p>
         </div>
       )}
@@ -570,11 +583,11 @@ export default function ScheduleStep() {
           <span className="flex items-center gap-2.5 min-w-0">
             <Clock size={16} className="text-[#59637C] shrink-0" />
             <span className="text-sm font-bold text-gray-900">
-              Your Flight Schedules
+              {t("Your Flight Schedules")}
             </span>
             {baseline !== null && (
               <span className="truncate max-w-48 text-xs font-medium text-primary bg-primary-light px-2 py-0.5 rounded-full">
-                Using: {baseline.data.name}
+                {t("Using: {name}", { name: baseline.data.name })}
               </span>
             )}
           </span>

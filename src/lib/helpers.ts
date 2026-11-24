@@ -33,11 +33,14 @@ export const handlePlanNameChange = (planName: string): string => {
 };
 
 /** Month-name date ("Sep 22, 2026") — the standard table date format. */
-export function formatDate(apiDateString?: string | null): string {
+export function formatDate(
+  apiDateString?: string | null,
+  locale = "en-US",
+): string {
   if (!apiDateString) return "—";
   const date = new Date(apiDateString);
   if (isNaN(date.getTime())) return "—";
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(locale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -152,14 +155,14 @@ export function getPeriodStats(
   };
 }
 
-export function getDateRange(days = 7): string {
+export function getDateRange(days = 7, locale = "en-US"): string {
   const today = new Date();
 
   const startDate = new Date(today);
   startDate.setDate(today.getDate() - (days - 1));
 
   const formatDate = (date: Date) =>
-    date.toLocaleDateString("en-US", {
+    date.toLocaleDateString(locale, {
       day: "numeric",
       month: "short",
     });
@@ -231,12 +234,15 @@ export const PLAN_ICONS: Record<string, LucideIcon> = {
 };
 
 /** "May 24, 2026" — the date format used across the billing screens. */
-export function formatBillingDate(apiDateString?: string | null): string {
+export function formatBillingDate(
+  apiDateString?: string | null,
+  locale = "en-US",
+): string {
   if (!apiDateString) return "—";
   const date = new Date(apiDateString);
   if (Number.isNaN(date.getTime())) return "—";
 
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString(locale, {
     month: "long",
     day: "numeric",
     year: "numeric",

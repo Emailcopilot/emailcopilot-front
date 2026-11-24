@@ -5,6 +5,7 @@ import { CheckCircle, ChevronRight, Zap, Inbox, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useEmailAccountStore } from "@/store/emailAccountStore";
+import { useI18n } from "@/lib/i18n";
 interface ProvidersOptionProps {
   setShowOtherProviderPopUp: (show: boolean) => void;
   setSelectedProfileName: (name: string) => void;
@@ -18,6 +19,7 @@ function ProvidersOption({
   selectedProfileName,
   returnTo,
 }: ProvidersOptionProps) {
+  const { t } = useI18n();
   const { oauthConnecting, oauthConnect } = useEmailAccountStore();
   const { updateCopilotData, copilotData } = useCopilotStore();
   return (
@@ -26,17 +28,17 @@ function ProvidersOption({
         {/* Header */}
         <div>
           <h2 className="text-xl font-bold text-gray-900">
-            Connect your email account
+            {t("Connect your email account")}
           </h2>
           <p className="text-sm text-gray-500 mt-1">
-            Choose the email account your copilot will use to send emails.
+            {t("Choose the email account your copilot will use to send emails.")}
           </p>
         </div>
 
         {/* Recommended section */}
         <div>
           <h3 className="text-xs font-semibold text-gray-800 mb-3">
-            Recommended
+            {t("Recommended")}
           </h3>
 
           <div className="space-y-3">
@@ -59,17 +61,17 @@ function ProvidersOption({
                 <div>
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <span className="font-semibold text-sm text-gray-900">
-                      Connect with Gmail
+                      {t("Connect with Gmail")}
                     </span>
                     <span className="flex items-center gap-1 text-[8px] font-medium text-success bg-success/5 px-2 py-0.5 rounded-full">
-                      <CheckCircle size={8} /> Recommended
+                      <CheckCircle size={8} /> {t("Recommended")}
                     </span>
                     <span className="flex items-center gap-1 text-[8px] font-medium text-primary bg-primary/5  px-2 py-0.5 rounded-full">
-                      <Zap size={8} /> Easy setup
+                      <Zap size={8} /> {t("Easy setup")}
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Connect your Gmail account with OAuth in a few clicks.
+                    {t("Connect your Gmail account with OAuth in a few clicks.")}
                   </p>
                 </div>
               </div>
@@ -104,17 +106,17 @@ function ProvidersOption({
                 <div>
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <span className="font-semibold text-sm text-gray-900">
-                      Connect with Outlook
+                      {t("Connect with Outlook")}
                     </span>
                     <span className="flex items-center gap-1 text-[8px] font-medium text-success bg-success/5 px-2 py-0.5 rounded-full">
-                      <CheckCircle size={8} /> Recommended
+                      <CheckCircle size={8} /> {t("Recommended")}
                     </span>
                     <span className="flex items-center gap-1 text-[8px] font-medium text-primary bg-primary/5  px-2 py-0.5 rounded-full">
-                      <Zap size={8} /> Easy setup
+                      <Zap size={8} /> {t("Easy setup")}
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Connect your Outlook account with OAuth in a few clicks.
+                    {t("Connect your Outlook account with OAuth in a few clicks.")}
                   </p>
                 </div>
               </div>
@@ -134,7 +136,7 @@ function ProvidersOption({
           </div>
           <div className="relative flex justify-center">
             <span className="bg-white px-3 text-xs font-semibold text-gray-800">
-              Other options
+              {t("Other options")}
             </span>
           </div>
         </div>
@@ -158,10 +160,10 @@ function ProvidersOption({
             </div>
             <div>
               <span className="font-semibold text-sm text-gray-900">
-                Connect other email provider
+                {t("Connect other email provider")}
               </span>
               <p className="text-xs text-gray-500 mt-1">
-                Use SMTP / IMAP to connect any email provider.
+                {t("Use SMTP / IMAP to connect any email provider.")}
               </p>
             </div>
           </div>

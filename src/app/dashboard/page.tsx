@@ -18,12 +18,21 @@ import CopilotsCard from "@/components/ui/overview/CopilotsCard";
 import CopilotFooter from "@/components/ui/NewCopilot/CopilotFooter";
 import { useLeadStore } from "@/store/leadStore";
 import { useCopilotStore } from "@/store/copilotStore";
+import { useI18n } from "@/lib/i18n";
+
+/**
+ * The API has no per-day stats yet (GET /leads returns 20 leads and sentAt is
+ * empty), so period numbers and the chart are greyed out. Flip to true once the
+ * back-end delivers daily stats.
+ */
+const DAILY_STATS_LIVE = false;
 
 export default function OverviewPage() {
   const { leads, getAllLeads } = useLeadStore();
   const { copilots, getAllCopilots } = useCopilotStore();
 
   const router = useRouter();
+  const { t, locale } = useI18n();
 
   const [period, setPeriod] = useState<DateRange>("Last 7 days");
 
@@ -63,17 +72,32 @@ export default function OverviewPage() {
     sentStats.total > 0 ? (replyStats.total / sentStats.total) * 100 : 0;
 
   const comparisonLabel = useMemo(
-    () => "vs " + getDateRange(periodToDays(period)),
-    [period],
+    () =>
+      t("vs {range}", {
+        range: getDateRange(
+          periodToDays(period),
+          locale === "en" ? "en-US" : locale,
+        ),
+      }),
+    [period, t, locale],
+  );
+
+  // Total over all copilots, accurate until daily stats exist.
+  const totalSent = (copilots ?? []).reduce(
+    (sum, c) => sum + (Number(c.emailsSent) || 0),
+    0,
   );
 
   const stats = [
     {
       label: "Emails Sent",
-      value: sentStats.total,
+      value: DAILY_STATS_LIVE
+        ? sentStats.total
+        : totalSent.toLocaleString(locale === "en" ? "en-US" : locale),
       change: sentStats.percentageChange,
       comparisonLabel,
       icon: Send,
+      footnote: DAILY_STATS_LIVE ? undefined : t("All time"),
     },
     {
       label: "Replies",
@@ -81,6 +105,7 @@ export default function OverviewPage() {
       change: replyStats.percentageChange,
       comparisonLabel,
       icon: BarChart3,
+      comingSoon: true,
     },
     {
       label: "Reply Rate",
@@ -88,6 +113,7 @@ export default function OverviewPage() {
       change: 0,
       comparisonLabel,
       icon: Users,
+      comingSoon: true,
     },
     {
       label: "Copilots",
@@ -116,6 +142,8 @@ export default function OverviewPage() {
             value={s.value as string | number}
             change={s.change}
             comparisonLabel={s.comparisonLabel}
+            comingSoon={"comingSoon" in s && s.comingSoon}
+            footnote={"footnote" in s ? s.footnote : undefined}
           />
         ))}
       </div>
@@ -123,6 +151,7 @@ export default function OverviewPage() {
         leads={leads}
         range={period}
         onRangeChange={(newRange) => setPeriod(newRange)}
+        comingSoon={!DAILY_STATS_LIVE}
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
         <CopilotsCard />

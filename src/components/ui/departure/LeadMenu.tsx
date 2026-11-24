@@ -5,12 +5,37 @@ import { createPortal } from "react-dom";
 import { Ban, MailCheck, Printer, Trash2, MoreVertical, X } from "lucide-react";
 import { toast } from "sonner";
 import { leadsApi } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 import type { Lead } from "@/lib/types";
 
 interface LeadMenuProps {
   lead: Lead;
   onDeleted: (id: number) => void;
   onSuppressionChange: (id: number, suppressed: boolean) => void;
+}
+
+// "Delete" hides a lead from the overview only (the back-end keeps it, so
+// sending logic is unaffected). The hidden ids are remembered in this browser
+// so the lead doesn't come back after a refresh.
+const HIDDEN_LEADS_KEY = "emailcopilot.hiddenLeadIds";
+
+export function getHiddenLeadIds(): Set<number> {
+  try {
+    const raw = localStorage.getItem(HIDDEN_LEADS_KEY);
+    return new Set(raw ? (JSON.parse(raw) as number[]) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function hideLead(id: number) {
+  try {
+    const ids = getHiddenLeadIds();
+    ids.add(id);
+    localStorage.setItem(HIDDEN_LEADS_KEY, JSON.stringify([...ids]));
+  } catch {
+    // Storage unavailable (e.g. private mode): the lead is still removed from view.
+  }
 }
 
 function escapeCsvCell(value: string | null | undefined): string {
@@ -58,6 +83,7 @@ export default function LeadMenu({
   onDeleted,
   onSuppressionChange,
 }: LeadMenuProps) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -92,9 +118,13 @@ export default function LeadMenu({
     try {
       await leadsApi.updateDoNotContact(lead.id, true);
       onSuppressionChange(lead.id, true);
-      toast.success(`You will never email ${lead.email} again.`);
+      toast.success(
+        t("{email} is excluded. You won't email them again.", {
+          email: lead.email,
+        }),
+      );
     } catch {
-      toast.error("Failed to update lead.");
+      toast.error(t("Failed to update lead."));
     } finally {
       setOpen(false);
     }
@@ -104,9 +134,9 @@ export default function LeadMenu({
     try {
       await leadsApi.updateDoNotContact(lead.id, false);
       onSuppressionChange(lead.id, false);
-      toast.success(`You can email ${lead.email} again.`);
+      toast.success(t("You can email {email} again.", { email: lead.email }));
     } catch {
-      toast.error("Failed to update lead.");
+      toast.error(t("Failed to update lead."));
     } finally {
       setOpen(false);
     }
@@ -114,14 +144,18 @@ export default function LeadMenu({
 
   function handleExport() {
     exportLeadCsv(lead);
-    toast.success("Lead exported as CSV.");
+    toast.success(t("Lead exported as CSV."));
     setOpen(false);
   }
 
   function handleDelete() {
-    if (!confirm(`Delete ${lead.email}? It will reappear on refresh.`)) return;
+    if (
+      !confirm(t("Remove {email} from your overview?", { email: lead.email }))
+    )
+      return;
+    hideLead(lead.id);
     onDeleted(lead.id);
-    toast.success("Lead removed from view.");
+    toast.success(t("Lead removed from the overview."));
     setOpen(false);
   }
 
@@ -131,7 +165,7 @@ export default function LeadMenu({
         onClick={handleToggle}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Lead actions"
+        aria-label={t("Lead actions")}
         className="text-gray-300 transition-colors hover:text-gray-500"
       >
         {open ? <X size={18} /> : <MoreVertical size={18} />}
@@ -155,7 +189,7 @@ export default function LeadMenu({
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 <MailCheck size={13} />
-                Email Again
+                {t("Include Again")}
               </button>
             ) : (
               <button
@@ -167,7 +201,7 @@ export default function LeadMenu({
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 <Ban size={13} />
-                Never Email Again
+                {t("Exclude")}
               </button>
             )}
             <button
@@ -179,7 +213,7 @@ export default function LeadMenu({
               className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <Printer size={13} />
-              Export
+              {t("Export")}
             </button>
             <div className="my-1 border-t border-gray-100" />
             <button
@@ -191,7 +225,7 @@ export default function LeadMenu({
               className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
             >
               <Trash2 size={13} />
-              Delete
+              {t("Delete")}
             </button>
           </div>,
           document.body,

@@ -10,8 +10,10 @@ import TargetAudienceTable from "@/components/layout/features/targetaudience/tar
 import TargetAudienceForm from "@/components/layout/features/targetaudience/TargetAudienceForm";
 import type { TargetAudience } from "@/store/copilotStore";
 import DashboardHeader from "@/components/layout/DashboardHeader";
+import { useI18n } from "@/lib/i18n";
 
 export default function ScrapeProfilesPage() {
+  const { t } = useI18n();
   const [profiles, setProfiles] = useState<TargetAudience[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -57,34 +59,34 @@ export default function ScrapeProfilesPage() {
       await targetAudiencesApi.run(id);
       fetchProfiles();
     } catch {
-      toast.error("Failed to run scrape.");
+      toast.error(t("Failed to start. Please try again."));
     } finally {
       setRunningId(null);
     }
   }
 
   async function handleDelete(id: number) {
-    if (!confirm("Delete this Target Audience?")) return;
+    if (!confirm(t("Delete this target audience?"))) return;
     try {
       await targetAudiencesApi.delete(id);
       fetchProfiles();
     } catch {
-      toast.error("Failed to delete.");
+      toast.error(t("Failed to delete."));
     }
   }
 
   async function handleDuplicate(audience: TargetAudience) {
     try {
       await targetAudiencesApi.create({
-        name: `${audience.name} (Copy)`,
+        name: `${audience.name} (${t("Copy")})`,
         searchQuery: audience.searchQuery,
         country: audience.country || "",
         city: audience.city || "",
       });
-      toast.success("Target Audience duplicated successfully.");
+      toast.success(t("Target audience duplicated."));
       fetchProfiles();
     } catch {
-      toast.error("Failed to duplicate Target Audience.");
+      toast.error(t("Failed to duplicate the target audience."));
     }
   }
   async function handleEdit(audience: TargetAudience) {
@@ -125,7 +127,7 @@ export default function ScrapeProfilesPage() {
 
       {loading ? (
         <div className="flex items-center justify-center h-48 text-gray-400">
-          Loading...
+          {t("Loading...")}
         </div>
       ) : (
         <TargetAudienceTable

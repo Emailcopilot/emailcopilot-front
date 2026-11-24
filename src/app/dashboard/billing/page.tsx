@@ -15,8 +15,10 @@ import PlanStatusCard from "@/components/ui/billing/PlanStatusCard";
 import type { BillingInterval } from "@/components/ui/billing/PlanSelector";
 import { parseBillingIntent } from "@/lib/billingIntent";
 import { useBilling, type PlanId } from "@/lib/useBilling";
+import { useI18n } from "@/lib/i18n";
 
 export default function BillingPage() {
+  const { t } = useI18n();
   const {
     plans,
     subscription,
@@ -105,7 +107,7 @@ export default function BillingPage() {
       );
     } catch (e) {
       toast.error(
-        e instanceof Error ? e.message : "Could not start checkout. Try again.",
+        e instanceof Error ? e.message : t("Could not start checkout. Try again."),
       );
       setSubscribingPlanId(null);
     }
@@ -123,7 +125,9 @@ export default function BillingPage() {
       await subscribe(subscription.planId, annual ? "year" : "month");
     } catch (e) {
       toast.error(
-        e instanceof Error ? e.message : "Could not retry payment. Try again.",
+        e instanceof Error
+          ? e.message
+          : t("Could not retry payment. Try again."),
       );
     } finally {
       setIsRetrying(false);
@@ -140,11 +144,15 @@ export default function BillingPage() {
       await cancel();
       setCancelOpen(false);
       toast.success(
-        "Subscription canceled. You keep access until the end of your billing period.",
+        t(
+          "Subscription canceled. You keep access until the end of your billing period.",
+        ),
       );
     } catch (e) {
       toast.error(
-        e instanceof Error ? e.message : "Could not cancel your subscription.",
+        e instanceof Error
+          ? e.message
+          : t("Could not cancel your subscription."),
       );
     }
   }
@@ -156,7 +164,7 @@ export default function BillingPage() {
       toast.error(
         e instanceof Error
           ? e.message
-          : "Could not update your payment method. Try again.",
+          : t("Could not update your payment method. Try again."),
       );
     }
   }
@@ -191,23 +199,28 @@ export default function BillingPage() {
         <div className="mb-6 flex flex-wrap items-center gap-3 rounded-xl border border-warning/30 bg-warning/10 p-4 text-sm text-warning">
           <span className="min-w-0 flex-1">
             {paymentState === "failed"
-              ? "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up."
-              : "We have not received payment yet. No charge has been made. Refresh to check the latest status."}
+              ? t(
+                  "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up.",
+                )
+              : t(
+                  "We have not received payment yet. No charge has been made. Refresh to check the latest status.",
+                )}
           </span>
           <button
             type="button"
             onClick={handleRefresh}
             className="shrink-0 rounded-lg border border-warning/30 bg-white px-3 py-1.5 text-xs font-semibold text-warning transition-colors hover:bg-warning/5"
           >
-            Refresh status
+            {t("Refresh status")}
           </button>
         </div>
       )}
 
       {!hasActivePlan && !hasSubscription && (
         <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-          An active plan is required to use the dashboard. Choose a plan below
-          to get started.
+          {t(
+            "An active plan is required to use the dashboard. Choose a plan below to get started.",
+          )}
         </div>
       )}
 
@@ -292,10 +305,12 @@ export default function BillingPage() {
 
       <ConfirmDialog
         open={cancelOpen}
-        title="Cancel your subscription?"
-        description="You'll keep access to your current plan until the end of your billing period. Your Copilots and data stay untouched."
-        confirmLabel={isCanceling ? "Canceling..." : "Cancel plan"}
-        cancelLabel="Keep plan"
+        title={t("Cancel your subscription?")}
+        description={t(
+          "You'll keep access to your current plan until the end of your billing period. Your Copilots and data stay untouched.",
+        )}
+        confirmLabel={isCanceling ? t("Canceling...") : t("Cancel plan")}
+        cancelLabel={t("Keep plan")}
         tone="danger"
         loading={isCanceling}
         onConfirm={handleCancel}

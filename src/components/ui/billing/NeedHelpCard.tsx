@@ -1,14 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronRight, FileQuestion, Mail } from "lucide-react";
 import { BILLING_SUPPORT_EMAIL } from "@/lib/billingFaq";
+import { useI18n } from "@/lib/i18n";
 
 export default function NeedHelpCard() {
+  const { t } = useI18n();
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6">
-      <h2 className="text-lg font-bold text-gray-900">Need help?</h2>
+      <h2 className="text-lg font-bold text-gray-900">{t("Need help?")}</h2>
       <p className="mt-2 text-sm text-gray-500">
-        If you have any question about billing or your subscription we&apos;re
-        here to help.
+        {t(
+          "If you have any question about billing or your subscription we're here to help.",
+        )}
       </p>
 
       <Link
@@ -18,10 +23,10 @@ export default function NeedHelpCard() {
         <FileQuestion size={20} className="mt-0.5 shrink-0 text-gray-400" />
         <span className="flex-1">
           <span className="block text-sm font-bold text-gray-900">
-            Billing FAQ
+            {t("Billing FAQ")}
           </span>
           <span className="block text-sm text-gray-500">
-            Find answers to common billing questions.
+            {t("Find answers to common billing questions.")}
           </span>
         </span>
         <ChevronRight
@@ -35,7 +40,7 @@ export default function NeedHelpCard() {
       <div className="flex items-start gap-3 p-2">
         <Mail size={20} className="mt-0.5 shrink-0 text-gray-400" />
         <div>
-          <p className="text-sm font-bold text-gray-900">Contact support</p>
+          <p className="text-sm font-bold text-gray-900">{t("Contact support")}</p>
           <a
             href={`mailto:${BILLING_SUPPORT_EMAIL}`}
             className="text-sm text-primary transition-colors hover:text-primary-hover"

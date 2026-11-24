@@ -8,6 +8,7 @@ import {
   planAnnualPrice,
   PLAN_ICONS,
 } from "@/lib/helpers";
+import { useI18n } from "@/lib/i18n";
 
 interface PlanStatusCardProps {
   plan: Plan | null;
@@ -28,6 +29,7 @@ export default function PlanStatusCard({
   onRefresh,
   onChangePlan,
 }: PlanStatusCardProps) {
+  const { t } = useI18n();
   const PlanIcon = PLAN_ICONS[plan?.id ?? "starter"] ?? PLAN_ICONS.starter;
   const rawInterval = subscription?.billingInterval ?? plan?.interval;
   const billingPeriod =
@@ -48,12 +50,16 @@ export default function PlanStatusCard({
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="text-lg font-bold text-gray-900">
-            {failed ? "Payment failed" : "Payment pending"}
+            {failed ? t("Payment failed") : t("Payment pending")}
           </h2>
           <p className="mt-1 max-w-xl text-sm text-gray-500">
             {failed
-              ? "This plan is not active yet and you have not been charged. Retry the payment to activate it."
-              : "We have not received payment yet. Your plan stays inactive until the payment is confirmed."}
+              ? t(
+                  "This plan is not active yet and you have not been charged. Retry the payment to activate it.",
+                )
+              : t(
+                  "We have not received payment yet. Your plan stays inactive until the payment is confirmed.",
+                )}
           </p>
         </div>
         <span
@@ -64,7 +70,7 @@ export default function PlanStatusCard({
           }`}
         >
           <StatusIcon size={13} />
-          {failed ? "Failed" : "Awaiting payment"}
+          {failed ? t("Failed") : t("Awaiting payment")}
         </span>
       </div>
 
@@ -80,19 +86,21 @@ export default function PlanStatusCard({
             <span className="font-semibold text-gray-900">
               €{displayPrice}
             </span>{" "}
-            / {billingPeriod}
+            / {t(billingPeriod)}
           </p>
         </div>
       </div>
 
       <div className="mt-6">
-        <p className="text-sm font-bold text-gray-900">Included after payment</p>
+        <p className="text-sm font-bold text-gray-900">
+          {t("Included after payment")}
+        </p>
         <ul className="mt-3 space-y-2.5">
           {(plan?.features ?? []).map((feature) => (
             <li key={feature} className="flex items-center gap-3">
               <CheckCircle2 size={18} className="shrink-0 text-gray-300" />
               <span className="text-sm text-gray-500">
-                {formatPlanFeature(feature)}
+                {t(formatPlanFeature(feature))}
               </span>
             </li>
           ))}
@@ -108,7 +116,7 @@ export default function PlanStatusCard({
             className="btn-cta flex items-center justify-center gap-2 rounded-lg border border-transparent px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
           >
             {isRetrying && <Loader2 size={14} className="animate-spin" />}
-            {isRetrying ? "Starting checkout" : "Retry payment"}
+            {isRetrying ? t("Starting checkout") : t("Retry payment")}
           </button>
         ) : (
           <button
@@ -116,7 +124,7 @@ export default function PlanStatusCard({
             onClick={onRefresh}
             className="rounded-lg border border-warning/30 bg-white px-4 py-2.5 text-sm font-semibold text-warning transition-colors hover:bg-warning/5"
           >
-            Refresh status
+            {t("Refresh status")}
           </button>
         )}
         <button
@@ -124,7 +132,7 @@ export default function PlanStatusCard({
           onClick={onChangePlan}
           className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50"
         >
-          Choose another plan
+          {t("Choose another plan")}
         </button>
       </div>
     </div>

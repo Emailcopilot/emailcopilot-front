@@ -4,6 +4,7 @@ import TargetAudienceMenu from "@/components/ui/targetAudience/TargetAudienceMen
 import TemplatesPagination from "@/components/ui/templates/Pagination";
 import { useRowsPerPage } from "@/lib/hooks";
 import { formatDate } from "@/lib/helpers";
+import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 
 export interface TargetAudienceTableProps {
@@ -19,6 +20,10 @@ function formatCount(value: number | null | undefined): string {
   if (value === null || value === undefined) return "—";
   return value.toLocaleString("en-US");
 }
+
+// Audience size isn't calculated yet by the back-end (always 0). Greyed out
+// until it is; flip to true to show the real numbers again.
+const AUDIENCE_SIZE_LIVE = false;
 
 const TABLE_HEADERS = [
   "Target Audience name",
@@ -39,6 +44,7 @@ function SearchInput({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="relative w-full sm:w-80">
       <Search
@@ -47,10 +53,10 @@ function SearchInput({
       />
       <input
         type="text"
-        placeholder="Search target audience..."
+        placeholder={t("Search target audience...")}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        aria-label="Search target audiences by name"
+        aria-label={t("Search target audiences by name")}
         className="w-full h-10 border border-[#E2E8F0] rounded-lg pl-10 pr-4 text-sm bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
         style={{ color: "#59637C" }}
       />
@@ -73,6 +79,8 @@ function AudienceRow({
   onDelete?: (audience: TargetAudience) => void;
   onDuplicate?: (audience: TargetAudience) => void;
 }) {
+  const { t, locale } = useI18n();
+  const dateLocale = locale === "en" ? "en-US" : locale;
   const menu = (
     <>
       <button
@@ -83,7 +91,7 @@ function AudienceRow({
         className="text-gray-300 transition-colors hover:text-gray-500"
         aria-haspopup="menu"
         aria-expanded={openMenuId === audience.id}
-        aria-label="Row actions"
+        aria-label={t("Row actions")}
       >
         {openMenuId === audience.id ? (
           <X size={18} />
@@ -129,14 +137,25 @@ function AudienceRow({
 
         <span className="text-sm text-[#0F172A]">{audience.country || "—"}</span>
 
-        <span className="text-sm text-[#0F172A]">{audience.city || "—"}</span>
-
         <span className="text-sm text-[#0F172A]">
-          {formatCount(audience.resultsCount)}
+          {audience.city || t("All cities")}
         </span>
 
+        {AUDIENCE_SIZE_LIVE ? (
+          <span className="text-sm text-[#0F172A]">
+            {formatCount(audience.resultsCount)}
+          </span>
+        ) : (
+          <span
+            className="text-xs text-gray-300"
+            title={t("Audience size isn't live yet")}
+          >
+            {t("Coming soon")}
+          </span>
+        )}
+
         <span className="text-sm text-[#0F172A]">
-          {formatDate(audience.updatedAt)}
+          {formatDate(audience.updatedAt, dateLocale)}
         </span>
 
         <div className="flex items-center relative">{menu}</div>
@@ -155,12 +174,20 @@ function AudienceRow({
               {audience.searchQuery || "—"}
             </div>
             <div className="mt-0.5 text-xs text-[#59637C]">
-              {[audience.country, audience.city].filter(Boolean).join(" · ") ||
-                "—"}{" "}
-              · {formatCount(audience.resultsCount)} leads
+              {[audience.country, audience.city || t("All cities")]
+                .filter(Boolean)
+                .join(" · ")}
+              {AUDIENCE_SIZE_LIVE && (
+                <>
+                    {" · "}
+                    {t("{count} leads", {
+                      count: formatCount(audience.resultsCount),
+                    })}
+                  </>
+              )}
             </div>
             <div className="mt-0.5 text-xs text-[#59637C]">
-              {formatDate(audience.updatedAt)}
+              {formatDate(audience.updatedAt, dateLocale)}
             </div>
           </div>
           <div className="relative shrink-0">{menu}</div>
@@ -171,6 +198,7 @@ function AudienceRow({
 }
 
 function EmptyState({ onCreateNew }: { onCreateNew?: () => void }) {
+  const { t } = useI18n();
   return (
     <div className="flex flex-col items-center justify-center py-12 sm:py-20 px-4">
       <div
@@ -189,17 +217,17 @@ function EmptyState({ onCreateNew }: { onCreateNew?: () => void }) {
         />
       </div>
       <h3 className="font-bold mb-2 text-center text-lg leading-7 text-[#0F172A]">
-        No Target Audiences Found
+        {t("No Target Audiences Found")}
       </h3>
       <p className="mb-6 text-center text-sm leading-5 font-light text-[#59637C]">
-        Create a target audience for easier access later
+        {t("Create a target audience for easier access later")}
       </p>
       {onCreateNew && (
         <button
           onClick={onCreateNew}
           className="inline-flex items-center gap-2 btn-cta text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
         >
-          Create New Target Audience
+          {t("Create New Target Audience")}
         </button>
       )}
     </div>
@@ -214,6 +242,7 @@ function TargetAudienceTable({
   onDuplicate,
   onCreateNew,
 }: TargetAudienceTableProps) {
+  const { t } = useI18n();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [query, setQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -242,7 +271,7 @@ function TargetAudienceTable({
         {/* Card Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 sm:px-5 py-4 border-b border-[#E2E8F0]">
           <h2 className="font-bold text-lg leading-6 text-[#0F172A]">
-            Your Target Audiences ({filtered.length})
+            {t("Your Target Audiences ({count})", { count: filtered.length })}
           </h2>
           <SearchInput value={query} onChange={handleSearchChange} />
         </div>
@@ -255,9 +284,13 @@ function TargetAudienceTable({
           {TABLE_HEADERS.map((col) => (
             <span
               key={col}
-              className="font-normal text-xs leading-5 text-[#94A3B8]"
+              className={`font-normal text-xs leading-5 ${
+                col === "Est. Audience Size" && !AUDIENCE_SIZE_LIVE
+                  ? "text-gray-300"
+                  : "text-[#94A3B8]"
+              }`}
             >
-              {col}
+              {t(col)}
             </span>
           ))}
         </div>

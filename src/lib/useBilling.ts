@@ -93,6 +93,9 @@ export function useBilling() {
         // user leaves the billing-only state without a manual reload.
         refetchInterval: (query) =>
             query.state.data?.status === "pending" ? 10_000 : false,
+        staleTime: 30 * 1000,
+        retry: false,
+        retryOnMount: false,
     });
 
     const invoicesQuery = useQuery<Invoice[]>({
@@ -207,6 +210,10 @@ export function useBilling() {
         limitsLoading: limitsQuery.isLoading,
         limitsError: (limitsQuery.error as Error | null)?.message ?? null,
         error,
+        subscriptionLoading: subscriptionQuery.isLoading,
+        subscriptionFetching: subscriptionQuery.isFetching,
+        subscriptionError: subscriptionQuery.error,
+        retrySubscription: () => subscriptionQuery.refetch(),
 
         // ── Actions ───────────────────────────────────────────────────────────────
         subscribe: (planId: PlanId, interval: "month" | "year") =>

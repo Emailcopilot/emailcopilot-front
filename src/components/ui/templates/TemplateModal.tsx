@@ -24,6 +24,8 @@ import { toEditorContent } from "@/lib/helpers";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
+import SubjectLineInput from "@/components/ui/SubjectLineInput";
+import { useI18n } from "@/lib/i18n";
 
 const INITIAL_STEPS: TemplateStep[] = [
   {
@@ -37,8 +39,8 @@ const INITIAL_STEPS: TemplateStep[] = [
 
 const VARIABLE_DEFS = [
   { key: "CompanyName", label: "{{CompanyName}}", hint: "The company name" },
-  { key: "SenderName", label: "{{SenderName}}", hint: "First name of the contact" },
-  { key: "Website", label: "{{Website}}", hint: "Last name of the contact" },
+  { key: "SenderName", label: "{{SenderName}}", hint: "Your name (the sender)" },
+  { key: "Website", label: "{{Website}}", hint: "The company's website" },
   { key: "Email", label: "{{Email}}", hint: "Email address of the contact" },
 ];
 
@@ -49,6 +51,7 @@ function VariableList({
   selectedVariable: string;
   onSelect: (varName: string) => void;
 }) {
+  const { t } = useI18n();
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -80,7 +83,7 @@ function VariableList({
                 <p
                   className={`text-xs mt-0.5 ${selected ? "text-slate-500" : "text-slate-400"}`}
                 >
-                  {v.hint}
+                  {t(v.hint)}
                 </p>
               </div>
             </button>
@@ -90,7 +93,7 @@ function VariableList({
 
       <button className="mt-3 w-full border border-[#E2E8F0] rounded-lg py-3 flex items-center justify-center gap-2 text-sm font-semibold text-[#2563EB] hover:bg-blue-50/50 transition-colors">
         <Plus size={16} />
-        Add Variables
+        {t("Add Variables")}
       </button>
     </>
   );
@@ -105,6 +108,17 @@ export default function TemplateModal({
   onSave,
   onClose,
 }: TemplateModalProps) {
+  // `t` is used as a template variable below, so the translator is `tr`.
+  const { t: tr } = useI18n();
+  /** Step titles are stored in English; show them in the app language. */
+  const stepTitle = (step: TemplateStep, index: number) =>
+    index === 0
+      ? tr("Step {n} - Initial Email", { n: 1 })
+      : tr("Step {n} - Follow-up {m}", { n: index + 1, m: index });
+  const stepDescription = (step: TemplateStep, index: number) =>
+    index === 0
+      ? tr("A personalized cold email")
+      : tr("Send {days} days after no reply", { days: step.delayDays });
   const [activeTab, setActiveTab] = useState<"steps" | "variables">("steps");
   const [selectedStep, setSelectedStep] = useState(1);
   const [selectedVariable, setSelectedVariable] = useState("CompanyName");
@@ -306,16 +320,16 @@ export default function TemplateModal({
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">
               {editingTemplate
-                ? "Edit email template"
-                : "Create new email template"}
+                ? tr("Edit email template")
+                : tr("Create new email template")}
             </h2>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => onSave(steps)}
                 disabled={saving}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+                className="px-4 py-2 btn-cta border border-transparent text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
               >
-                {saving ? "Saving..." : "Save"}
+                {saving ? tr("Saving...") : tr("Save")}
               </button>
               <button
                 onClick={onClose}
@@ -333,12 +347,12 @@ export default function TemplateModal({
           {/* Email template name */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-900 mb-2">
-              Email template name
+              {tr("Email template name")}
             </label>
             <input
               id="template-field-name"
               className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              placeholder="Name your template"
+              placeholder={tr("Name your template")}
               value={form.name}
               onFocus={() => setLastFocusedField("name")}
               onChange={(e) => onFormChange({ ...form, name: e.target.value })}
@@ -347,17 +361,17 @@ export default function TemplateModal({
 
           {/* Subject line */}
           <div className="mb-5">
-            <label className="block text-sm font-medium text-gray-900 mb-2">
-              Subject line
+            <label htmlFor="template-field-subject" className="block text-sm font-medium text-gray-900 mb-2">
+              {tr("Subject line")}
             </label>
-            <input
+            <SubjectLineInput
               id="template-field-subject"
               className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              placeholder="Type your subject line"
+              placeholder={tr("Type your subject line")}
               value={form.subject}
               onFocus={() => setLastFocusedField("subject")}
-              onChange={(e) =>
-                onFormChange({ ...form, subject: e.target.value })
+              onValueChange={(subject) =>
+                onFormChange({ ...form, subject })
               }
             />
           </div>
@@ -365,7 +379,7 @@ export default function TemplateModal({
           {/* Email body */}
           <div className="mb-5">
             <label className="block text-sm font-medium text-gray-900 mb-2">
-              Email body
+              {tr("Email body")}
             </label>
             <div
               className="border border-gray-200 rounded-lg overflow-hidden flex flex-col focus-within:ring-1 focus-within:ring-blue-500 focus-within:border-blue-500 bg-white"
@@ -478,7 +492,7 @@ export default function TemplateModal({
                     : "text-slate-700 hover:text-slate-900 border border-transparent"
                 }`}
               >
-                Steps
+                {tr("Steps")}
               </button>
               <button
                 onClick={() => setActiveTab("variables")}
@@ -488,7 +502,7 @@ export default function TemplateModal({
                     : "text-slate-700 hover:text-slate-900 border border-transparent"
                 }`}
               >
-                Variables
+                {tr("Variables")}
               </button>
             </div>
           </div>
@@ -497,7 +511,7 @@ export default function TemplateModal({
           {activeTab === "steps" && (
             <div className="mb-5">
               <div className="border border-gray-200 rounded-lg divide-y divide-gray-200">
-                {steps.map((step) => (
+                {steps.map((step, index) => (
                   <div
                     key={step.id}
                     onClick={() => setSelectedStep(step.id)}
@@ -523,10 +537,10 @@ export default function TemplateModal({
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-gray-900">
-                        {step.title}
+                        {stepTitle(step, index)}
                       </p>
                       <p className="text-xs text-gray-500 mt-0.5">
-                        {step.description}
+                        {stepDescription(step, index)}
                       </p>
                     </div>
                     {step.type !== "initial" && (
@@ -536,7 +550,7 @@ export default function TemplateModal({
                           deleteStep(step.id);
                         }}
                         className="ml-auto transition-colors w-7 h-7 flex items-center justify-center rounded-md text-gray-300 hover:bg-red-100 hover:text-red-600"
-                        title="Delete step"
+                        title={tr("Delete step")}
                       >
                         <Trash2 size={15} />
                       </button>
@@ -550,7 +564,7 @@ export default function TemplateModal({
                 className="mt-3 w-full border border-[#E2E8F0] rounded-lg py-3 flex items-center justify-center gap-2 text-sm font-semibold text-[#2563EB] hover:bg-blue-50/50 transition-colors"
               >
                 <Plus size={16} />
-                Add Follow-up Step
+                {tr("Add Follow-up Step")}
               </button>
             </div>
           )}
@@ -566,9 +580,9 @@ export default function TemplateModal({
           )}
             </div>
             <aside className="hidden lg:block lg:sticky lg:top-0 border border-slate-200 rounded-xl p-4 bg-slate-50/50">
-              <p className="text-sm font-semibold text-gray-900">Variables</p>
+              <p className="text-sm font-semibold text-gray-900">{tr("Variables")}</p>
               <p className="text-xs text-gray-500 mt-1 mb-3">
-                Click to insert at your cursor
+                {tr("Click to insert at your cursor")}
               </p>
               <VariableList
                 selectedVariable={selectedVariable}
@@ -581,7 +595,7 @@ export default function TemplateModal({
           <div ref={listRef} className="flex items-center gap-4 py-5 mb-1">
             <div className="flex-1 h-px bg-gray-200" />
             <p className="text-sm text-gray-500 text-center whitespace-nowrap">
-              Your email templates
+              {tr("Your email templates")}
             </p>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
@@ -589,7 +603,7 @@ export default function TemplateModal({
           {/* Existing Templates Grid */}
           {existingTemplates.length === 0 ? (
             <p className="text-xs text-gray-400 text-center py-4">
-              No saved templates yet.
+              {tr("No saved templates yet.")}
             </p>
           ) : (
             <>
@@ -624,7 +638,9 @@ export default function TemplateModal({
                         {replyRate}% {replyRate > 0 && (isUp ? "↑" : "↓")}
                       </span>
                       <span className="text-gray-500">
-                        {usedIn} {usedIn === 1 ? "copilot" : "copilots"}
+                        {usedIn === 1
+                          ? tr("1 copilot")
+                          : tr("{count} copilots", { count: usedIn })}
                       </span>
                     </div>
                   </button>
@@ -636,7 +652,9 @@ export default function TemplateModal({
                 onClick={() => setShowAll(true)}
                 className="w-full border border-[#E2E8F0] rounded-lg py-3 flex items-center justify-center gap-2 text-sm font-semibold text-[#2563EB] hover:bg-blue-50/50 transition-colors mb-6"
               >
-                View more ({existingTemplates.length - 4} more)
+                {tr("View more ({count} more)", {
+                  count: existingTemplates.length - 4,
+                })}
               </button>
             )}
             </>
@@ -648,14 +666,14 @@ export default function TemplateModal({
               onClick={onClose}
               className="flex-1 border border-gray-200 rounded-lg py-3 text-sm font-medium hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              {tr("Cancel")}
             </button>
             <button
               onClick={() => onSave(steps)}
               disabled={saving}
-              className="flex-1 bg-blue-600 text-white rounded-lg py-3 text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+              className="flex-1 btn-cta border border-transparent text-white rounded-lg py-3 text-sm font-medium transition-colors disabled:opacity-50"
             >
-              {saving ? "Saving..." : "Save changes"}
+              {saving ? tr("Saving...") : tr("Save changes")}
             </button>
           </div>
         </div>

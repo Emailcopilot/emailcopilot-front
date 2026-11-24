@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import type { BillingFaq } from "@/lib/billingFaq";
+import { useI18n } from "@/lib/i18n";
 
 interface FaqAccordionItemProps {
   faq: BillingFaq;
@@ -16,6 +17,7 @@ export default function FaqAccordionItem({
   isOpen,
   onToggle,
 }: FaqAccordionItemProps) {
+  const { t } = useI18n();
   const panelId = `billing-faq-panel-${faq.id}`;
 
   return (
@@ -44,7 +46,7 @@ export default function FaqAccordionItem({
         </span>
 
         <span className="flex-1 pt-0.5 text-sm font-bold text-gray-900 sm:text-base">
-          {faq.question}
+          {t(faq.question)}
         </span>
 
         <ChevronDown
@@ -57,7 +59,7 @@ export default function FaqAccordionItem({
 
       {isOpen && (
         <p id={panelId} className="px-5 pb-4 pl-17 text-sm text-gray-500">
-          {faq.answer}
+          {t(faq.answer)}
         </p>
       )}
     </div>

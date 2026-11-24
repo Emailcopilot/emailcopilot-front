@@ -11,6 +11,7 @@ import {
   planAnnualPrice,
   planTagline,
 } from "@/lib/helpers";
+import { useI18n } from "@/lib/i18n";
 
 type Interval = "month" | "year";
 
@@ -49,6 +50,7 @@ export default function LimitUpgradeDialog({
   emptyTiersMessage,
   onClose,
 }: LimitUpgradeDialogProps) {
+  const { t } = useI18n();
   const [interval, setInterval] = useState<Interval>("month");
 
   useEffect(() => {
@@ -111,10 +113,12 @@ export default function LimitUpgradeDialog({
                   }`}
                 >
                   {option === "month"
-                    ? "Monthly"
+                    ? t("Monthly")
                     : annualDiscount > 0
-                      ? `Yearly (save up to ${annualDiscount}%)`
-                      : "Yearly"}
+                      ? t("Yearly (save up to {percent}%)", {
+                          percent: annualDiscount,
+                        })
+                      : t("Yearly")}
                 </button>
               ))}
             </div>
@@ -142,11 +146,11 @@ export default function LimitUpgradeDialog({
                     {handlePlanNameChange(plan.name)}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {planTagline(plan.id)}
+                    {t(planTagline(plan.id))}
                   </p>
                   {feature && (
                     <p className="mt-1 text-xs font-medium text-primary">
-                      {feature}
+                      {t(feature)}
                     </p>
                   )}
                 </div>
@@ -154,7 +158,9 @@ export default function LimitUpgradeDialog({
                   <p className="text-base font-bold text-gray-900">
                     €{Math.round(price)}
                   </p>
-                  <p className="text-[11px] text-gray-400">/ {interval}</p>
+                  <p className="text-[11px] text-gray-400">
+                    {interval === "month" ? t("/ month") : t("/ year")}
+                  </p>
                 </div>
               </li>
             );
@@ -169,14 +175,14 @@ export default function LimitUpgradeDialog({
                 onClick={onClose}
                 className="text-sm font-medium text-gray-500 transition-colors hover:text-gray-900"
               >
-                Maybe later
+                {t("Maybe later")}
               </button>
               <Link
                 href={`/dashboard/billing?upgrade=${reason}`}
                 onClick={onClose}
                 className="btn-cta inline-flex items-center gap-2 rounded-lg border border-transparent px-4 py-2.5 text-sm font-semibold text-white"
               >
-                Go to Billing <ArrowRight size={15} />
+                {t("Go to Billing")} <ArrowRight size={15} />
               </Link>
             </>
           ) : (
@@ -185,7 +191,7 @@ export default function LimitUpgradeDialog({
               onClick={onClose}
               className="btn-cta ml-auto rounded-lg border border-transparent px-4 py-2.5 text-sm font-semibold text-white"
             >
-              Got it
+              {t("Got it")}
             </button>
           )}
         </div>

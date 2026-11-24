@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Plus, type LucideIcon } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 interface DashboardHeaderProps {
   title: string;
@@ -28,6 +29,7 @@ export default function DashboardHeader({
 
   onAction,
 }: DashboardHeaderProps) {
+  const { t } = useI18n();
   // The primary variant floats above the content on mobile; the outline variant is a
   // secondary affordance and stays inline in the header at every size.
   const actionClassName =
@@ -40,7 +42,7 @@ export default function DashboardHeader({
       <ActionIcon size={18} />
 
       {/* Large */}
-      <span className="text-[10px] lg:text-sm">{actionLabel}</span>
+      <span className="text-[10px] lg:text-sm">{t(actionLabel)}</span>
     </>
   );
 
@@ -49,12 +51,12 @@ export default function DashboardHeader({
       {/* Title */}
       <div className="min-w-0">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
-          {title}
+          {t(title)}
         </h1>
 
         {description && (
           <p className="text-gray-500 text-xs sm:text-sm mt-1 line-clamp-2">
-            {description}
+            {typeof description === "string" ? t(description) : description}
           </p>
         )}
       </div>

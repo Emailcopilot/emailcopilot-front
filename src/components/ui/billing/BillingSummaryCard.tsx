@@ -7,6 +7,7 @@ import {
   handlePlanNameChange,
   planAnnualPrice,
 } from "@/lib/helpers";
+import { useI18n } from "@/lib/i18n";
 
 interface BillingSummaryCardProps {
   plan: Plan | null;
@@ -25,6 +26,8 @@ export default function BillingSummaryCard({
   mode = "active",
   paymentState,
 }: BillingSummaryCardProps) {
+  const { t, locale } = useI18n();
+  const dateLocale = locale === "en" ? "en-US" : locale;
   const rawInterval = subscription?.billingInterval ?? plan?.interval;
   const billingPeriod =
     rawInterval === "year" || rawInterval === "annual"
@@ -44,12 +47,12 @@ export default function BillingSummaryCard({
     ? [
         { label: "Plan", value: handlePlanNameChange(plan?.name ?? "") },
         { label: "Price", value: price },
-        { label: "Billing period", value: billingPeriod },
+        { label: "Billing period", value: t(billingPeriod) },
         {
           label: "Next billing date",
           value: subscription?.cancelAtPeriodEnd
             ? "—"
-            : formatBillingDate(subscription?.currentPeriodEnd),
+            : formatBillingDate(subscription?.currentPeriodEnd, dateLocale),
         },
         {
           label: "Amount due",
@@ -59,15 +62,15 @@ export default function BillingSummaryCard({
     : [
         { label: "Plan", value: handlePlanNameChange(plan?.name ?? "") },
         { label: "Price", value: price },
-        { label: "Billing period", value: billingPeriod },
-        { label: "Status", value: statusLabel },
+        { label: "Billing period", value: t(billingPeriod) },
+        { label: "Status", value: t(statusLabel) },
         { label: "Amount charged", value: "€0.00" },
       ];
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6">
       <h2 className="text-lg font-bold text-gray-900">
-        {isActive ? "Billing summary" : "Payment summary"}
+        {isActive ? t("Billing summary") : t("Payment summary")}
       </h2>
 
       <dl className="mt-5 space-y-4">
@@ -76,7 +79,7 @@ export default function BillingSummaryCard({
             key={row.label}
             className="flex items-center justify-between gap-3"
           >
-            <dt className="text-sm font-bold text-gray-900">{row.label}</dt>
+            <dt className="text-sm font-bold text-gray-900">{t(row.label)}</dt>
             <dd className="text-sm text-gray-500">{row.value}</dd>
           </div>
         ))}
@@ -92,7 +95,7 @@ export default function BillingSummaryCard({
           {isUpdatingPaymentMethod && (
             <Loader2 size={14} className="animate-spin" />
           )}
-          Update payment method
+          {t("Update payment method")}
         </button>
       )}
     </div>

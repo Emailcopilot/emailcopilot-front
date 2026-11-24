@@ -7,12 +7,13 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import { Globe, X, Map as MapIcon, Building2, CircleAlert } from "lucide-react";
+import { Globe, X, Map as MapIcon, Building2, LocateFixed } from "lucide-react";
 import { Country, City, ICountry, ICity } from "country-state-city";
 import { targetAudiencesApi } from "@/lib/api";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
 import Switcher from "@/components/ui/Switcher";
+import { useI18n } from "@/lib/i18n";
 
 // ── TagInput ─────────────────────────────────────────────────────────────────
 
@@ -39,6 +40,7 @@ function TagInput({
   emptyMessage = "No results found",
   allowCustom = false,
 }: TagInputProps) {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -143,7 +145,7 @@ function TagInput({
           ref={inputRef}
           type="text"
           value={query}
-          placeholder={selected.length === 0 ? placeholder : ""}
+          placeholder={selected.length === 0 ? t(placeholder) : ""}
           className="no-focus-ring flex-1 min-w-20 outline-none focus:outline-none focus:ring-0 focus:border-none text-sm bg-transparent placeholder:text-gray-400"
           onChange={(e) => {
             setQuery(e.target.value);
@@ -194,7 +196,7 @@ function TagInput({
 
       {open && query.length > 0 && filtered.length === 0 && !allowCustom && (
         <div className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg py-3 px-3 text-sm text-gray-400 text-center">
-          {emptyMessage}
+          {t(emptyMessage)}
         </div>
       )}
     </div>
@@ -245,6 +247,7 @@ export default function TargetAudienceForm({
   onCancel,
   onSuccess,
 }: TargetAudienceFormProps) {
+  const { t } = useI18n();
   const parseArray = (val: unknown): string[] => {
     if (!val) return [];
     if (Array.isArray(val))
@@ -296,11 +299,11 @@ export default function TargetAudienceForm({
 
   const handleCreate = async () => {
     if (!name.trim()) {
-      toast.error("Profile Name is required.");
+      toast.error(t("Target audience name is required."));
       return;
     }
     if (industries.length === 0) {
-      toast.error("At least one Industry (Search Query) is required.");
+      toast.error(t("Add at least one industry."));
       return;
     }
 
@@ -315,18 +318,18 @@ export default function TargetAudienceForm({
 
       if (initialData) {
         await targetAudiencesApi.update(initialData.id, payload);
-        toast.success("Target Audience updated successfully");
+        toast.success(t("Target audience updated"));
       } else {
         await targetAudiencesApi.create(payload);
         console.log("Created new Target Audience:", payload);
-        toast.success("Target Audience created successfully");
+        toast.success(t("Target audience created"));
       }
       onSuccess();
     } catch (error) {
       toast.error(
         initialData
-          ? "Failed to update Target Audience."
-          : "Failed to create Target Audience.",
+          ? t("Failed to update the target audience.")
+          : t("Failed to create the target audience."),
       );
       console.error(error);
     } finally {
@@ -336,33 +339,37 @@ export default function TargetAudienceForm({
 
   return (
     <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6">
-      <h2 className="text-lg font-bold mb-1">Define your Target Audience</h2>
+      <h2 className="text-lg font-bold mb-1">{t("Define your Target Audience")}</h2>
       <p className="text-sm text-gray-500 mb-8">
-        Tell your copilot who you want to reach and we’ll find the best
-        matches.
+        {t(
+          "Tell your copilot who you want to reach and we’ll find the best matches.",
+        )}
       </p>
       <div className="space-y-4">
         <div>
           <label className="text-lg font-bold mb-1">
-            Target Audience Name <span className="text-red-500">*</span>
+            {t("Target Audience Name")} <span className="text-red-500">*</span>
           </label>
           <p className="text-sm text-gray-500 mb-2 ">
-            Give your target a name so you can easily identify it later
+            {t("Give your target a name so you can easily identify it later")}
           </p>
-          <input
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
-            placeholder="E.g. Tech Leads in Amsterdam"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <label className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2.5 min-h-10.5 cursor-text">
+            <LocateFixed size={15} className="text-gray-400 shrink-0" />
+            <input
+              className="no-focus-ring flex-1 outline-none focus:outline-none focus:ring-0 text-sm bg-transparent placeholder:text-gray-400"
+              placeholder={t("E.g. Tech Leads in Amsterdam")}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </label>
         </div>
 
         <div>
           <label className="text-lg font-bold  mb-1">
-            Industry <span className="text-red-500">*</span>
+            {t("Industry")} <span className="text-red-500">*</span>
           </label>
           <p className="text-sm text-gray-500 mb-2">
-            Choose the industry of your target companies.
+            {t("Choose the industry of your target companies.")}
           </p>
           <TagInput
             icon={<Building2 size={15} />}
@@ -376,9 +383,9 @@ export default function TargetAudienceForm({
         </div>
 
         <div>
-          <label className="text-lg font-bold  mb-1">Country</label>
+          <label className="text-lg font-bold  mb-1">{t("Country")}</label>
           <p className="text-sm text-gray-500 mb-2">
-            In which countries are you target companies located?
+            {t("In which countries are your target companies located?")}
           </p>
           <TagInput
             icon={<Globe size={15} />}
@@ -392,34 +399,36 @@ export default function TargetAudienceForm({
         </div>
 
         <div>
-          <div className="flex items-center justify-between ">
-            <label className="text-lg font-bold mb-1">City</label>
-            <Switcher
-              isOn={enableCity}
-              onClick={() => setEnableCity(!enableCity)}
-            />
-          </div>
+          <label className="text-lg font-bold mb-1">{t("City")}</label>
+          <p className="text-sm text-gray-500 mb-2">
+            {t("In which cities are your target companies located?")}
+          </p>
 
-          {!enableCity ? (
-            <div className="w-full lg:col-span-2 flex justify-between items-start gap-2">
-              <div className=" relative flex items-start gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50/50">
-                <CircleAlert className="w-6 h-6 text-blue-500 shrink-0" />
+          {/* The switch sits inside the card and is labelled, so it's clear
+              that OFF = all cities, ON = only the cities picked below. */}
+          <div className="rounded-xl border border-gray-200 p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <MapIcon size={15} className="text-gray-400 shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 mb-1">
-                    All cities included
-                  </h3>
-                  <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                    Your Copilot will search all cities within the selected
-                    country.
+                  <p className="text-sm font-semibold text-gray-900">
+                    {t("Target specific cities")}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {enableCity
+                      ? t("Only companies in the cities you pick below.")
+                      : t("All cities within the selected countries are included.")}
                   </p>
                 </div>
               </div>
+              <Switcher
+                isOn={enableCity}
+                onClick={() => setEnableCity(!enableCity)}
+              />
             </div>
-          ) : (
-            <>
-              <p className="text-sm text-gray-500 mb-2">
-                In which cities are you target companies located?
-              </p>
+
+            {enableCity && (
+              <div className="mt-3">
               <TagInput
                 icon={<MapIcon size={15} />}
                 options={availableCities}
@@ -438,8 +447,9 @@ export default function TargetAudienceForm({
                     : "No cities found"
                 }
               />
-            </>
-          )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -449,18 +459,18 @@ export default function TargetAudienceForm({
           disabled={saving}
           className="flex-1 border border-gray-200 rounded-lg py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors"
         >
-          Cancel
+          {t("Cancel")}
         </button>
         <button
           onClick={handleCreate}
           disabled={saving}
-          className="flex-1 bg-primary text-white rounded-lg py-2.5 text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50"
+          className="flex-1 btn-cta border border-transparent text-white rounded-lg py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
         >
           {saving
-            ? "Saving..."
+            ? t("Saving...")
             : initialData
-              ? "Save Changes"
-              : "Create New Target Audience"}
+              ? t("Save Changes")
+              : t("Create New Target Audience")}
         </button>
       </div>
     </div>

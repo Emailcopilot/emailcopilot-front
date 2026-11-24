@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import type { PaginatedMeta } from "@/lib/types";
+import { useI18n } from "@/lib/i18n";
 
 interface PaginationProps {
   meta: PaginatedMeta;
@@ -18,6 +19,7 @@ export function Pagination({
 
   showLimitSelector = true,
 }: PaginationProps) {
+  const { t } = useI18n();
   if (!meta) return null;
 
   return (
@@ -26,7 +28,7 @@ export function Pagination({
         {showLimitSelector && (
           <>
             <div className="flex w-fit items-center gap-3">
-              <span className="text-gray-500">Show</span>
+              <span className="text-gray-500">{t("Show")}</span>
               <div className="relative">
                 <select
                   value={meta.limit}
@@ -43,13 +45,17 @@ export function Pagination({
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
                 />
               </div>
-              <span className="text-gray-500">results per page</span>
+              <span className="text-gray-500">{t("results per page")}</span>
             </div>
             <span className="text-gray-300">|</span>
           </>
         )}
         <div className="flex w-fit justify-center text-gray-500 whitespace-nowrap">
-          Page {meta.page} of {meta.totalPages} ({meta.total} Total)
+          {t("Page {page} of {pages} ({total} total)", {
+            page: meta.page,
+            pages: meta.totalPages,
+            total: meta.total,
+          })}
         </div>
       </div>
 

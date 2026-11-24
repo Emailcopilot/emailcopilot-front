@@ -3,11 +3,14 @@
 import React from "react";
 import { Mail, Calendar, Clock, ShieldCheck, Globe } from "lucide-react";
 import { useCopilotStore } from "../../../../store/copilotStore";
+import { formatAllDayAvailability } from "@/lib/sending-schedule";
+import { useI18n } from "@/lib/i18n";
 
 const DEFAULT_TIMEZONE = "Europe/Brussels";
 
 export default function ScheduleSideBar() {
   const { copilotData } = useCopilotStore();
+  const { t, locale } = useI18n();
   const sendLimit = copilotData?.flightSchedule?.sendLimit;
   const timezone = copilotData?.flightSchedule?.timezone || DEFAULT_TIMEZONE;
   const activeDays = copilotData?.flightSchedule?.activeDays || [1, 2, 3, 4, 5];
@@ -30,25 +33,28 @@ export default function ScheduleSideBar() {
     activeDays.length === 2 &&
     activeDays.every((d) => ["Sat", "Sun"].includes(daysOfWeek[d - 1]));
   const formattedDays = isWeekday
-    ? "Monday - Friday"
+    ? t("Monday - Friday")
     : isWeekend
-      ? "Weekend only"
+      ? t("Weekend only")
       : activeDays.length === 7
-        ? "Every day"
-        : activeDays.join(", ");
+        ? t("Every day")
+        : [...activeDays]
+            .sort((a, b) => a - b)
+            .map((d) => t(daysOfWeek[d - 1] ?? String(d)))
+            .join(", ");
 
   const activeDaysPerMonth = activeDays.length * 4;
   const monthlyVolume = sendLimitActive
-    ? `~${(sendLimit ?? 30) * activeDaysPerMonth}`
-    : "Unlimited";
+    ? `~${((sendLimit ?? 30) * activeDaysPerMonth).toLocaleString(locale)}`
+    : t("Unlimited");
 
   return (
     <div className="w-full ">
       <h3 className="font-bold text-slate-900 mb-1 leading-tight">
-        Schedule Summary
+        {t("Schedule Summary")}
       </h3>
       <p className="text-xs text-slate-500 mb-8">
-        Here&apos;s how your copilot will send.
+        {t("Here's how your copilot will send.")}
       </p>
 
       <div className="flex flex-col gap-6 mb-8">
@@ -59,12 +65,12 @@ export default function ScheduleSideBar() {
           </div>
           <div>
             <h4 className="text-sm font-bold text-slate-900 mb-1">
-              Daily send limit
+              {t("Daily send limit")}
             </h4>
             <p className="text-xs text-slate-500">
               {sendLimitActive
-                ? `${sendLimit ?? 30} emails per day`
-                : "Unlimited emails"}
+                ? t("{n} emails per day", { n: sendLimit ?? 30 })
+                : t("Unlimited emails")}
             </p>
           </div>
         </div>
@@ -76,7 +82,7 @@ export default function ScheduleSideBar() {
           </div>
           <div>
             <h4 className="text-sm font-bold text-slate-900 mb-1">
-              Active days
+              {t("Active days")}
             </h4>
             <p className="text-xs text-slate-500">{formattedDays}</p>
           </div>
@@ -89,12 +95,12 @@ export default function ScheduleSideBar() {
           </div>
           <div>
             <h4 className="text-sm font-bold text-slate-900 mb-1">
-              Sending hours
+              {t("Sending hours")}
             </h4>
             <p className="text-xs text-slate-500">
               {sendingHoursActive
                 ? `${fromTime} - ${toTime}`
-                : "24/7 (Any time)"}
+                : t(formatAllDayAvailability(activeDays))}
             </p>
           </div>
         </div>
@@ -105,7 +111,7 @@ export default function ScheduleSideBar() {
             <Globe className="w-5 h-5 text-slate-700" />
           </div>
           <div>
-            <h4 className="text-sm font-bold text-slate-900 mb-1">Timezone</h4>
+            <h4 className="text-sm font-bold text-slate-900 mb-1">{t("Timezone")}</h4>
             <p
               className="text-xs text-slate-500 line-clamp-1 pr-2"
               title={formattedTimezone}
@@ -120,19 +126,20 @@ export default function ScheduleSideBar() {
 
       <div className="mb-8">
         <h4 className="text-sm font-bold text-slate-900 mb-2">
-          Est. monthly volume
+          {t("Est. monthly volume")}
         </h4>
         <p className="text-xs text-slate-500">
-          {monthlyVolume} emails <br />
-          Based on {activeDaysPerMonth} active days/month
+          {t("{volume} emails", { volume: monthlyVolume })} <br />
+          {t("Based on {n} active days/month", { n: activeDaysPerMonth })}
         </p>
       </div>
 
       <div className="flex items-start gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50/50">
         <ShieldCheck className="w-6 h-6 text-blue-500 shrink-0" />
         <p className="text-xs text-slate-700 font-medium leading-relaxed">
-          These settings help maximize deliverability and keep your account
-          safe.
+          {t(
+            "These settings help maximize deliverability and keep your account safe.",
+          )}
         </p>
       </div>
     </div>

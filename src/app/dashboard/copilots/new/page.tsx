@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState, useEffect, useCallback, useRef } from "react";
-import { MoreVertical, ChevronRight, Loader2 } from "lucide-react";
+import { MoreVertical, ChevronRight, Loader2, PauseCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { isAxiosError } from "axios";
@@ -24,11 +24,15 @@ import ScheduleStep from "@/components/ui/NewCopilot/StepFive/ScheduleStep";
 import ScheduleSideBar from "@/components/ui/NewCopilot/StepFive/ScheduleSideBar";
 import LaunchSideBar from "@/components/ui/NewCopilot/StepSix/LaunchSideBar";
 import { apiErrorMessage, getBrowserTimeZone } from "@/lib/helpers";
-import { copilotQuota, isCopilotLimitError } from "@/lib/limits";
+import { copilotQuota, emailQuota, isCopilotLimitError } from "@/lib/limits";
 import { useBilling } from "@/lib/useBilling";
+import { useSetupFeedbackActions } from "@/lib/SetupFeedbackProvider";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n";
 
 function NewCopilotPageContent() {
+  const feedback = useSetupFeedbackActions();
+  const { t } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
   const {
@@ -41,6 +45,10 @@ function NewCopilotPageContent() {
     persistDraft,
     loadCopilot,
     setStep,
+    editingLive,
+    setEditingLive,
+    relaunchRequested,
+    clearRelaunchRequest,
   } = useCopilotStore();
 
   const [launching, setLaunching] = useState(false);
@@ -49,6 +57,7 @@ function NewCopilotPageContent() {
 
   const { limits } = useBilling();
   const quota = copilotQuota(limits);
+  const mailQuota = emailQuota(limits);
 
   const { user } = useUser();
 
@@ -107,6 +116,7 @@ function NewCopilotPageContent() {
   ];
 
   useEffect(() => {
+    let cancelled = false;
     const editId = searchParams.get("edit");
     const duplicateId = searchParams.get("duplicate");
     const EmailAccountId = searchParams.get("accountId");
@@ -126,7 +136,11 @@ function NewCopilotPageContent() {
       copilotsApi
         .getById(id)
         .then((res) => {
+          if (cancelled) return;
           const copilot = res.data;
+          setEditingLive(
+            copilot.status === "active" || copilot.status === "running",
+          );
           loadCopilot(
             {
               id: copilot.id,
@@ -166,21 +180,25 @@ function NewCopilotPageContent() {
             setStep(2);
             if (provider) {
               toast.success(
-                `${provider.charAt(0).toUpperCase() + provider.slice(1)} connected successfully`,
+                t("{provider} connected successfully", {
+                  provider: provider.charAt(0).toUpperCase() + provider.slice(1),
+                }),
               );
             }
           }
         })
         .catch((error) => {
+          if (cancelled) return;
           if (isAxiosError(error) && error.response?.status === 404) {
             setCopilotNotFound(true);
             return;
           }
-          toast.error("Failed to load copilot. Please try again.");
+          toast.error(t("Failed to load copilot. Please try again."));
           router.push("/dashboard/copilots");
         })
-        .finally(() => setLoadingCopilot(false));
+        .finally(() => { if (!cancelled) setLoadingCopilot(false); });
     } else if (duplicateId) {
+      setEditingLive(false);
       const id = parseInt(duplicateId, 10);
       if (Number.isNaN(id)) {
         setCopilotNotFound(true);
@@ -191,10 +209,11 @@ function NewCopilotPageContent() {
       copilotsApi
         .getById(id)
         .then((res) => {
+          if (cancelled) return;
           const copilot = res.data;
           loadCopilot(
             {
-              name: `Copy of ${copilot.name}`,
+              name: t("Copy of {name}", { name: copilot.name }),
               description: copilot.description,
               goal: copilot.goal,
               emailAccountId: copilot.emailAccountId,
@@ -222,21 +241,32 @@ function NewCopilotPageContent() {
           );
         })
         .catch((error) => {
+          if (cancelled) return;
           if (isAxiosError(error) && error.response?.status === 404) {
             setCopilotNotFound(true);
             return;
           }
-          toast.error("Failed to load copilot. Please try again.");
+          toast.error(t("Failed to load copilot. Please try again."));
           router.push("/dashboard/copilots");
         })
-        .finally(() => setLoadingCopilot(false));
+        .finally(() => { if (!cancelled) setLoadingCopilot(false); });
     } else {
       // Pure create mode (no ?edit= or ?duplicate=): wipe any leftover state
       // from an abandoned wizard so every Create starts blank at step 1.
       // Idempotent, so StrictMode double-fire is harmless.
+      setLoadingCopilot(false);
       resetStore();
     }
-  }, [searchParams, router, loadCopilot, setDraftId, setStep, resetStore]);
+    return () => { cancelled = true; };
+  }, [
+    searchParams,
+    router,
+    loadCopilot,
+    setDraftId,
+    setStep,
+    resetStore,
+    setEditingLive,
+  ]);
 
   // Creating is gated by the plan's copilot allowance. Editing or duplicating
   // an existing copilot is not. Send blocked users back to the list, which
@@ -256,15 +286,20 @@ function NewCopilotPageContent() {
   }, [limits, quota?.atLimit, searchParams, router]);
 
   const getPageTitle = () => {
-    if (mode === "edit") return "Edit Copilot";
-    if (mode === "duplicate") return "Duplicate Copilot";
-    return "Create New Copilot";
+    if (mode === "edit") return t("Edit Copilot");
+    if (mode === "duplicate") return t("Duplicate Copilot");
+    return t("Create New Copilot");
   };
 
   const handleSaveDraftStep = useCallback(async () => {
     try {
       await persistDraft();
-      toast.success("Draft saved — you can launch anytime.");
+      toast.success(
+        useCopilotStore.getState().mode === "edit" &&
+          useCopilotStore.getState().editingLive
+          ? t("Changes saved — the copilot stays paused until you re-launch it.")
+          : t("Draft saved — you can launch anytime."),
+      );
       router.push("/dashboard/copilots");
     } catch (error) {
       // Saving a draft creates the copilot, so the same plan limit applies.
@@ -272,11 +307,12 @@ function NewCopilotPageContent() {
         router.push("/dashboard/copilots?limit=copilots");
         return;
       }
-      toast.error("Failed to save draft. Please try again.");
+      toast.error(t("Failed to save draft. Please try again."));
     }
-  }, [persistDraft, router]);
+  }, [persistDraft, router, t]);
 
   const handleLaunch = useCallback(async () => {
+    if (feedback.isBusy()) return;
     try {
       setLaunching(true);
       const payload = {
@@ -293,15 +329,21 @@ function NewCopilotPageContent() {
         status: "active" as const,
       };
 
-      if (draftId) {
-        await copilotsApi.update(draftId, payload);
-        await copilotsApi.updateStatus(draftId, "active");
-      } else {
-        await copilotsApi.create(payload);
-      }
-
-      resetStore();
-      router.push("/dashboard/copilots");
+      await feedback.launch(async () => {
+        if (draftId) {
+          await copilotsApi.update(draftId, payload);
+          await copilotsApi.updateStatus(draftId, "active");
+          return draftId;
+        }
+        const response = await copilotsApi.create(payload);
+        const id = Number(response.data?.id);
+        if (!Number.isSafeInteger(id) || id < 1) throw new Error("The launch response did not include a valid copilot ID.");
+        return id;
+      }, () => {
+        toast.success(t("Copilot launch accepted."));
+        resetStore();
+        router.push("/dashboard/copilots");
+      });
     } catch (error) {
       // Backend fallback for the copilot allowance: show the upgrade dialog
       // instead of a generic failure.
@@ -309,11 +351,30 @@ function NewCopilotPageContent() {
         router.push("/dashboard/copilots?limit=copilots");
         return;
       }
-      toast.error(apiErrorMessage(error, "Failed to launch copilot. Please try again."));
+      toast.error(apiErrorMessage(error, t("Failed to launch copilot. Please try again.")));
     } finally {
       setLaunching(false);
     }
-  }, [copilotData, draftId, router, resetStore, user]);
+  }, [copilotData, draftId, router, resetStore, user, feedback, t]);
+
+  // "Re-launch" from any step: the step has just saved, now put it live again.
+  useEffect(() => {
+    if (!relaunchRequested) return;
+    clearRelaunchRequest();
+    if (mailQuota?.atLimit) {
+      toast.error(
+        t(
+          "Your monthly email allowance is used up. Upgrade your plan to re-launch this copilot.",
+        ),
+      );
+      return;
+    }
+    handleLaunch().then(() => {
+      if (!useCopilotStore.getState().draftId) {
+        toast.success(t("Copilot re-launched."));
+      }
+    });
+  }, [relaunchRequested, clearRelaunchRequest, mailQuota?.atLimit, handleLaunch, t]);
 
   if (copilotNotFound) {
     return <CopilotNotFound />;
@@ -324,7 +385,7 @@ function NewCopilotPageContent() {
       <div className="py-8 px-4 w-full mx-auto flex items-center justify-center min-h-100">
         <div className="flex items-center gap-3 text-gray-500">
           <Loader2 size={20} className="animate-spin" />
-          <span>Loading copilot...</span>
+          <span>{t("Loading copilot...")}</span>
         </div>
       </div>
     );
@@ -347,10 +408,10 @@ function NewCopilotPageContent() {
           </div>
 
           <p className="text-gray-800 text-sm lg:text-lg font-bold">
-            Create New Copilot
+            {getPageTitle()}
           </p>
           <p className="text-gray-500 text-xs lg:text-sm">
-            Build your outbound copilot in 6 simple steps.
+            {t("Build your outbound copilot in 6 simple steps.")}
           </p>
         </div>
 
@@ -368,12 +429,19 @@ function NewCopilotPageContent() {
                 }}
                 className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
               >
-                Discard &amp; exit
+                {t("Discard & exit")}
               </button>
             </div>
           </div>
         </div>
       </header>
+
+      {mode === "edit" && editingLive && (
+        <div className="flex items-start gap-2.5 mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <PauseCircle size={18} className="mt-px shrink-0 text-amber-500" />
+          <span>{t("Editing pauses this copilot until you launch it again.")}</span>
+        </div>
+      )}
 
       {/* Stepper */}
       <Stepper />
@@ -398,6 +466,11 @@ function NewCopilotPageContent() {
   );
 }
 
+function LoadingLabel() {
+  const { t } = useI18n();
+  return <span>{t("Loading...")}</span>;
+}
+
 export default function NewCopilotPage() {
   return (
     <Suspense
@@ -405,7 +478,7 @@ export default function NewCopilotPage() {
         <div className="py-8 px-4 w-full mx-auto flex items-center justify-center min-h-100">
           <div className="flex items-center gap-3 text-gray-500">
             <Loader2 size={20} className="animate-spin" />
-            <span>Loading...</span>
+            <LoadingLabel />
           </div>
         </div>
       }
