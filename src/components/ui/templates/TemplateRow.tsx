@@ -1,6 +1,7 @@
 import { formatDate } from "@/lib/helpers";
 import TemplateActions from "./TemplateActions";
 import type { Template } from "@/lib/types/templates";
+import { useI18n } from "@/lib/i18n";
 
 /** Plain-text preview of the (HTML) email body */
 function bodyPreview(html?: string): string {
@@ -34,6 +35,7 @@ function UsageStatus({
   inUse: boolean;
   isSmall?: boolean;
 }) {
+  const { t } = useI18n();
   return (
     <span
       className={`inline-flex w-fit shrink-0 items-center rounded-md font-medium whitespace-nowrap ${
@@ -45,7 +47,7 @@ function UsageStatus({
           : { backgroundColor: "#F1F5F9", color: "#64748B" }
       }
     >
-      {inUse ? "In use" : "Not in use"}
+      {inUse ? t("In use") : t("Not in use")}
     </span>
   );
 }
@@ -56,6 +58,7 @@ export default function TemplateRow({
   onDelete,
   onDuplicate,
 }: TemplateRowProps) {
+  const { t, locale } = useI18n();
   const isUp = (template.trend ?? "up") === "up";
   const replyRate = template.replyRate ?? 0;
   const usedIn = template.usedIn ?? 0;
@@ -68,7 +71,10 @@ export default function TemplateRow({
         ? template.steps
         : 0,
   );
-  const lastUpdated = formatDate(template.updatedAt || template.createdAt || "");
+  const lastUpdated = formatDate(
+    template.updatedAt || template.createdAt || "",
+    locale === "en" ? "en-US" : locale,
+  );
   const body = bodyPreview(template.body);
 
   return (
@@ -96,7 +102,9 @@ export default function TemplateRow({
         <span className="text-sm text-[#0F172A]">{lastUpdated}</span>
 
         <span className="text-sm text-[#0F172A]">
-          {usedIn} {usedIn === 1 ? "copilot" : "copilots"}
+          {usedIn === 1
+            ? t("1 copilot")
+            : t("{count} copilots", { count: usedIn })}
         </span>
 
         {REPLY_RATE_LIVE ? (
@@ -114,9 +122,9 @@ export default function TemplateRow({
         ) : (
           <span
             className="text-xs text-gray-300"
-            title="Reply rate isn't live yet"
+            title={t("Reply rate isn't live yet")}
           >
-            Coming soon
+            {t("Coming soon")}
           </span>
         )}
 
@@ -142,7 +150,9 @@ export default function TemplateRow({
             </span>
             <div className="flex items-center gap-3 text-xs text-[#59637C]">
               <span>
-                {steps} {steps === 1 ? "step" : "steps"}
+                {steps === 1
+                  ? t("1 step")
+                  : t("{count} steps", { count: steps })}
               </span>
               <span>{lastUpdated}</span>
             </div>
