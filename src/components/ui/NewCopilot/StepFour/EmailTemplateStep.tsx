@@ -25,6 +25,7 @@ import { useCopilotStore } from "@/store/copilotStore";
 import { apiErrorMessage, toEditorContent } from "@/lib/helpers";
 import { toast } from "sonner";
 import SubjectLineInput from "@/components/ui/SubjectLineInput";
+import { useI18n } from "@/lib/i18n";
 
 const initialEmailBody = `
 <p>Hi,</p>
@@ -41,6 +42,7 @@ const initialEmailBody = `
 
 export default function EmailTemplateStep() {
   const feedback = useSetupFeedbackActions();
+  const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<"steps" | "variables">("steps");
   const [activeStep, setActiveStep] = useState(1);
   // const [smartSending, setSmartSending] = useState(true);
@@ -163,20 +165,20 @@ export default function EmailTemplateStep() {
     templatesApi
       .getById(id)
       .then((res) => {
-        const t = res.data?.data ?? res.data;
-        if (!t) return;
-        setTemplateName(t.name || "");
-        setSubjectInput(t.subject || "");
-        editor.commands.setContent(toEditorContent(t.body || ""));
-        if (Array.isArray(t.variables)) setVariableInput(t.variables);
+        const tpl = res.data?.data ?? res.data;
+        if (!tpl) return;
+        setTemplateName(tpl.name || "");
+        setSubjectInput(tpl.subject || "");
+        editor.commands.setContent(toEditorContent(tpl.body || ""));
+        if (Array.isArray(tpl.variables)) setVariableInput(tpl.variables);
         // Seed the edit snapshot so a save with changes edits THIS
         // template in place instead of creating a copy.
         setOriginalTemplate({
-          id: String(t.id ?? id),
-          body: t.body || "",
-          subject: t.subject || "",
-          name: t.name || "",
-          variables: Array.isArray(t.variables) ? t.variables : [],
+          id: String(tpl.id ?? id),
+          body: tpl.body || "",
+          subject: tpl.subject || "",
+          name: tpl.name || "",
+          variables: Array.isArray(tpl.variables) ? tpl.variables : [],
         });
       })
       .catch((err) => {
@@ -330,7 +332,7 @@ export default function EmailTemplateStep() {
         try {
           await persistDraft();
         } catch {
-          toast.error("Failed to save draft. Please try again.");
+          toast.error(t("Failed to save draft. Please try again."));
           return;
         }
         setStep(5);
@@ -343,14 +345,14 @@ export default function EmailTemplateStep() {
       try {
         await persistDraft({ templateId });
       } catch {
-        toast.error("Failed to save draft. Please try again.");
+        toast.error(t("Failed to save draft. Please try again."));
         return;
       }
 
       setStep(5);
     } catch (error) {
       console.error("Failed to save template:", error);
-      toast.error("Failed to save template. Please try again.");
+      toast.error(t("Failed to save template. Please try again."));
     } finally {
       setLoading(false);
     }
@@ -360,7 +362,7 @@ export default function EmailTemplateStep() {
     if (!editor || feedback.isBusy() || (event?.detail ?? 0) > 1) return;
 
     if (!copilotData.emailAccountId) {
-      toast.error("Select an email account before sending a test email.");
+      toast.error(t("Select an email account before sending a test email."));
       return;
     }
 
@@ -373,12 +375,14 @@ export default function EmailTemplateStep() {
         const templateId = await persistTemplate();
         // The test must use the newly persisted template.
         return persistDraft({ templateId });
-      }, () => toast.success("Test email request accepted. Check your connected inbox."),
+      }, () => toast.success(
+        t("Test email request accepted. Check your connected inbox."),
+      ),
       () => useCopilotStore.getState().copilotData.flightSchedule);
     } catch (error) {
       console.error("Failed to send test email:", error);
       toast.error(
-        apiErrorMessage(error, "Failed to send test email. Please try again."),
+        apiErrorMessage(error, t("Failed to send test email. Please try again.")),
       );
     } finally {
       setSendingTestEmail(false);
@@ -394,28 +398,28 @@ export default function EmailTemplateStep() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 mb-1">
-            Create your email template
+            {t("Create your email template")}
           </h1>
           <p className="text-sm text-slate-500">
-            Write the email your copilot will send to your target audience.
+            {t("Write the email your copilot will send to your target audience.")}
           </p>
         </div>
         <button
           type="button"
           onClick={handleTestEmail}
           disabled={sendingTestEmail}
-          title="Send a test email to your connected account"
+          title={t("Send a test email to your connected account")}
           className="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-600 bg-white hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <Mail size={14} />{" "}
-          {sendingTestEmail ? "Sending..." : "Send test email"}
+          {sendingTestEmail ? t("Sending...") : t("Send test email")}
         </button>
       </div>
 
       {/* Template Name Input */}
       <div className="flex flex-col md:flex-row md:items-center gap-4 mb-2">
         <label className="text-sm font-semibold text-slate-800 whitespace-nowrap">
-          Template name
+          {t("Template name")}
         </label>
         <div className="w-full flex gap-3">
           <input
@@ -446,7 +450,7 @@ export default function EmailTemplateStep() {
                   : "text-slate-500 hover:text-slate-700"
               }`}
             >
-              Steps
+              {t("Steps")}
             </button>
             <button
               type="button"
@@ -457,7 +461,7 @@ export default function EmailTemplateStep() {
                   : "text-slate-500 hover:text-slate-700"
               }`}
             >
-              Variables
+              {t("Variables")}
             </button>
           </div>
 
@@ -493,10 +497,10 @@ export default function EmailTemplateStep() {
                             : "text-slate-700"
                         }`}
                       >
-                        {step.title}
+                        {t(step.title)}
                       </div>
                       <div className="text-xs text-slate-500 mt-0.5">
-                        {step.desc}
+                        {t(step.desc)}
                       </div>
                     </div>
                   </div>
@@ -535,7 +539,7 @@ export default function EmailTemplateStep() {
                       {variable.name}
                     </div>
                     <div className="text-xs text-slate-500">
-                      {variable.desc}
+                      {t(variable.desc)}
                     </div>
                   </div>
                   <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-slate-400" />
@@ -551,10 +555,10 @@ export default function EmailTemplateStep() {
           <div className="flex justify-between items-start mb-6">
             <div>
               <h2 className="text-lg font-bold text-slate-900 mb-1">
-                Step 1 - Initial Email
+                {t("Step 1 - Initial Email")}
               </h2>
               <p className="text-sm text-slate-500">
-                This is the first email your leads will receive.
+                {t("This is the first email your leads will receive.")}
               </p>
             </div>
             {/* <button
@@ -570,7 +574,7 @@ export default function EmailTemplateStep() {
           {/* Subject Line */}
           <div className="mb-6">
             <label htmlFor="copilot-subject-line" className="block text-sm font-bold text-slate-900 mb-2">
-              Subject line
+              {t("Subject line")}
             </label>
             <SubjectLineInput
               id="copilot-subject-line"
@@ -588,7 +592,7 @@ export default function EmailTemplateStep() {
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="text-sm font-bold text-slate-900">
-                Email body
+                {t("Email body")}
               </label>
               <span className="text-xs text-slate-400 font-medium">
                 55 / 100
@@ -736,7 +740,7 @@ export default function EmailTemplateStep() {
         </div>
         <div className="relative flex justify-center">
           <span className="bg-white px-3 text-xs font-semibold text-gray-800">
-            Your Templates
+            {t("Your Templates")}
           </span>
         </div>
       </div>
@@ -756,7 +760,7 @@ export default function EmailTemplateStep() {
                 }}
               />
               <p className="text-xs font-medium text-gray-500">
-                Fetching templates...
+                {t("Fetching templates...")}
               </p>
             </div>
           ) : /* Empty */
@@ -776,10 +780,10 @@ export default function EmailTemplateStep() {
               </div>
               <div>
                 <h4 className="text-sm font-bold text-gray-900">
-                  No templates yet
+                  {t("No templates yet")}
                 </h4>
                 <p className="text-xs text-gray-500 mt-1 max-w-xs">
-                  Once you save a template it will appear here, ready to use.
+                  {t("Once you save a template it will appear here, ready to use.")}
                 </p>
               </div>
             </div>
@@ -830,7 +834,7 @@ export default function EmailTemplateStep() {
                   {/* Subject badge */}
                   <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gray-50 border border-gray-100 mb-3 w-full overflow-hidden">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider shrink-0">
-                      Subj
+                      {t("Subj")}
                     </span>
                     <span className="text-xs text-gray-600 font-medium truncate">
                       {template.subject}
@@ -849,7 +853,7 @@ export default function EmailTemplateStep() {
                     style={{ color: "var(--color-primary)" }}
                   >
                     <ArrowRight className="w-3.5 h-3.5" />
-                    Use this template
+                    {t("Use this template")}
                   </div>
                 </button>
               ))}
