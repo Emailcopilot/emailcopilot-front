@@ -160,14 +160,14 @@ export default function PerformanceChart({
   }, [chartItems, activeRange]);
 
   return (
-    <div className="bg-white border mb-8 border-gray-200 rounded-xl px-6 py-5 font-sans w-full max-w-full">
-      <div className="flex items-center justify-between mb-2">
+    <div className="bg-white border mb-8 border-gray-200 rounded-xl px-4 sm:px-6 py-5 font-sans w-full max-w-full">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-2">
         <h2 className="text-base font-semibold text-gray-900 flex-1">
           Performance
         </h2>
 
-        <div className="flex items-center gap-4">
-          <div className="flex gap-2 items-center justify-center">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex gap-2 items-center justify-center whitespace-nowrap">
             <div className="w-5 border-b-2 border-primary" />
             <p className="text-gray-800 text-xs">Emails Sent</p>
             <div className="w-5 border-b-2 border-dashed border-success" />
