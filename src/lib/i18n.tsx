@@ -44,8 +44,11 @@ function detectLocale(): Locale {
 interface I18nValue {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  /** Translate an English UI text; falls back to the text itself. */
-  t: (text: string) => string;
+  /**
+   * Translate an English UI text; falls back to the text itself.
+   * Placeholders like {count} are filled from `vars`.
+   */
+  t: (text: string, vars?: Record<string, string | number>) => string;
 }
 
 const I18nContext = createContext<I18nValue>({
@@ -75,8 +78,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback(
-    (text: string) =>
-      locale === "en" ? text : (MESSAGES[locale]?.[text] ?? text),
+    (text: string, vars?: Record<string, string | number>) => {
+      const out =
+        locale === "en" ? text : (MESSAGES[locale]?.[text] ?? text);
+      if (!vars) return out;
+      return out.replace(/\{(\w+)\}/g, (m, key: string) =>
+        key in vars ? String(vars[key]) : m,
+      );
+    },
     [locale],
   );
 
