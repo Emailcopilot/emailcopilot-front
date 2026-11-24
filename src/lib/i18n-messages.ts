@@ -240,6 +240,71 @@ const nl: Messages = {
   "All time": "Totaal",
   "Emails sent and replies per day will appear here soon.":
     "Verzonden e-mails en antwoorden per dag verschijnen hier binnenkort.",
+  // Email accounts
+  "Account Name": "Accountnaam",
+  "Account actions": "Accountacties",
+  "Account name and email address are required.":
+    "Accountnaam en e-mailadres zijn verplicht.",
+  "Add Account": "Account toevoegen",
+  "Add an email account to start sending outreach.":
+    "Voeg een e-mailaccount toe om outreach te versturen.",
+  "Adding...": "Toevoegen...",
+  "App Password / Token": "App-wachtwoord / token",
+  "Are you sure you want to delete this email account?":
+    "Weet je zeker dat je dit e-mailaccount wilt verwijderen?",
+  "Choose the email account your copilot will use to send emails.":
+    "Kies het e-mailaccount waarmee je copilot e-mails verstuurt.",
+  "Connect other email provider": "Andere e-mailprovider koppelen",
+  "Connect with Gmail": "Koppelen met Gmail",
+  "Connect with Outlook": "Koppelen met Outlook",
+  "Connect your Gmail account with OAuth in a few clicks.":
+    "Koppel je Gmail-account met OAuth in een paar klikken.",
+  "Connect your Outlook account with OAuth in a few clicks.":
+    "Koppel je Outlook-account met OAuth in een paar klikken.",
+  "Connect your email account": "Koppel je e-mailaccount",
+  "Edit Email Account": "E-mailaccount bewerken",
+  "Email account created successfully": "E-mailaccount aangemaakt",
+  "Email account deleted successfully": "E-mailaccount verwijderd",
+  "Email account verified successfully": "E-mailaccount geverifieerd",
+  "Emails sent per account isn't live yet":
+    "Verzonden e-mails per account is nog niet live",
+  "Failed to add the email account.": "E-mailaccount toevoegen mislukt.",
+  "Failed to connect via OAuth": "Koppelen via OAuth mislukt",
+  "Failed to create email account": "E-mailaccount aanmaken mislukt",
+  "Failed to delete email account": "E-mailaccount verwijderen mislukt",
+  "Failed to fetch email accounts": "E-mailaccounts ophalen mislukt",
+  "Failed to update the email account.": "E-mailaccount bijwerken mislukt.",
+  "Failed to verify email account": "E-mailaccount verifiëren mislukt",
+  "Go Back": "Terug",
+  "John Doe": "Jan Jansen",
+  "No Email Accounts Found": "Geen e-mailaccounts gevonden",
+  "No Email Accounts Yet": "Nog geen e-mailaccounts",
+  "Open account actions": "Accountacties openen",
+  "Other options": "Andere opties",
+  Port: "Poort",
+  Recommended: "Aanbevolen",
+  "SMTP Host": "SMTP-host",
+  "Search accounts": "Accounts zoeken",
+  "Search accounts...": "Zoek accounts...",
+  "Try adjusting your search or filters": "Pas je zoekopdracht of filters aan",
+  "Use SMTP / IMAP to connect any email provider.":
+    "Gebruik SMTP / IMAP om elke e-mailprovider te koppelen.",
+  "Your Email Accounts ({count})": "Jouw e-mailaccounts ({count})",
+  "Your name / Sender Name": "Je naam / afzendernaam",
+  "e.g. Outreach Account": "bijv. Outreach-account",
+  "Email account": "E-mailaccount",
+  "Email address": "E-mailadres",
+  Connected: "Gekoppeld",
+  "Emails sent": "Verzonden",
+  Verified: "Geverifieerd",
+  Unverified: "Niet geverifieerd",
+  Error: "Fout",
+  "All statuses": "Alle statussen",
+  Verify: "Verifiëren",
+  "Email account verification failed. Please make sure the account is correctly configured.":
+    "Verificatie van het e-mailaccount mislukt. Controleer of het account goed is ingesteld.",
+  // Email accounts (badges)
+  "Easy setup": "Snel ingesteld",
 };
 
 const de: Messages = {
@@ -475,6 +540,75 @@ const de: Messages = {
   "All time": "Gesamt",
   "Emails sent and replies per day will appear here soon.":
     "Gesendete E-Mails und Antworten pro Tag erscheinen hier bald.",
+  // Email accounts
+  "Account Name": "Kontoname",
+  "Account actions": "Kontoaktionen",
+  "Account name and email address are required.":
+    "Kontoname und E-Mail-Adresse sind erforderlich.",
+  "Add Account": "Konto hinzufügen",
+  "Add an email account to start sending outreach.":
+    "Füge ein E-Mail-Konto hinzu, um Outreach zu versenden.",
+  "Adding...": "Wird hinzugefügt...",
+  "App Password / Token": "App-Passwort / Token",
+  "Are you sure you want to delete this email account?":
+    "Möchtest du dieses E-Mail-Konto wirklich löschen?",
+  "Choose the email account your copilot will use to send emails.":
+    "Wähle das E-Mail-Konto, mit dem dein Copilot E-Mails sendet.",
+  "Connect other email provider": "Anderen E-Mail-Anbieter verbinden",
+  "Connect with Gmail": "Mit Gmail verbinden",
+  "Connect with Outlook": "Mit Outlook verbinden",
+  "Connect your Gmail account with OAuth in a few clicks.":
+    "Verbinde dein Gmail-Konto per OAuth mit wenigen Klicks.",
+  "Connect your Outlook account with OAuth in a few clicks.":
+    "Verbinde dein Outlook-Konto per OAuth mit wenigen Klicks.",
+  "Connect your email account": "Verbinde dein E-Mail-Konto",
+  "Edit Email Account": "E-Mail-Konto bearbeiten",
+  "Email account created successfully": "E-Mail-Konto erstellt",
+  "Email account deleted successfully": "E-Mail-Konto gelöscht",
+  "Email account verified successfully": "E-Mail-Konto verifiziert",
+  "Emails sent per account isn't live yet":
+    "Gesendete E-Mails pro Konto sind noch nicht live",
+  "Failed to add the email account.":
+    "E-Mail-Konto konnte nicht hinzugefügt werden.",
+  "Failed to connect via OAuth": "Verbindung über OAuth fehlgeschlagen",
+  "Failed to create email account": "E-Mail-Konto konnte nicht erstellt werden",
+  "Failed to delete email account": "E-Mail-Konto konnte nicht gelöscht werden",
+  "Failed to fetch email accounts":
+    "E-Mail-Konten konnten nicht geladen werden",
+  "Failed to update the email account.":
+    "E-Mail-Konto konnte nicht aktualisiert werden.",
+  "Failed to verify email account":
+    "E-Mail-Konto konnte nicht verifiziert werden",
+  "Go Back": "Zurück",
+  "John Doe": "Max Mustermann",
+  "No Email Accounts Found": "Keine E-Mail-Konten gefunden",
+  "No Email Accounts Yet": "Noch keine E-Mail-Konten",
+  "Open account actions": "Kontoaktionen öffnen",
+  "Other options": "Weitere Optionen",
+  Provider: "Anbieter",
+  Recommended: "Empfohlen",
+  "SMTP Host": "SMTP-Host",
+  "Search accounts": "Konten suchen",
+  "Search accounts...": "Konten suchen...",
+  "Try adjusting your search or filters": "Passe deine Suche oder Filter an",
+  "Use SMTP / IMAP to connect any email provider.":
+    "Verbinde jeden E-Mail-Anbieter per SMTP / IMAP.",
+  "Your Email Accounts ({count})": "Deine E-Mail-Konten ({count})",
+  "Your name / Sender Name": "Dein Name / Absendername",
+  "e.g. Outreach Account": "z. B. Outreach-Konto",
+  "Email account": "E-Mail-Konto",
+  "Email address": "E-Mail-Adresse",
+  Connected: "Verbunden",
+  "Emails sent": "Gesendet",
+  Verified: "Verifiziert",
+  Unverified: "Nicht verifiziert",
+  Error: "Fehler",
+  "All statuses": "Alle Status",
+  Verify: "Verifizieren",
+  "Email account verification failed. Please make sure the account is correctly configured.":
+    "Verifizierung des E-Mail-Kontos fehlgeschlagen. Bitte prüfe, ob das Konto richtig eingerichtet ist.",
+  // Email accounts (badges)
+  "Easy setup": "Schnell eingerichtet",
 };
 
 const fr: Messages = {
@@ -709,6 +843,73 @@ const fr: Messages = {
   "All time": "Au total",
   "Emails sent and replies per day will appear here soon.":
     "Les e-mails envoyés et les réponses par jour apparaîtront bientôt ici.",
+  // Email accounts
+  "Account Name": "Nom du compte",
+  "Account actions": "Actions du compte",
+  "Account name and email address are required.":
+    "Le nom du compte et l'adresse e-mail sont obligatoires.",
+  "Add Account": "Ajouter le compte",
+  "Add an email account to start sending outreach.":
+    "Ajoutez un compte e-mail pour envoyer votre prospection.",
+  "Adding...": "Ajout...",
+  "App Password / Token": "Mot de passe d'application / jeton",
+  "Are you sure you want to delete this email account?":
+    "Voulez-vous vraiment supprimer ce compte e-mail ?",
+  "Choose the email account your copilot will use to send emails.":
+    "Choisissez le compte e-mail que votre copilot utilisera pour envoyer des e-mails.",
+  "Connect other email provider": "Connecter un autre fournisseur",
+  "Connect with Gmail": "Se connecter avec Gmail",
+  "Connect with Outlook": "Se connecter avec Outlook",
+  "Connect your Gmail account with OAuth in a few clicks.":
+    "Connectez votre compte Gmail via OAuth en quelques clics.",
+  "Connect your Outlook account with OAuth in a few clicks.":
+    "Connectez votre compte Outlook via OAuth en quelques clics.",
+  "Connect your email account": "Connectez votre compte e-mail",
+  "Edit Email Account": "Modifier le compte e-mail",
+  "Email account created successfully": "Compte e-mail créé",
+  "Email account deleted successfully": "Compte e-mail supprimé",
+  "Email account verified successfully": "Compte e-mail vérifié",
+  "Emails sent per account isn't live yet":
+    "Les e-mails envoyés par compte ne sont pas encore disponibles",
+  "Failed to add the email account.": "Échec de l'ajout du compte e-mail.",
+  "Failed to connect via OAuth": "Échec de la connexion via OAuth",
+  "Failed to create email account": "Échec de la création du compte e-mail",
+  "Failed to delete email account": "Échec de la suppression du compte e-mail",
+  "Failed to fetch email accounts": "Échec du chargement des comptes e-mail",
+  "Failed to update the email account.":
+    "Échec de la mise à jour du compte e-mail.",
+  "Failed to verify email account": "Échec de la vérification du compte e-mail",
+  "Go Back": "Retour",
+  "John Doe": "Jean Dupont",
+  "No Email Accounts Found": "Aucun compte e-mail trouvé",
+  "No Email Accounts Yet": "Aucun compte e-mail pour l'instant",
+  "Open account actions": "Ouvrir les actions du compte",
+  "Other options": "Autres options",
+  Provider: "Fournisseur",
+  Recommended: "Recommandé",
+  "SMTP Host": "Hôte SMTP",
+  "Search accounts": "Rechercher des comptes",
+  "Search accounts...": "Rechercher des comptes...",
+  "Try adjusting your search or filters":
+    "Modifiez votre recherche ou vos filtres",
+  "Use SMTP / IMAP to connect any email provider.":
+    "Utilisez SMTP / IMAP pour connecter n'importe quel fournisseur.",
+  "Your Email Accounts ({count})": "Vos comptes e-mail ({count})",
+  "Your name / Sender Name": "Votre nom / nom d'expéditeur",
+  "e.g. Outreach Account": "ex. Compte de prospection",
+  "Email account": "Compte e-mail",
+  "Email address": "Adresse e-mail",
+  Connected: "Connecté le",
+  "Emails sent": "Envoyés",
+  Verified: "Vérifié",
+  Unverified: "Non vérifié",
+  Error: "Erreur",
+  "All statuses": "Tous les statuts",
+  Verify: "Vérifier",
+  "Email account verification failed. Please make sure the account is correctly configured.":
+    "La vérification du compte e-mail a échoué. Vérifiez que le compte est correctement configuré.",
+  // Email accounts (badges)
+  "Easy setup": "Configuration facile",
 };
 
 const es: Messages = {
@@ -944,6 +1145,73 @@ const es: Messages = {
   "All time": "En total",
   "Emails sent and replies per day will appear here soon.":
     "Los correos enviados y las respuestas por día aparecerán aquí pronto.",
+  // Email accounts
+  "Account Name": "Nombre de la cuenta",
+  "Account actions": "Acciones de la cuenta",
+  "Account name and email address are required.":
+    "El nombre de la cuenta y el correo son obligatorios.",
+  "Add Account": "Añadir cuenta",
+  "Add an email account to start sending outreach.":
+    "Añade una cuenta de correo para empezar a enviar.",
+  "Adding...": "Añadiendo...",
+  "App Password / Token": "Contraseña de aplicación / token",
+  "Are you sure you want to delete this email account?":
+    "¿Seguro que quieres eliminar esta cuenta de correo?",
+  "Choose the email account your copilot will use to send emails.":
+    "Elige la cuenta de correo con la que tu copilot enviará correos.",
+  "Connect other email provider": "Conectar otro proveedor",
+  "Connect with Gmail": "Conectar con Gmail",
+  "Connect with Outlook": "Conectar con Outlook",
+  "Connect your Gmail account with OAuth in a few clicks.":
+    "Conecta tu cuenta de Gmail con OAuth en pocos clics.",
+  "Connect your Outlook account with OAuth in a few clicks.":
+    "Conecta tu cuenta de Outlook con OAuth en pocos clics.",
+  "Connect your email account": "Conecta tu cuenta de correo",
+  "Edit Email Account": "Editar cuenta de correo",
+  "Email account created successfully": "Cuenta de correo creada",
+  "Email account deleted successfully": "Cuenta de correo eliminada",
+  "Email account verified successfully": "Cuenta de correo verificada",
+  "Emails sent per account isn't live yet":
+    "Los correos enviados por cuenta aún no están disponibles",
+  "Failed to add the email account.": "No se pudo añadir la cuenta de correo.",
+  "Failed to connect via OAuth": "No se pudo conectar con OAuth",
+  "Failed to create email account": "No se pudo crear la cuenta de correo",
+  "Failed to delete email account": "No se pudo eliminar la cuenta de correo",
+  "Failed to fetch email accounts":
+    "No se pudieron cargar las cuentas de correo",
+  "Failed to update the email account.":
+    "No se pudo actualizar la cuenta de correo.",
+  "Failed to verify email account": "No se pudo verificar la cuenta de correo",
+  "Go Back": "Volver",
+  "John Doe": "Juan Pérez",
+  "No Email Accounts Found": "No se encontraron cuentas de correo",
+  "No Email Accounts Yet": "Aún no hay cuentas de correo",
+  "Open account actions": "Abrir acciones de la cuenta",
+  "Other options": "Otras opciones",
+  Port: "Puerto",
+  Provider: "Proveedor",
+  Recommended: "Recomendado",
+  "SMTP Host": "Host SMTP",
+  "Search accounts": "Buscar cuentas",
+  "Search accounts...": "Buscar cuentas...",
+  "Try adjusting your search or filters": "Ajusta tu búsqueda o filtros",
+  "Use SMTP / IMAP to connect any email provider.":
+    "Usa SMTP / IMAP para conectar cualquier proveedor.",
+  "Your Email Accounts ({count})": "Tus cuentas de correo ({count})",
+  "Your name / Sender Name": "Tu nombre / nombre del remitente",
+  "e.g. Outreach Account": "p. ej. Cuenta de prospección",
+  "Email account": "Cuenta de correo",
+  "Email address": "Correo electrónico",
+  Connected: "Conectada",
+  "Emails sent": "Enviados",
+  Verified: "Verificada",
+  Unverified: "Sin verificar",
+  "All statuses": "Todos los estados",
+  Verify: "Verificar",
+  "Email account verification failed. Please make sure the account is correctly configured.":
+    "La verificación de la cuenta falló. Asegúrate de que la cuenta esté bien configurada.",
+  // Email accounts (badges)
+  "Easy setup": "Configuración fácil",
 };
 
 export const MESSAGES: Record<string, Messages> = { nl, de, fr, es };
