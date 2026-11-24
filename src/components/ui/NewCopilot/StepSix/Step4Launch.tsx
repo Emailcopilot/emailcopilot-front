@@ -25,8 +25,10 @@ import { useSetupFeedbackActions } from "@/lib/SetupFeedbackProvider";
 import EmailLimitDialog from "@/components/ui/limits/EmailLimitDialog";
 import TestEmailGateModal from "./TestEmailGateModal";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
+import { useI18n } from "@/lib/i18n";
 
 function ReadinessItem({ done, label }: { done: boolean; label: string }) {
+  const { t } = useI18n();
   return (
     <div
       className={`flex items-center gap-2 ${done ? "text-emerald-600" : "text-gray-400"}`}
@@ -38,7 +40,7 @@ function ReadinessItem({ done, label }: { done: boolean; label: string }) {
       ) : (
         <div className="w-4 h-4 rounded-full border border-gray-300" />
       )}
-      <span>{label}</span>
+      <span>{t(label)}</span>
     </div>
   );
 }
@@ -55,6 +57,7 @@ export default function Step4Launch({
   onSaveDraft,
 }: Step4LaunchProps) {
   const feedback = useSetupFeedbackActions();
+  const { t, locale } = useI18n();
   const { copilotData, setStep, draftId, persistDraft, mode, editingLive } =
     useCopilotStore();
   const isRelaunch = mode === "edit" && editingLive;
@@ -96,11 +99,11 @@ export default function Step4Launch({
     takeoff?.flightScheduleId ?? copilotData.flightScheduleId;
   const Days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const formatActiveDays = (days: string[] = []) => {
-    if (days.length === 0) return "None";
-    if (days.length === 7) return "Monday - Sunday";
+    if (days.length === 0) return t("None");
+    if (days.length === 7) return t("Monday - Sunday");
     if (days.length === 5 && !days.includes("Sat") && !days.includes("Sun"))
-      return "Monday - Friday";
-    return days.join(", ");
+      return t("Monday - Friday");
+    return days.map((d) => t(d)).join(", ");
   };
   // show alert when user tries to leave the page with unsaved changes
   useEffect(() => {
@@ -143,7 +146,7 @@ export default function Step4Launch({
     selectedScrapeProfile?.city ||
     copilotData.targetProfile?.cities?.join(", ");
   const audienceLocation =
-    [audienceCountry, audienceCity].filter(Boolean).join(", ") || "All";
+    [audienceCountry, audienceCity].filter(Boolean).join(", ") || t("All");
 
   // Sequence/touches: wizard-built templates have no steps array (one email).
   const sequenceCount = selectedTemplate?.steps?.length ?? 1;
@@ -151,10 +154,10 @@ export default function Step4Launch({
   // Schedule display: honest about unlimited / unset states.
   const sched = takeoff?.flightSchedule ?? copilotData.flightSchedule;
   const scheduleLimit = !readySchedule
-    ? "Not selected"
+    ? t("Not selected")
     : sched?.sendLimitActive
-      ? `${sched?.sendLimit ?? 30} emails per day`
-      : "Unlimited";
+      ? t("{n} emails per day", { n: sched?.sendLimit ?? 30 })
+      : t("Unlimited");
   const scheduleDays = !readySchedule
     ? "—"
     : formatActiveDays(sched?.activeDays?.map((day) => Days[day - 1]));
@@ -165,7 +168,7 @@ export default function Step4Launch({
     ? "—"
     : sched?.sendingHoursActive
       ? `${sched?.sendingHours?.start} - ${sched?.sendingHours?.end}`
-      : formatAllDayAvailability(sched?.activeDays);
+      : t(formatAllDayAvailability(sched?.activeDays));
 
   // Progress + estimated volume for the take-off card.
   const doneCount = [
@@ -183,10 +186,11 @@ export default function Step4Launch({
       : (sched?.sendLimit ?? 30) * (sched?.activeDays?.length ?? 0) * 4;
 
   const resultsCount = selectedScrapeProfile?.resultsCount;
-  const audienceSizeLabel =
+  const companiesLabel =
     resultsCount != null && resultsCount > 0
-      ? `${resultsCount.toLocaleString()} companies`
-      : "After first run";
+      ? t("{count} companies", { count: resultsCount.toLocaleString(locale) })
+      : null;
+  const audienceSizeLabel = companiesLabel ?? t("After first run");
 
   // Gate only when no test email has ever been sent for this copilot. If the
   // status can't be verified, fail open so a flaky endpoint never blocks launch.
@@ -212,12 +216,18 @@ export default function Step4Launch({
         queryClient.invalidateQueries({ queryKey: ["copilot-test-email-status"] });
         // Keep the gate's success view until the user closes or launches.
         if (fromGate) setGateSent(true);
-        else toast.success("Test email request accepted. Check your connected inbox.");
+        else
+          toast.success(
+            t("Test email request accepted. Check your connected inbox."),
+          );
       }, () => sched);
     } catch (error) {
       console.error("Failed to send test email:", error);
       toast.error(
-        apiErrorMessage(error, "Failed to send test email. Please try again."),
+        apiErrorMessage(
+          error,
+          t("Failed to send test email. Please try again."),
+        ),
       );
     } finally {
       setSendingTestEmail(false);
@@ -241,10 +251,12 @@ export default function Step4Launch({
     <div className="w-full" data-setup-feedback-final-step={draftId ?? copilotData.id ?? ""}
       aria-busy={loadingTakeoff || loadingTestStatus || sendingTestEmail || launching}>
       <h2 className="text-xl font-bold text-gray-900 mb-1">
-        Review your copilot
+        {t("Review your copilot")}
       </h2>
       <p className="text-sm text-gray-500 mb-6">
-        Everything looks good! Review your settings before launching.
+        {readyAll
+          ? t("Everything looks good! Review your settings before launching.")
+          : t("Review your settings and finish the open steps before launching.")}
       </p>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8">
@@ -260,26 +272,26 @@ export default function Step4Launch({
             />
             <div className="w-full">
               <h3 className="text-sm font-semibold text-gray-900 group-hover:text-primary mb-4">
-                Setup
+                {t("Setup")}
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-[130px_1fr] gap-x-5 gap-y-3 text-sm">
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Copilot name
+                  {t("Copilot name")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
-                  {copilotData.name || "Not specified"}
+                  {copilotData.name || t("Not specified")}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Description
+                  {t("Description")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
-                  {copilotData.description || "Not specified"}
+                  {copilotData.description || t("Not specified")}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Goal
+                  {t("Goal")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
-                  {copilotData.goal || "Not specified"}
+                  {copilotData.goal || t("Not specified")}
                 </div>
               </div>
             </div>
@@ -298,22 +310,22 @@ export default function Step4Launch({
             />
             <div className="w-full">
               <h3 className="text-sm font-semibold text-gray-900 group-hover:text-primary mb-4">
-                Email Account
+                {t("Email Account")}
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-[130px_1fr] gap-x-5 gap-y-3 text-sm">
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Sending as
+                  {t("Sending as")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
                   {selectedEmailProfile?.profileName ||
                     selectedEmailProfile?.email ||
-                    "N/A"}
+                    t("N/A")}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Email Account
+                  {t("Email Account")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
-                  {selectedEmailProfile?.email || "N/A"}
+                  {selectedEmailProfile?.email || t("N/A")}
                 </div>
               </div>
             </div>
@@ -332,25 +344,25 @@ export default function Step4Launch({
             />
             <div className="w-full">
               <h3 className="text-sm font-semibold text-gray-900 group-hover:text-primary mb-4">
-                Target Audience
+                {t("Target Audience")}
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-[130px_1fr] gap-x-5 gap-y-3 text-sm">
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Industry
+                  {t("Industry")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
                   {selectedScrapeProfile?.name ||
                     copilotData.targetProfile?.industries?.join(", ") ||
-                    "N/A"}
+                    t("N/A")}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Location
+                  {t("Location")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
                   {audienceLocation}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Est. audience size
+                  {t("Est. audience size")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
                   {audienceSizeLabel}
@@ -372,23 +384,25 @@ export default function Step4Launch({
             />
             <div className="w-full">
               <h3 className="text-sm font-semibold text-gray-900 group-hover:text-primary mb-4">
-                Email Template
+                {t("Email Template")}
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-[130px_1fr] gap-x-5 gap-y-3 text-sm">
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Template
+                  {t("Template")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
-                  {selectedTemplate?.name || "N/A"}
+                  {selectedTemplate?.name || t("N/A")}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Sequence
+                  {t("Sequence")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
-                  {sequenceCount === 1 ? "1 step" : `${sequenceCount} steps`}
+                  {sequenceCount === 1
+                    ? t("1 step")
+                    : t("{count} steps", { count: sequenceCount })}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Total touches
+                  {t("Total touches")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
                   {sequenceCount}
@@ -410,29 +424,29 @@ export default function Step4Launch({
             />
             <div className="w-full">
               <h3 className="text-sm font-semibold text-gray-900 group-hover:text-primary mb-4">
-                Flight Schedule
+                {t("Flight Schedule")}
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-[130px_1fr] gap-x-5 gap-y-3 text-sm">
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Daily send limit
+                  {t("Daily send limit")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
                   {scheduleLimit}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Active days
+                  {t("Active days")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
                   {scheduleDays}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Timezone
+                  {t("Timezone")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
                   {scheduleTimezone}
                 </div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary">
-                  Time
+                  {t("Time")}
                 </div>
                 <div className="text-gray-500 group-hover:text-blue-500">
                   {scheduleTime}
@@ -457,8 +471,8 @@ export default function Step4Launch({
                 className={`text-sm font-semibold mb-4 ${readyAll ? "text-emerald-500" : "text-gray-400"}`}
               >
                 {readyAll
-                  ? "You're ready to take off!"
-                  : "Almost ready to take off"}
+                  ? t("You're ready to take off!")
+                  : t("Almost ready to take off")}
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 text-sm">
                 <ReadinessItem done={readySetup} label="Setup" />
@@ -469,23 +483,28 @@ export default function Step4Launch({
                 <ReadinessItem
                   done={readyAll}
                   label={
-                    readyAll ? "You are ready to fly" : "Finish setup to fly"
+                    readyAll ? t("You are ready to fly") : t("Finish setup to fly")
                   }
                 />
               </div>
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">Est. monthly volume</span>
+                  <span className="text-gray-500">{t("Est. monthly volume")}</span>
                   <span className="font-semibold text-gray-900">
                     {!readySchedule
                       ? "—"
                       : estMonthly == null
-                        ? "Unlimited"
-                        : `~${estMonthly.toLocaleString()} emails`}
+                        ? t("Unlimited")
+                        : t("{volume} emails", {
+                            volume: `~${estMonthly.toLocaleString(locale)}`,
+                          })}
                   </span>
                 </div>
                 <p className="mt-1 text-xs text-gray-400">
-                  {doneCount} of 5 steps complete
+                  {t("{done} of {total} steps complete", {
+                    done: doneCount,
+                    total: 5,
+                  })}
                 </p>
               </div>
             </div>
@@ -498,7 +517,7 @@ export default function Step4Launch({
           onClick={() => setStep(5)}
           className="flex items-center gap-2 px-5 py-2.5 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
         >
-          <ArrowLeft size={15} /> Back
+          <ArrowLeft size={15} /> {t("Back")}
         </button>
 
         <div className="flex items-center gap-2 flex-wrap ml-auto">
@@ -506,11 +525,11 @@ export default function Step4Launch({
             type="button"
             onClick={(event) => { if (event.detail <= 1) void sendTestEmail(); }}
             disabled={sendingTestEmail}
-            title="Send a test email to your connected account"
+            title={t("Send a test email to your connected account")}
             className="flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Mail size={14} />{" "}
-            {sendingTestEmail ? "Sending..." : "Send test email"}
+            {sendingTestEmail ? t("Sending...") : t("Send test email")}
           </button>
           <button
             onClick={async () => {
@@ -527,12 +546,12 @@ export default function Step4Launch({
             {saving ? (
               <span className="flex items-center">
                 <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-500 mr-2"></span>
-                Saving...
+                {t("Saving...")}
               </span>
             ) : (
               <>
                 <Save size={15} />{" "}
-                {isRelaunch ? "Save, keep paused" : "Save as Draft"}
+                {isRelaunch ? t("Save, keep paused") : t("Save as Draft")}
               </>
             )}
           </button>
@@ -545,17 +564,17 @@ export default function Step4Launch({
               <Rocket size={15} />{" "}
               {launching
                 ? isRelaunch
-                  ? "Re-launching..."
-                  : "Launching..."
+                  ? t("Re-launching...")
+                  : t("Launching...")
                 : isRelaunch
-                  ? "Re-launch Copilot"
-                  : "Launch Copilot"}
+                  ? t("Re-launch Copilot")
+                  : t("Launch Copilot")}
             </button>
             {!launching && (loadingTakeoff || loadingTestStatus || !readyAll) && (
               <span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-md bg-gray-900 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover/tip:opacity-100">
                 {loadingTakeoff || loadingTestStatus
-                  ? "Loading copilot data…"
-                  : "Complete all steps before launching"}
+                  ? t("Loading copilot data…")
+                  : t("Complete all steps before launching")}
               </span>
             )}
           </span>
@@ -567,11 +586,7 @@ export default function Step4Launch({
         sending={sendingTestEmail}
         sent={gateSent}
         sentTo={selectedEmailProfile?.email}
-        audienceLabel={
-          resultsCount != null && resultsCount > 0
-            ? `${resultsCount.toLocaleString()} companies`
-            : selectedScrapeProfile?.name
-        }
+        audienceLabel={companiesLabel ?? selectedScrapeProfile?.name}
         relaunch={isRelaunch}
         onSend={() => sendTestEmail(true)}
         onLaunch={() => {
