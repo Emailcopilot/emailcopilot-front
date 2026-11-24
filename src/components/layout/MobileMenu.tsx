@@ -10,10 +10,12 @@ import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import clsx from "clsx";
 import { isNavActive, navGroups } from "@/lib/nav-items";
+import { useI18n } from "@/lib/i18n";
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useI18n();
   const { user } = useUser();
 
   const toggleMenu = () => {
@@ -86,7 +88,7 @@ export default function MobileMenu() {
                   >
                     {group.label && (
                       <div className="px-3 pb-2 text-xs font-medium uppercase tracking-wider text-gray-400">
-                        {group.label}
+                        {t(group.label)}
                       </div>
                     )}
                     <div className="space-y-1">
@@ -113,7 +115,7 @@ export default function MobileMenu() {
                                 isActive ? "text-primary" : "text-gray-400"
                               }
                             />
-                            <span>{label}</span>
+                            <span>{t(label)}</span>
                           </Link>
                         );
                       })}
