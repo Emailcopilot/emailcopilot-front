@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useCopilotStore } from "../../../../store/copilotStore";
 import { useTakeoffCopilot } from "@/lib/useTakeoffCopilot";
+import { useI18n } from "@/lib/i18n";
 
 interface LaunchSideBarProps {
   draftId?: string;
@@ -16,6 +17,7 @@ interface LaunchSideBarProps {
 export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
   const { copilotData, mode, editingLive } = useCopilotStore();
   const isRelaunch = mode === "edit" && editingLive;
+  const { t } = useI18n();
   const { data: takeoff } = useTakeoffCopilot();
 
   const selectedEmailProfile = takeoff?.emailAccount ?? null;
@@ -42,25 +44,24 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
   const Days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   const formatActiveDays = (days: string[] = []) => {
-    if (days.length === 0) return "None";
-    if (days.length === 7) return "Mon - Sun";
+    if (days.length === 0) return t("None");
+    if (days.length === 7) return `${t("Mon")} - ${t("Sun")}`;
     if (days.length === 5 && !days.includes("Sat") && !days.includes("Sun"))
-      return "Mon - Fri";
+      return `${t("Mon")} - ${t("Fri")}`;
 
-    const shortDays = days.map((d) => d.slice(0, 3));
-    return shortDays.join(", ");
+    return days.map((d) => t(d.slice(0, 3))).join(", ");
   };
 
   const scheduleSummary = !flightScheduleId
-    ? "Not selected"
-    : `${sched?.sendLimitActive ? `${sched?.sendLimit ?? 30} emails per day` : "Unlimited"}, ${formatActiveDays(
+    ? t("Not selected")
+    : `${sched?.sendLimitActive ? t("{n} emails per day", { n: sched?.sendLimit ?? 30 }) : t("Unlimited")}, ${formatActiveDays(
         sched?.activeDays?.map((day) => Days[day - 1]),
       )}`;
 
   return (
     <div className="w-full ">
       <h2 className="text-[15px] font-bold text-gray-900 mb-10">
-        Estimated performance
+        {t("Copilot Summary")}
       </h2>
 
       <div className="flex flex-col gap-8 mt-5">
@@ -69,10 +70,10 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
           <Navigation size={20} className="text-gray-700 mt-0.5 shrink-0" />
           <div>
             <p className="text-[13px] font-bold text-gray-900 mb-1">
-              Copilot name
+              {t("Copilot name")}
             </p>
             <p className="text-[13px] text-gray-500">
-              {copilotData.name || "Not set yet"}
+              {copilotData.name || t("Not set yet")}
             </p>
           </div>
         </div>
@@ -82,12 +83,12 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
           <Mail size={20} className="text-gray-700 mt-0.5 shrink-0" />
           <div>
             <p className="text-[13px] font-bold text-gray-900 mb-1">
-              Email Account
+              {t("Email Account")}
             </p>
             <p className="text-[13px] text-gray-500">
               {selectedEmailProfile?.profileName ||
                 selectedEmailProfile?.email ||
-                "N/A"}
+                t("N/A")}
             </p>
           </div>
         </div>
@@ -97,13 +98,13 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
           <Users size={20} className="text-gray-700 mt-0.5 shrink-0" />
           <div>
             <p className="text-[13px] font-bold text-gray-900 mb-1">
-              Target Audience
+              {t("Target Audience")}
             </p>
             <p className="text-[13px] text-gray-500">
               {selectedAudience?.name ||
                 (copilotData.targetProfile?.industries?.length
                   ? copilotData.targetProfile.industries.join(", ")
-                  : "N/A")}
+                  : t("N/A"))}
             </p>
           </div>
         </div>
@@ -113,10 +114,10 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
           <FileText size={20} className="text-gray-700 mt-0.5 shrink-0" />
           <div>
             <p className="text-[13px] font-bold text-gray-900 mb-1">
-              Email Template
+              {t("Email Template")}
             </p>
             <p className="text-[13px] text-gray-500">
-              {selectedTemplate?.name || "N/A"}
+              {selectedTemplate?.name || t("N/A")}
             </p>
           </div>
         </div>
@@ -126,7 +127,7 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
           <CalendarDays size={20} className="text-gray-700 mt-0.5 shrink-0" />
           <div>
             <p className="text-[13px] font-bold text-gray-900 mb-1">
-              Flight Schedule
+              {t("Flight Schedule")}
             </p>
             <p className="text-[13px] text-gray-500">{scheduleSummary}</p>
           </div>
@@ -136,13 +137,13 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
         <div className="flex items-start gap-6 mb-5">
           <ShieldCheck size={20} className="text-gray-700 mt-0.5 shrink-0" />
           <div>
-            <p className="text-[13px] font-bold text-gray-900 mb-1">Status</p>
+            <p className="text-[13px] font-bold text-gray-900 mb-1">{t("Status")}</p>
             <p className="text-[13px] text-gray-500">
               {readyAll
                 ? isRelaunch
-                  ? "Ready to re-launch"
-                  : "Ready to take-off"
-                : "Incomplete — finish setup"}
+                  ? t("Ready to re-launch")
+                  : t("Ready to take-off")
+                : t("Incomplete — finish setup")}
             </p>
           </div>
         </div>
@@ -152,12 +153,12 @@ export default function LaunchSideBar({ draftId }: LaunchSideBarProps) {
       {draftId && (
         <div className="bg-white border border-gray-200 rounded-xl p-4">
           <p className="text-xs font-medium text-gray-900 mb-0.5">
-            {isRelaunch ? "Paused while editing" : "Draft saved"}
+            {isRelaunch ? t("Paused while editing") : t("Draft saved")}
           </p>
           <p className="text-xs text-gray-400">
             {isRelaunch
-              ? "Your changes are saved. Re-launch to start sending again."
-              : "Your progress is saved. Come back anytime to finish."}
+              ? t("Your changes are saved. Re-launch to start sending again.")
+              : t("Your progress is saved. Come back anytime to finish.")}
           </p>
         </div>
       )}
