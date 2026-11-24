@@ -1,4 +1,5 @@
 "use client";
+import { useI18n } from "@/lib/i18n";
 type LeadStatusType = "new" | "sent" | "replied" | "failed" | "suppressed" | "skipped";
 
 const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
@@ -13,6 +14,11 @@ const DEFAULT_STYLE = { bg: "#F1F5F9", text: "#64748B" };
 
 /** Shown instead of the raw status where the wording differs. */
 const STATUS_LABELS: Record<string, string> = {
+  new: "New",
+  sent: "Sent",
+  replied: "Replied",
+  failed: "Failed",
+  skipped: "Skipped",
   suppressed: "Excluded",
 };
 
@@ -23,6 +29,7 @@ function LeadStatus({
   status: string | LeadStatusType;
   isSmall?: boolean;
 }) {
+  const { t } = useI18n();
   const style = STATUS_STYLES[status] ?? DEFAULT_STYLE;
 
   return (
@@ -33,7 +40,7 @@ function LeadStatus({
       style={{ backgroundColor: style.bg, color: style.text }}
     >
       <span className="line-clamp-1">
-        {STATUS_LABELS[status] ?? (status || "Sent")}
+        {STATUS_LABELS[status] ? t(STATUS_LABELS[status]) : status || t("Sent")}
       </span>
     </div>
   );
