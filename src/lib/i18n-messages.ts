@@ -605,6 +605,325 @@ const nl: Messages = {
     "Hoe neem ik contact op met factuursupport?",
   "If you have any questions about your subscription, invoices, payments, or billing, our team is here to help.":
     "Heb je vragen over je abonnement, facturen, betalingen of facturering? Ons team helpt je graag.",
+  // New copilot wizard + limit dialogs
+  "{provider} connected successfully": "{provider} is gekoppeld",
+  "Failed to load copilot. Please try again.":
+    "Copilot laden mislukt. Probeer het opnieuw.",
+  "Copy of {name}": "Kopie van {name}",
+  "Edit Copilot": "Copilot bewerken",
+  "Duplicate Copilot": "Copilot dupliceren",
+  "Changes saved — the copilot stays paused until you re-launch it.":
+    "Wijzigingen opgeslagen — de copilot blijft gepauzeerd tot je hem opnieuw lanceert.",
+  "Draft saved — you can launch anytime.":
+    "Concept opgeslagen — je kunt op elk moment lanceren.",
+  "Failed to save draft. Please try again.":
+    "Concept opslaan mislukt. Probeer het opnieuw.",
+  "Copilot launch accepted.": "Lancering van de copilot geaccepteerd.",
+  "Failed to launch copilot. Please try again.":
+    "Copilot lanceren mislukt. Probeer het opnieuw.",
+  "Your monthly email allowance is used up. Upgrade your plan to re-launch this copilot.":
+    "Je maandelijkse e-mailtegoed is op. Upgrade je abonnement om deze copilot opnieuw te lanceren.",
+  "Copilot re-launched.": "Copilot opnieuw gelanceerd.",
+  "Loading copilot...": "Copilot laden...",
+  "Build your outbound copilot in 6 simple steps.":
+    "Bouw je outbound-copilot in 6 eenvoudige stappen.",
+  "Discard & exit": "Verwerpen en sluiten",
+  "Editing pauses this copilot until you launch it again.":
+    "Bewerken pauzeert deze copilot tot je hem opnieuw lanceert.",
+  "No flight schedules available yet — use the form above to create one.":
+    "Nog geen flight schedules — maak er een met het formulier hierboven.",
+  "Monday - Friday": "Maandag - vrijdag",
+  "Weekend only": "Alleen weekend",
+  "Every day": "Elke dag",
+  Unlimited: "Onbeperkt",
+  "Schedule Summary": "Samenvatting schema",
+  "Here's how your copilot will send.": "Zo gaat je copilot versturen.",
+  "Daily send limit": "Dagelijkse verzendlimiet",
+  "{n} emails per day": "{n} e-mails per dag",
+  "Unlimited emails": "Onbeperkt e-mails",
+  "Active days": "Actieve dagen",
+  "Sending hours": "Verzendtijden",
+  "Est. monthly volume": "Geschat maandvolume",
+  "{volume} emails": "{volume} e-mails",
+  "Based on {n} active days/month": "Op basis van {n} actieve dagen/maand",
+  "These settings help maximize deliverability and keep your account safe.":
+    "Deze instellingen helpen de bezorgbaarheid te maximaliseren en je account veilig te houden.",
+  "Changes saved as a new schedule — the original schedule was not changed.":
+    "Wijzigingen opgeslagen als nieuw schema — het originele schema is niet gewijzigd.",
+  "Flight schedule created and linked.":
+    "Flight schedule aangemaakt en gekoppeld.",
+  "Failed to create flight schedule. Please try again.":
+    "Flight schedule aanmaken mislukt. Probeer het opnieuw.",
+  "Configure Flight Schedule": "Flight Schedule instellen",
+  "Choose when and how your copilot sends emails.":
+    "Kies wanneer en hoe je copilot e-mails verstuurt.",
+  "Schedule Name (if creating new)": "Naam schema (bij nieuw schema)",
+  "e.g. My Custom Schedule": "bijv. Mijn eigen schema",
+  "Recommended: 20-50 per day for best deliverability":
+    "Aanbevolen: 20-50 per dag voor de beste bezorgbaarheid",
+  "Choose which days your copilot is allowed to send emails.":
+    "Kies op welke dagen je copilot e-mails mag versturen.",
+  "(your timezone)": "(jouw tijdzone)",
+  "Set the daily time window when your copilot can send emails.":
+    "Stel het dagelijkse tijdvenster in waarin je copilot e-mails mag versturen.",
+  "Default Timezone": "Standaardtijdzone",
+  "Custom schedule — a new schedule will be created and linked when you continue.":
+    "Eigen schema — er wordt een nieuw schema aangemaakt en gekoppeld als je verdergaat.",
+  "A new schedule named “{name}” will be created and linked. The original schedule stays unchanged.":
+    "Er wordt een nieuw schema “{name}” aangemaakt en gekoppeld. Het originele schema blijft ongewijzigd.",
+  "Modified from “{name}” — your changes will be saved as a new schedule. The original schedule stays unchanged.":
+    "Aangepast vanaf “{name}” — je wijzigingen worden opgeslagen als nieuw schema. Het originele schema blijft ongewijzigd.",
+  "Using saved schedule: {name} — nothing will be changed when you continue.":
+    "Opgeslagen schema in gebruik: {name} — er verandert niets als je verdergaat.",
+  "Your Flight Schedules": "Jouw flight schedules",
+  "Using: {name}": "In gebruik: {name}",
+  "Template summary": "Samenvatting template",
+  "1-step sequence": "Reeks van 1 stap",
+  "Failed to save template. Please try again.":
+    "Template opslaan mislukt. Probeer het opnieuw.",
+  "Select an email account before sending a test email.":
+    "Kies een e-mailaccount voordat je een testmail verstuurt.",
+  "Create your email template": "Maak je e-mailtemplate",
+  "Write the email your copilot will send to your target audience.":
+    "Schrijf de e-mail die je copilot naar je doelgroep stuurt.",
+  "Send test email": "Testmail versturen",
+  "Step 1 - Initial Email": "Stap 1 - Eerste e-mail",
+  "This is the first email your leads will receive.":
+    "Dit is de eerste e-mail die je leads ontvangen.",
+  "Your Templates": "Jouw templates",
+  "Fetching templates...": "Templates ophalen...",
+  "No templates yet": "Nog geen templates",
+  "Once you save a template it will appear here, ready to use.":
+    "Zodra je een template opslaat, verschijnt hij hier, klaar voor gebruik.",
+  Subj: "Onderw.",
+  "Use this template": "Deze template gebruiken",
+  "Copilot Summary": "Samenvatting copilot",
+  "Here’s a summary of your copilot.":
+    "Hier is een samenvatting van je copilot.",
+  "Copilot Name": "Naam copilot",
+  "Private Jet Operators": "Privéjetmaatschappijen",
+  Description: "Omschrijving",
+  "Book more appointments and generate qualified leads":
+    "Meer afspraken boeken en gekwalificeerde leads genereren",
+  Goal: "Doel",
+  "You can edit all settings later at any time.":
+    "Je kunt alle instellingen later altijd nog aanpassen.",
+  "Paused while editing": "Gepauzeerd tijdens bewerken",
+  "Draft saved": "Concept opgeslagen",
+  "Your changes are saved. Re-launch to start sending again.":
+    "Je wijzigingen zijn opgeslagen. Lanceer opnieuw om weer te versturen.",
+  "Your progress is saved. Come back anytime to finish.":
+    "Je voortgang is opgeslagen. Kom op elk moment terug om af te ronden.",
+  "Failed to save copilot. Please try again.":
+    "Copilot opslaan mislukt. Probeer het opnieuw.",
+  "Setup Your Copilot": "Stel je copilot in",
+  "Give your Copilot a name and describe its purpose.":
+    "Geef je copilot een naam en beschrijf het doel.",
+  "Internal name to identify your copilot.":
+    "Interne naam om je copilot te herkennen.",
+  "e.g. Private Jet Operators": "bijv. Privéjetmaatschappijen",
+  "Describe what this copilot does and who it’s for.":
+    "Beschrijf wat deze copilot doet en voor wie hij is.",
+  "e.g. Reach out to private jet operators in Amsterdam and introduce our services":
+    "bijv. Benader privéjetmaatschappijen in Amsterdam en introduceer onze diensten",
+  "What is the main goal of this copilot?":
+    "Wat is het belangrijkste doel van deze copilot?",
+  "e.g. Book more appointments and generate qualified leads":
+    "bijv. Meer afspraken boeken en gekwalificeerde leads genereren",
+  None: "Geen",
+  "Copilot name": "Naam copilot",
+  "Not set yet": "Nog niet ingesteld",
+  "N/A": "n.v.t.",
+  "Email Template": "E-mailtemplate",
+  "Ready to re-launch": "Klaar om opnieuw te lanceren",
+  "Ready to take-off": "Klaar voor take-off",
+  "Incomplete — finish setup": "Onvolledig — rond het instellen af",
+  "Monday - Sunday": "Maandag - zondag",
+  All: "Alle",
+  "{count} companies": "{count} bedrijven",
+  "After first run": "Na de eerste run",
+  "Review your copilot": "Controleer je copilot",
+  "Everything looks good! Review your settings before launching.":
+    "Alles ziet er goed uit! Controleer je instellingen voordat je lanceert.",
+  "Review your settings and finish the open steps before launching.":
+    "Controleer je instellingen en rond de open stappen af voordat je lanceert.",
+  "Not specified": "Niet opgegeven",
+  "Sending as": "Verstuurd als",
+  Location: "Locatie",
+  "Est. audience size": "Geschatte grootte",
+  Sequence: "Reeks",
+  "Total touches": "Contactmomenten",
+  "You're ready to take off!": "Je bent klaar voor take-off!",
+  "Almost ready to take off": "Bijna klaar voor take-off",
+  "You are ready to fly": "Je bent klaar om te vliegen",
+  "Finish setup to fly": "Rond het instellen af om te vliegen",
+  "{done} of {total} steps complete": "{done} van {total} stappen voltooid",
+  Back: "Terug",
+  "Save, keep paused": "Opslaan, gepauzeerd laten",
+  "Save as Draft": "Opslaan als concept",
+  "Re-launching...": "Opnieuw lanceren...",
+  "Re-launch Copilot": "Copilot opnieuw lanceren",
+  "Launch Copilot": "Copilot lanceren",
+  "Loading copilot data…": "Copilotgegevens laden…",
+  "Complete all steps before launching":
+    "Rond alle stappen af voordat je lanceert",
+  "Test email request accepted": "Testmail-verzoek geaccepteerd",
+  "your connected inbox": "je gekoppelde inbox",
+  "Not now": "Nu niet",
+  "Re-launch copilot": "Copilot opnieuw lanceren",
+  "Launch copilot": "Copilot lanceren",
+  "Re-launch without testing?": "Opnieuw lanceren zonder te testen?",
+  "Launch without testing?": "Lanceren zonder te testen?",
+  Close: "Sluiten",
+  "your target audience": "je doelgroep",
+  "your email account": "je e-mailaccount",
+  "A test takes about a minute and reaches nobody but you. Test emails don't count toward your monthly limit.":
+    "Een test duurt ongeveer een minuut en komt alleen bij jou aan. Testmails tellen niet mee voor je maandlimiet.",
+  "Re-launch anyway": "Toch opnieuw lanceren",
+  "Launch anyway": "Toch lanceren",
+  "Send a test first": "Eerst een test versturen",
+  "Check {inbox} and make sure everything looks right. When you're happy with it, re-launch your copilot.":
+    "Kijk in {inbox} en controleer of alles klopt. Ben je tevreden, lanceer je copilot dan opnieuw.",
+  "Check {inbox} and make sure everything looks right. When you're happy with it, launch your copilot.":
+    "Kijk in {inbox} en controleer of alles klopt. Ben je tevreden, lanceer je copilot dan.",
+  "This copilot will start emailing {audience} again from {sender}. You haven't read the email yourself yet.":
+    "Deze copilot gaat {audience} weer mailen vanaf {sender}. Je hebt de e-mail zelf nog niet gelezen.",
+  "This copilot will start emailing {audience} from {sender}. You haven't read the email yourself yet.":
+    "Deze copilot gaat {audience} mailen vanaf {sender}. Je hebt de e-mail zelf nog niet gelezen.",
+  "Target Audience created successfully": "Doelgroep aangemaakt",
+  "Failed to create target audience": "Doelgroep aanmaken mislukt",
+  "Type and press Enter to add industries…":
+    "Typ en druk op Enter om branches toe te voegen…",
+  "Search countries…": "Zoek landen…",
+  "Select a country first…": "Kies eerst een land…",
+  "Search cities…": "Zoek steden…",
+  "Your Target Audience": "Jouw doelgroep",
+  "Loading target audiences...": "Doelgroepen laden...",
+  "No saved target audiences yet.": "Nog geen opgeslagen doelgroepen.",
+  "Target Profile Summary": "Samenvatting doelgroep",
+  "This is who your copilot will reach.":
+    "Dit zijn de mensen die je copilot gaat bereiken.",
+  "None selected": "Niets gekozen",
+  Cities: "Steden",
+  companies: "bedrijven",
+  "Calculated after the first run": "Berekend na de eerste run",
+  "Are you sure you want to delete this account?":
+    "Weet je zeker dat je dit account wilt verwijderen?",
+  "Why connect my email account?": "Waarom mijn e-mailaccount koppelen?",
+  "1. Connect securely": "1. Veilig koppelen",
+  "Your account is securely connected via OAuth, so we never see or store your password.":
+    "Je account wordt veilig gekoppeld via OAuth, dus we zien of bewaren je wachtwoord nooit.",
+  "2. Send from your own email address":
+    "2. Verstuur vanaf je eigen e-mailadres",
+  "This helps recipients recognize and trust the sender.":
+    "Zo herkennen en vertrouwen ontvangers de afzender.",
+  "3. Built for deliverability": "3. Gebouwd voor bezorgbaarheid",
+  "Gradual warmup and daily limits to protect your sender reputation.":
+    "Geleidelijke opwarming en daglimieten om je afzenderreputatie te beschermen.",
+  "4. Replies stay in your inbox": "4. Antwoorden blijven in je inbox",
+  "Replies go straight to your own inbox, so you can continue the conversation as usual.":
+    "Antwoorden komen direct in je eigen inbox, zodat je het gesprek gewoon kunt voortzetten.",
+  "Step {n} of {total}": "Stap {n} van {total}",
+  "Step {n}": "Stap {n}",
+  "Save & Continue": "Opslaan en verder",
+  "Search timezone...": "Zoek tijdzone...",
+  "No timezone found.": "Geen tijdzone gevonden.",
+  "Feedback submission is not implemented yet.":
+    "Feedback versturen is nog niet beschikbaar.",
+  "We couldn’t send your feedback. Please try again.":
+    "We konden je feedback niet versturen. Probeer het opnieuw.",
+  "Thanks for your feedback": "Bedankt voor je feedback",
+  "Your feedback helps us improve copilot setup.":
+    "Met je feedback maken we het instellen van een copilot beter.",
+  Done: "Klaar",
+  "How easy was it to set up your copilot?":
+    "Hoe makkelijk was het om je copilot in te stellen?",
+  "Tell us what worked and what we can improve.":
+    "Vertel ons wat goed ging en wat beter kan.",
+  "Sending…": "Versturen…",
+  "Send feedback": "Feedback versturen",
+  "Closing…": "Sluiten…",
+  "Saving reminder…": "Herinnering opslaan…",
+  "Your rating": "Je beoordeling",
+  "(required)": "(verplicht)",
+  "{value} out of 5": "{value} van de 5",
+  "Very difficult": "Heel moeilijk",
+  "Very easy": "Heel makkelijk",
+  Comment: "Opmerking",
+  "(optional)": "(optioneel)",
+  "What could we make easier?": "Wat kunnen we makkelijker maken?",
+  "All days": "Alle dagen",
+  Weekdays: "Werkdagen",
+  "{n} / day": "{n} / dag",
+  "From {start} to {end}": "Van {start} tot {end}",
+  "Default timezone": "Standaardtijdzone",
+  current: "huidige",
+  "Copilot limit reached": "Copilotlimiet bereikt",
+  "You are already on our highest plan. Contact support if you need more copilots.":
+    "Je hebt al ons hoogste abonnement. Neem contact op met support als je meer copilots nodig hebt.",
+  "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot, or upgrade to add more.":
+    "Je {plan}-abonnement bevat {max} copilot en die gebruik je al. Verwijder hem om ruimte te maken, of upgrade om er meer toe te voegen.",
+  "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot, or upgrade to add more.":
+    "Je {plan}-abonnement bevat {max} copilots en je gebruikt ze alle {max}. Verwijder een copilot om ruimte te maken, of upgrade om er meer toe te voegen.",
+  "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot.":
+    "Je {plan}-abonnement bevat {max} copilot en die gebruik je al. Verwijder hem om ruimte te maken.",
+  "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot.":
+    "Je {plan}-abonnement bevat {max} copilots en je gebruikt ze alle {max}. Verwijder een copilot om ruimte te maken.",
+  "Monthly email allowance reached ({used} of {max} used). Your copilots pause sending until the allowance renews on {date}.":
+    "Maandelijks e-mailtegoed bereikt ({used} van {max} gebruikt). Je copilots pauzeren tot het tegoed op {date} wordt vernieuwd.",
+  "Monthly email allowance reached ({used} of {max} used). Your copilots pause sending until the allowance renews.":
+    "Maandelijks e-mailtegoed bereikt ({used} van {max} gebruikt). Je copilots pauzeren tot het tegoed wordt vernieuwd.",
+  "You have used {used} of {max} emails this month. {remaining} left before your copilots pause.":
+    "Je hebt deze maand {used} van {max} e-mails gebruikt. Nog {remaining} voordat je copilots pauzeren.",
+  Upgrade: "Upgraden",
+  "View plan": "Abonnement bekijken",
+  Dismiss: "Sluiten",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until {date} when your allowance renews.":
+    "Je {plan}-abonnement bevat {max} e-mails per maand en je hebt ze alle {used} gebruikt. Upgrade voor meer tegoed per maand, of wacht tot {date}, wanneer je tegoed wordt vernieuwd.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until your allowance renews.":
+    "Je {plan}-abonnement bevat {max} e-mails per maand en je hebt ze alle {used} gebruikt. Upgrade voor meer tegoed per maand, of wacht tot je tegoed wordt vernieuwd.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews on {date}.":
+    "Je {plan}-abonnement bevat {max} e-mails per maand en je hebt ze alle {used} gebruikt. Je hebt ons hoogste abonnement, dus het versturen gaat verder zodra je tegoed op {date} wordt vernieuwd.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews.":
+    "Je {plan}-abonnement bevat {max} e-mails per maand en je hebt ze alle {used} gebruikt. Je hebt ons hoogste abonnement, dus het versturen gaat verder zodra je tegoed wordt vernieuwd.",
+  "Monthly email allowance reached": "Maandelijks e-mailtegoed bereikt",
+  "You are already on our highest plan. Your allowance renews automatically next month.":
+    "Je hebt al ons hoogste abonnement. Je tegoed wordt volgende maand automatisch vernieuwd.",
+  "Yearly (save 20%)": "Jaarlijks (20% korting)",
+  "Maybe later": "Misschien later",
+  "Go to Billing": "Naar facturering",
+  "Got it": "Begrepen",
+  "The sending schedule is unavailable. Please check its settings.":
+    "Het verzendschema is niet beschikbaar. Controleer de instellingen.",
+  "Select at least one valid active day before sending a test email.":
+    "Kies minstens één geldige actieve dag voordat je een testmail verstuurt.",
+  "Select a valid schedule timezone before sending a test email.":
+    "Kies een geldige tijdzone voor het schema voordat je een testmail verstuurt.",
+  "Please check the schedule's sending hours settings before sending a test email.":
+    "Controleer de verzendtijden van het schema voordat je een testmail verstuurt.",
+  "Choose valid, different start and end times before sending a test email.":
+    "Kies een geldige, verschillende begin- en eindtijd voordat je een testmail verstuurt.",
+  "Test emails are only allowed from {start} to {end} ({timezone}) on active days.":
+    "Testmails kunnen alleen van {start} tot {end} ({timezone}) op actieve dagen.",
+  "We couldn’t save your reminder. Please try again.":
+    "We konden je herinnering niet opslaan. Probeer het opnieuw.",
+  // New copilot wizard: step labels, audience size labels, variable hints
+  "Configure your copilot": "Stel je copilot in",
+  "Choose who's sending": "Kies de afzender",
+  "Choose who to reach": "Kies wie je bereikt",
+  "Create your message": "Maak je bericht",
+  "Choose when to send": "Kies wanneer je verstuurt",
+  "Review and launch": "Controleren en lanceren",
+  Massive: "Zeer groot",
+  Large: "Groot",
+  Healthy: "Gezond",
+  Moderate: "Gemiddeld",
+  Limited: "Beperkt",
+  "The recipient's company name": "De bedrijfsnaam van de ontvanger",
+  "The recipient's email address": "Het e-mailadres van de ontvanger",
+  "The recipient's website": "De website van de ontvanger",
+  "The recipient's phone number": "Het telefoonnummer van de ontvanger",
+  "Your name as the sender": "Je naam als afzender",
 };
 
 const de: Messages = {
@@ -1220,6 +1539,324 @@ const de: Messages = {
     "Wie erreiche ich den Abrechnungssupport?",
   "If you have any questions about your subscription, invoices, payments, or billing, our team is here to help.":
     "Wenn du Fragen zu deinem Abo, Rechnungen, Zahlungen oder zur Abrechnung hast, hilft dir unser Team gerne.",
+  // New copilot wizard + limit dialogs
+  "{provider} connected successfully": "{provider} wurde verbunden",
+  "Failed to load copilot. Please try again.":
+    "Copilot konnte nicht geladen werden. Bitte versuche es erneut.",
+  "Copy of {name}": "Kopie von {name}",
+  "Edit Copilot": "Copilot bearbeiten",
+  "Duplicate Copilot": "Copilot duplizieren",
+  "Changes saved — the copilot stays paused until you re-launch it.":
+    "Änderungen gespeichert — der Copilot bleibt pausiert, bis du ihn erneut startest.",
+  "Draft saved — you can launch anytime.":
+    "Entwurf gespeichert — du kannst jederzeit starten.",
+  "Failed to save draft. Please try again.":
+    "Entwurf konnte nicht gespeichert werden. Bitte versuche es erneut.",
+  "Copilot launch accepted.": "Start des Copilots angenommen.",
+  "Failed to launch copilot. Please try again.":
+    "Copilot konnte nicht gestartet werden. Bitte versuche es erneut.",
+  "Your monthly email allowance is used up. Upgrade your plan to re-launch this copilot.":
+    "Dein monatliches E-Mail-Kontingent ist aufgebraucht. Upgrade deinen Plan, um diesen Copilot erneut zu starten.",
+  "Copilot re-launched.": "Copilot erneut gestartet.",
+  "Loading copilot...": "Copilot wird geladen...",
+  "Build your outbound copilot in 6 simple steps.":
+    "Erstelle deinen Outbound-Copilot in 6 einfachen Schritten.",
+  "Discard & exit": "Verwerfen und beenden",
+  "Editing pauses this copilot until you launch it again.":
+    "Beim Bearbeiten wird dieser Copilot pausiert, bis du ihn erneut startest.",
+  "No flight schedules available yet — use the form above to create one.":
+    "Noch keine Flight Schedules — erstelle einen mit dem Formular oben.",
+  "Monday - Friday": "Montag - Freitag",
+  "Weekend only": "Nur Wochenende",
+  "Every day": "Jeden Tag",
+  Unlimited: "Unbegrenzt",
+  "Schedule Summary": "Zusammenfassung des Zeitplans",
+  "Here's how your copilot will send.": "So versendet dein Copilot.",
+  "Daily send limit": "Tägliches Versandlimit",
+  "{n} emails per day": "{n} E-Mails pro Tag",
+  "Unlimited emails": "Unbegrenzt viele E-Mails",
+  "Active days": "Aktive Tage",
+  "Sending hours": "Versandzeiten",
+  "Est. monthly volume": "Geschätztes Monatsvolumen",
+  "{volume} emails": "{volume} E-Mails",
+  "Based on {n} active days/month": "Basierend auf {n} aktiven Tagen/Monat",
+  "These settings help maximize deliverability and keep your account safe.":
+    "Diese Einstellungen maximieren die Zustellbarkeit und schützen dein Konto.",
+  "Changes saved as a new schedule — the original schedule was not changed.":
+    "Änderungen als neuer Zeitplan gespeichert — der ursprüngliche Zeitplan wurde nicht geändert.",
+  "Flight schedule created and linked.":
+    "Flight Schedule erstellt und verknüpft.",
+  "Failed to create flight schedule. Please try again.":
+    "Flight Schedule konnte nicht erstellt werden. Bitte versuche es erneut.",
+  "Configure Flight Schedule": "Flight Schedule einrichten",
+  "Choose when and how your copilot sends emails.":
+    "Lege fest, wann und wie dein Copilot E-Mails versendet.",
+  "Schedule Name (if creating new)": "Name des Zeitplans (bei neuem Zeitplan)",
+  "e.g. My Custom Schedule": "z. B. Mein eigener Zeitplan",
+  "Recommended: 20-50 per day for best deliverability":
+    "Empfohlen: 20-50 pro Tag für die beste Zustellbarkeit",
+  "Choose which days your copilot is allowed to send emails.":
+    "Wähle, an welchen Tagen dein Copilot E-Mails senden darf.",
+  "(your timezone)": "(deine Zeitzone)",
+  "Set the daily time window when your copilot can send emails.":
+    "Lege das tägliche Zeitfenster fest, in dem dein Copilot E-Mails senden darf.",
+  "Default Timezone": "Standardzeitzone",
+  "Custom schedule — a new schedule will be created and linked when you continue.":
+    "Eigener Zeitplan — beim Fortfahren wird ein neuer Zeitplan erstellt und verknüpft.",
+  "A new schedule named “{name}” will be created and linked. The original schedule stays unchanged.":
+    "Ein neuer Zeitplan „{name}“ wird erstellt und verknüpft. Der ursprüngliche Zeitplan bleibt unverändert.",
+  "Modified from “{name}” — your changes will be saved as a new schedule. The original schedule stays unchanged.":
+    "Geändert ausgehend von „{name}“ — deine Änderungen werden als neuer Zeitplan gespeichert. Der ursprüngliche Zeitplan bleibt unverändert.",
+  "Using saved schedule: {name} — nothing will be changed when you continue.":
+    "Gespeicherter Zeitplan: {name} — beim Fortfahren wird nichts geändert.",
+  "Your Flight Schedules": "Deine Flight Schedules",
+  "Using: {name}": "Verwendet: {name}",
+  "Template summary": "Zusammenfassung der Vorlage",
+  "1-step sequence": "Sequenz mit 1 Schritt",
+  "Failed to save template. Please try again.":
+    "Vorlage konnte nicht gespeichert werden. Bitte versuche es erneut.",
+  "Select an email account before sending a test email.":
+    "Wähle ein E-Mail-Konto aus, bevor du eine Test-E-Mail sendest.",
+  "Create your email template": "Erstelle deine E-Mail-Vorlage",
+  "Write the email your copilot will send to your target audience.":
+    "Schreibe die E-Mail, die dein Copilot an deine Zielgruppe sendet.",
+  "Send test email": "Test-E-Mail senden",
+  "Step 1 - Initial Email": "Schritt 1 - Erste E-Mail",
+  "This is the first email your leads will receive.":
+    "Das ist die erste E-Mail, die deine Leads erhalten.",
+  "Your Templates": "Deine Vorlagen",
+  "Fetching templates...": "Vorlagen werden geladen...",
+  "No templates yet": "Noch keine Vorlagen",
+  "Once you save a template it will appear here, ready to use.":
+    "Sobald du eine Vorlage speicherst, erscheint sie hier, bereit zur Verwendung.",
+  Subj: "Betr.",
+  "Use this template": "Diese Vorlage verwenden",
+  "Copilot Summary": "Copilot-Übersicht",
+  "Here’s a summary of your copilot.":
+    "Hier ist eine Übersicht deines Copilots.",
+  "Copilot Name": "Name des Copilots",
+  "Private Jet Operators": "Privatjet-Betreiber",
+  Description: "Beschreibung",
+  "Book more appointments and generate qualified leads":
+    "Mehr Termine buchen und qualifizierte Leads gewinnen",
+  Goal: "Ziel",
+  "You can edit all settings later at any time.":
+    "Du kannst alle Einstellungen später jederzeit ändern.",
+  "Paused while editing": "Während der Bearbeitung pausiert",
+  "Draft saved": "Entwurf gespeichert",
+  "Your changes are saved. Re-launch to start sending again.":
+    "Deine Änderungen sind gespeichert. Starte erneut, um wieder zu senden.",
+  "Your progress is saved. Come back anytime to finish.":
+    "Dein Fortschritt ist gespeichert. Komm jederzeit zurück, um fertig zu werden.",
+  "Failed to save copilot. Please try again.":
+    "Copilot konnte nicht gespeichert werden. Bitte versuche es erneut.",
+  "Setup Your Copilot": "Richte deinen Copilot ein",
+  "Give your Copilot a name and describe its purpose.":
+    "Gib deinem Copilot einen Namen und beschreibe seinen Zweck.",
+  "Internal name to identify your copilot.":
+    "Interner Name, um deinen Copilot zu erkennen.",
+  "e.g. Private Jet Operators": "z. B. Privatjet-Betreiber",
+  "Describe what this copilot does and who it’s for.":
+    "Beschreibe, was dieser Copilot tut und für wen er ist.",
+  "e.g. Reach out to private jet operators in Amsterdam and introduce our services":
+    "z. B. Privatjet-Betreiber in Amsterdam ansprechen und unsere Leistungen vorstellen",
+  "What is the main goal of this copilot?":
+    "Was ist das Hauptziel dieses Copilots?",
+  "e.g. Book more appointments and generate qualified leads":
+    "z. B. Mehr Termine buchen und qualifizierte Leads gewinnen",
+  None: "Keine",
+  "Copilot name": "Name des Copilots",
+  "Not set yet": "Noch nicht festgelegt",
+  "N/A": "k. A.",
+  "Email Template": "E-Mail-Vorlage",
+  "Ready to re-launch": "Bereit zum erneuten Start",
+  "Ready to take-off": "Bereit für den Take-off",
+  "Incomplete — finish setup": "Unvollständig — schließe die Einrichtung ab",
+  "Monday - Sunday": "Montag - Sonntag",
+  All: "Alle",
+  "{count} companies": "{count} Unternehmen",
+  "After first run": "Nach dem ersten Durchlauf",
+  "Review your copilot": "Überprüfe deinen Copilot",
+  "Everything looks good! Review your settings before launching.":
+    "Alles sieht gut aus! Überprüfe deine Einstellungen vor dem Start.",
+  "Review your settings and finish the open steps before launching.":
+    "Überprüfe deine Einstellungen und schließe die offenen Schritte vor dem Start ab.",
+  "Not specified": "Nicht angegeben",
+  "Sending as": "Senden als",
+  Location: "Standort",
+  "Est. audience size": "Geschätzte Größe",
+  Sequence: "Sequenz",
+  "Total touches": "Kontaktpunkte",
+  "You're ready to take off!": "Du bist bereit für den Take-off!",
+  "Almost ready to take off": "Fast bereit für den Take-off",
+  "You are ready to fly": "Du bist startklar",
+  "Finish setup to fly": "Schließe die Einrichtung ab, um zu starten",
+  "{done} of {total} steps complete": "{done} von {total} Schritten erledigt",
+  Back: "Zurück",
+  "Save, keep paused": "Speichern, pausiert lassen",
+  "Save as Draft": "Als Entwurf speichern",
+  "Re-launching...": "Wird erneut gestartet...",
+  "Re-launch Copilot": "Copilot erneut starten",
+  "Launch Copilot": "Copilot starten",
+  "Loading copilot data…": "Copilot-Daten werden geladen…",
+  "Complete all steps before launching":
+    "Schließe vor dem Start alle Schritte ab",
+  "Test email request accepted": "Test-E-Mail-Anfrage angenommen",
+  "your connected inbox": "dein verbundenes Postfach",
+  "Not now": "Nicht jetzt",
+  "Re-launch copilot": "Copilot erneut starten",
+  "Launch copilot": "Copilot starten",
+  "Re-launch without testing?": "Ohne Test erneut starten?",
+  "Launch without testing?": "Ohne Test starten?",
+  Close: "Schließen",
+  "your target audience": "deine Zielgruppe",
+  "your email account": "deinem E-Mail-Konto",
+  "A test takes about a minute and reaches nobody but you. Test emails don't count toward your monthly limit.":
+    "Ein Test dauert etwa eine Minute und erreicht nur dich. Test-E-Mails zählen nicht zu deinem Monatslimit.",
+  "Re-launch anyway": "Trotzdem erneut starten",
+  "Launch anyway": "Trotzdem starten",
+  "Send a test first": "Zuerst einen Test senden",
+  "Check {inbox} and make sure everything looks right. When you're happy with it, re-launch your copilot.":
+    "Sieh in {inbox} nach und prüfe, ob alles stimmt. Wenn du zufrieden bist, starte deinen Copilot erneut.",
+  "Check {inbox} and make sure everything looks right. When you're happy with it, launch your copilot.":
+    "Sieh in {inbox} nach und prüfe, ob alles stimmt. Wenn du zufrieden bist, starte deinen Copilot.",
+  "This copilot will start emailing {audience} again from {sender}. You haven't read the email yourself yet.":
+    "Dieser Copilot schreibt {audience} wieder von {sender} aus an. Du hast die E-Mail selbst noch nicht gelesen.",
+  "This copilot will start emailing {audience} from {sender}. You haven't read the email yourself yet.":
+    "Dieser Copilot beginnt, {audience} von {sender} aus anzuschreiben. Du hast die E-Mail selbst noch nicht gelesen.",
+  "Target Audience created successfully": "Zielgruppe erstellt",
+  "Failed to create target audience": "Zielgruppe konnte nicht erstellt werden",
+  "Type and press Enter to add industries…":
+    "Tippe und drücke Enter, um Branchen hinzuzufügen…",
+  "Search countries…": "Länder suchen…",
+  "Select a country first…": "Wähle zuerst ein Land…",
+  "Search cities…": "Städte suchen…",
+  "Your Target Audience": "Deine Zielgruppe",
+  "Loading target audiences...": "Zielgruppen werden geladen...",
+  "No saved target audiences yet.": "Noch keine gespeicherten Zielgruppen.",
+  "Target Profile Summary": "Zusammenfassung der Zielgruppe",
+  "This is who your copilot will reach.":
+    "Diese Zielgruppe erreicht dein Copilot.",
+  "None selected": "Nichts ausgewählt",
+  Cities: "Städte",
+  companies: "Unternehmen",
+  "Calculated after the first run": "Wird nach dem ersten Durchlauf berechnet",
+  "Are you sure you want to delete this account?":
+    "Möchtest du dieses Konto wirklich löschen?",
+  "Why connect my email account?": "Warum mein E-Mail-Konto verbinden?",
+  "1. Connect securely": "1. Sicher verbinden",
+  "Your account is securely connected via OAuth, so we never see or store your password.":
+    "Dein Konto wird sicher über OAuth verbunden, daher sehen oder speichern wir dein Passwort nie.",
+  "2. Send from your own email address":
+    "2. Von deiner eigenen E-Mail-Adresse senden",
+  "This helps recipients recognize and trust the sender.":
+    "So erkennen Empfänger den Absender und vertrauen ihm.",
+  "3. Built for deliverability": "3. Für Zustellbarkeit gebaut",
+  "Gradual warmup and daily limits to protect your sender reputation.":
+    "Schrittweises Aufwärmen und Tageslimits schützen deine Absenderreputation.",
+  "4. Replies stay in your inbox": "4. Antworten bleiben in deinem Postfach",
+  "Replies go straight to your own inbox, so you can continue the conversation as usual.":
+    "Antworten landen direkt in deinem eigenen Postfach, sodass du das Gespräch wie gewohnt fortsetzen kannst.",
+  "Step {n} of {total}": "Schritt {n} von {total}",
+  "Step {n}": "Schritt {n}",
+  "Save & Continue": "Speichern und weiter",
+  "Search timezone...": "Zeitzone suchen...",
+  "No timezone found.": "Keine Zeitzone gefunden.",
+  "Feedback submission is not implemented yet.":
+    "Das Senden von Feedback ist noch nicht verfügbar.",
+  "We couldn’t send your feedback. Please try again.":
+    "Wir konnten dein Feedback nicht senden. Bitte versuche es erneut.",
+  "Thanks for your feedback": "Danke für dein Feedback",
+  "Your feedback helps us improve copilot setup.":
+    "Dein Feedback hilft uns, die Einrichtung von Copilots zu verbessern.",
+  Done: "Fertig",
+  "How easy was it to set up your copilot?":
+    "Wie einfach war die Einrichtung deines Copilots?",
+  "Tell us what worked and what we can improve.":
+    "Sag uns, was gut lief und was wir verbessern können.",
+  "Sending…": "Wird gesendet…",
+  "Send feedback": "Feedback senden",
+  "Closing…": "Wird geschlossen…",
+  "Saving reminder…": "Erinnerung wird gespeichert…",
+  "Your rating": "Deine Bewertung",
+  "(required)": "(Pflichtfeld)",
+  "{value} out of 5": "{value} von 5",
+  "Very difficult": "Sehr schwierig",
+  "Very easy": "Sehr einfach",
+  Comment: "Kommentar",
+  "What could we make easier?": "Was könnten wir einfacher machen?",
+  "All days": "Alle Tage",
+  Weekdays: "Werktage",
+  "{n} / day": "{n} / Tag",
+  "From {start} to {end}": "Von {start} bis {end}",
+  "Default timezone": "Standardzeitzone",
+  current: "aktuellen",
+  "Copilot limit reached": "Copilot-Limit erreicht",
+  "You are already on our highest plan. Contact support if you need more copilots.":
+    "Du hast bereits unseren höchsten Plan. Wende dich an den Support, wenn du mehr Copilots brauchst.",
+  "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot, or upgrade to add more.":
+    "Dein {plan}-Plan umfasst {max} Copilot, und du nutzt ihn bereits. Lösche ihn, um Platz zu schaffen, oder upgrade, um mehr hinzuzufügen.",
+  "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot, or upgrade to add more.":
+    "Dein {plan}-Plan umfasst {max} Copilots, und du nutzt alle {max}. Lösche einen Copilot, um Platz zu schaffen, oder upgrade, um mehr hinzuzufügen.",
+  "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot.":
+    "Dein {plan}-Plan umfasst {max} Copilot, und du nutzt ihn bereits. Lösche ihn, um Platz zu schaffen.",
+  "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot.":
+    "Dein {plan}-Plan umfasst {max} Copilots, und du nutzt alle {max}. Lösche einen Copilot, um Platz zu schaffen.",
+  "Monthly email allowance reached ({used} of {max} used). Your copilots pause sending until the allowance renews on {date}.":
+    "Monatliches E-Mail-Kontingent erreicht ({used} von {max} genutzt). Deine Copilots pausieren bis zur Erneuerung am {date}.",
+  "Monthly email allowance reached ({used} of {max} used). Your copilots pause sending until the allowance renews.":
+    "Monatliches E-Mail-Kontingent erreicht ({used} von {max} genutzt). Deine Copilots pausieren bis zur Erneuerung.",
+  "You have used {used} of {max} emails this month. {remaining} left before your copilots pause.":
+    "Du hast diesen Monat {used} von {max} E-Mails genutzt. Noch {remaining}, bevor deine Copilots pausieren.",
+  Upgrade: "Upgraden",
+  "View plan": "Plan ansehen",
+  Dismiss: "Ausblenden",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until {date} when your allowance renews.":
+    "Dein {plan}-Plan umfasst {max} E-Mails pro Monat, und du hast alle {used} genutzt. Upgrade für ein höheres Monatskontingent oder warte bis zum {date}, wenn es erneuert wird.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until your allowance renews.":
+    "Dein {plan}-Plan umfasst {max} E-Mails pro Monat, und du hast alle {used} genutzt. Upgrade für ein höheres Monatskontingent oder warte, bis es erneuert wird.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews on {date}.":
+    "Dein {plan}-Plan umfasst {max} E-Mails pro Monat, und du hast alle {used} genutzt. Du hast unseren höchsten Plan, daher wird der Versand nach der Erneuerung am {date} fortgesetzt.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews.":
+    "Dein {plan}-Plan umfasst {max} E-Mails pro Monat, und du hast alle {used} genutzt. Du hast unseren höchsten Plan, daher wird der Versand nach der Erneuerung fortgesetzt.",
+  "Monthly email allowance reached": "Monatliches E-Mail-Kontingent erreicht",
+  "You are already on our highest plan. Your allowance renews automatically next month.":
+    "Du hast bereits unseren höchsten Plan. Dein Kontingent wird nächsten Monat automatisch erneuert.",
+  "Yearly (save 20%)": "Jährlich (20 % sparen)",
+  "Maybe later": "Vielleicht später",
+  "Go to Billing": "Zur Abrechnung",
+  "Got it": "Verstanden",
+  "The sending schedule is unavailable. Please check its settings.":
+    "Der Versandzeitplan ist nicht verfügbar. Bitte prüfe die Einstellungen.",
+  "Select at least one valid active day before sending a test email.":
+    "Wähle mindestens einen gültigen aktiven Tag aus, bevor du eine Test-E-Mail sendest.",
+  "Select a valid schedule timezone before sending a test email.":
+    "Wähle eine gültige Zeitzone für den Zeitplan aus, bevor du eine Test-E-Mail sendest.",
+  "Please check the schedule's sending hours settings before sending a test email.":
+    "Bitte prüfe die Versandzeiten des Zeitplans, bevor du eine Test-E-Mail sendest.",
+  "Choose valid, different start and end times before sending a test email.":
+    "Wähle gültige, unterschiedliche Start- und Endzeiten, bevor du eine Test-E-Mail sendest.",
+  "Test emails are only allowed from {start} to {end} ({timezone}) on active days.":
+    "Test-E-Mails sind nur von {start} bis {end} ({timezone}) an aktiven Tagen möglich.",
+  "We couldn’t save your reminder. Please try again.":
+    "Wir konnten deine Erinnerung nicht speichern. Bitte versuche es erneut.",
+  // New copilot wizard: step labels, audience size labels, variable hints
+  "Configure your copilot": "Richte deinen Copilot ein",
+  "Choose who's sending": "Wähle den Absender",
+  "Choose who to reach": "Wähle, wen du erreichst",
+  "Create your message": "Erstelle deine Nachricht",
+  "Choose when to send": "Wähle, wann gesendet wird",
+  "Review and launch": "Prüfen und starten",
+  Massive: "Sehr groß",
+  Large: "Groß",
+  Healthy: "Gesund",
+  Moderate: "Mittel",
+  Limited: "Begrenzt",
+  "The recipient's company name": "Der Firmenname des Empfängers",
+  "The recipient's email address": "Die E-Mail-Adresse des Empfängers",
+  "The recipient's website": "Die Website des Empfängers",
+  "The recipient's phone number": "Die Telefonnummer des Empfängers",
+  "Your name as the sender": "Dein Name als Absender",
 };
 
 const fr: Messages = {
@@ -1833,6 +2470,323 @@ const fr: Messages = {
     "Comment contacter le support facturation ?",
   "If you have any questions about your subscription, invoices, payments, or billing, our team is here to help.":
     "Pour toute question sur votre abonnement, vos factures, vos paiements ou la facturation, notre équipe est là pour vous aider.",
+  // New copilot wizard + limit dialogs
+  "{provider} connected successfully": "{provider} est connecté",
+  "Failed to load copilot. Please try again.":
+    "Impossible de charger le copilot. Veuillez réessayer.",
+  "Copy of {name}": "Copie de {name}",
+  "Edit Copilot": "Modifier le copilot",
+  "Duplicate Copilot": "Dupliquer le copilot",
+  "Changes saved — the copilot stays paused until you re-launch it.":
+    "Modifications enregistrées — le copilot reste en pause jusqu'à ce que vous le relanciez.",
+  "Draft saved — you can launch anytime.":
+    "Brouillon enregistré — vous pouvez lancer à tout moment.",
+  "Failed to save draft. Please try again.":
+    "Impossible d'enregistrer le brouillon. Veuillez réessayer.",
+  "Copilot launch accepted.": "Lancement du copilot accepté.",
+  "Failed to launch copilot. Please try again.":
+    "Impossible de lancer le copilot. Veuillez réessayer.",
+  "Your monthly email allowance is used up. Upgrade your plan to re-launch this copilot.":
+    "Votre quota mensuel d'e-mails est épuisé. Passez à un abonnement supérieur pour relancer ce copilot.",
+  "Copilot re-launched.": "Copilot relancé.",
+  "Loading copilot...": "Chargement du copilot...",
+  "Build your outbound copilot in 6 simple steps.":
+    "Créez votre copilot de prospection en 6 étapes simples.",
+  "Discard & exit": "Abandonner et quitter",
+  "Editing pauses this copilot until you launch it again.":
+    "La modification met ce copilot en pause jusqu'à ce que vous le relanciez.",
+  "No flight schedules available yet — use the form above to create one.":
+    "Aucun flight schedule pour l'instant — utilisez le formulaire ci-dessus pour en créer un.",
+  "Monday - Friday": "Lundi - vendredi",
+  "Weekend only": "Week-end uniquement",
+  "Every day": "Tous les jours",
+  Unlimited: "Illimité",
+  "Schedule Summary": "Résumé du planning",
+  "Here's how your copilot will send.": "Voici comment votre copilot enverra.",
+  "Daily send limit": "Limite d'envoi quotidienne",
+  "{n} emails per day": "{n} e-mails par jour",
+  "Unlimited emails": "E-mails illimités",
+  "Active days": "Jours actifs",
+  "Sending hours": "Heures d'envoi",
+  "Est. monthly volume": "Volume mensuel estimé",
+  "{volume} emails": "{volume} e-mails",
+  "Based on {n} active days/month": "Sur la base de {n} jours actifs/mois",
+  "These settings help maximize deliverability and keep your account safe.":
+    "Ces paramètres aident à maximiser la délivrabilité et à protéger votre compte.",
+  "Changes saved as a new schedule — the original schedule was not changed.":
+    "Modifications enregistrées comme nouveau planning — le planning d'origine n'a pas été modifié.",
+  "Flight schedule created and linked.": "Flight schedule créé et associé.",
+  "Failed to create flight schedule. Please try again.":
+    "Impossible de créer le flight schedule. Veuillez réessayer.",
+  "Configure Flight Schedule": "Configurer le Flight Schedule",
+  "Choose when and how your copilot sends emails.":
+    "Choisissez quand et comment votre copilot envoie des e-mails.",
+  "Schedule Name (if creating new)": "Nom du planning (si nouveau)",
+  "e.g. My Custom Schedule": "ex. Mon planning personnalisé",
+  "Recommended: 20-50 per day for best deliverability":
+    "Recommandé : 20-50 par jour pour une meilleure délivrabilité",
+  "Choose which days your copilot is allowed to send emails.":
+    "Choisissez les jours où votre copilot peut envoyer des e-mails.",
+  "(your timezone)": "(votre fuseau horaire)",
+  "Set the daily time window when your copilot can send emails.":
+    "Définissez la plage horaire quotidienne pendant laquelle votre copilot peut envoyer des e-mails.",
+  "Default Timezone": "Fuseau horaire par défaut",
+  "Custom schedule — a new schedule will be created and linked when you continue.":
+    "Planning personnalisé — un nouveau planning sera créé et associé lorsque vous continuerez.",
+  "A new schedule named “{name}” will be created and linked. The original schedule stays unchanged.":
+    "Un nouveau planning nommé « {name} » sera créé et associé. Le planning d'origine reste inchangé.",
+  "Modified from “{name}” — your changes will be saved as a new schedule. The original schedule stays unchanged.":
+    "Modifié à partir de « {name} » — vos modifications seront enregistrées comme nouveau planning. Le planning d'origine reste inchangé.",
+  "Using saved schedule: {name} — nothing will be changed when you continue.":
+    "Planning enregistré utilisé : {name} — rien ne sera modifié lorsque vous continuerez.",
+  "Your Flight Schedules": "Vos flight schedules",
+  "Using: {name}": "Utilisé : {name}",
+  "Template summary": "Résumé du modèle",
+  "1-step sequence": "Séquence en 1 étape",
+  "Failed to save template. Please try again.":
+    "Impossible d'enregistrer le modèle. Veuillez réessayer.",
+  "Select an email account before sending a test email.":
+    "Sélectionnez un compte e-mail avant d'envoyer un e-mail de test.",
+  "Create your email template": "Créez votre modèle d'e-mail",
+  "Write the email your copilot will send to your target audience.":
+    "Rédigez l'e-mail que votre copilot enverra à votre audience cible.",
+  "Send test email": "Envoyer un e-mail de test",
+  "Step 1 - Initial Email": "Étape 1 - E-mail initial",
+  "This is the first email your leads will receive.":
+    "C'est le premier e-mail que vos prospects recevront.",
+  "Your Templates": "Vos modèles",
+  "Fetching templates...": "Récupération des modèles...",
+  "No templates yet": "Aucun modèle pour l'instant",
+  "Once you save a template it will appear here, ready to use.":
+    "Dès que vous enregistrez un modèle, il apparaît ici, prêt à l'emploi.",
+  Subj: "Objet",
+  "Use this template": "Utiliser ce modèle",
+  "Copilot Summary": "Résumé du copilot",
+  "Here’s a summary of your copilot.": "Voici un résumé de votre copilot.",
+  "Copilot Name": "Nom du copilot",
+  "Private Jet Operators": "Opérateurs de jets privés",
+  "Book more appointments and generate qualified leads":
+    "Obtenir plus de rendez-vous et générer des prospects qualifiés",
+  Goal: "Objectif",
+  "You can edit all settings later at any time.":
+    "Vous pourrez modifier tous les paramètres plus tard, à tout moment.",
+  "Paused while editing": "En pause pendant la modification",
+  "Draft saved": "Brouillon enregistré",
+  "Your changes are saved. Re-launch to start sending again.":
+    "Vos modifications sont enregistrées. Relancez pour reprendre les envois.",
+  "Your progress is saved. Come back anytime to finish.":
+    "Votre progression est enregistrée. Revenez quand vous voulez pour terminer.",
+  "Failed to save copilot. Please try again.":
+    "Impossible d'enregistrer le copilot. Veuillez réessayer.",
+  "Setup Your Copilot": "Configurez votre copilot",
+  "Give your Copilot a name and describe its purpose.":
+    "Donnez un nom à votre copilot et décrivez son objectif.",
+  "Internal name to identify your copilot.":
+    "Nom interne pour identifier votre copilot.",
+  "e.g. Private Jet Operators": "ex. Opérateurs de jets privés",
+  "Describe what this copilot does and who it’s for.":
+    "Décrivez ce que fait ce copilot et à qui il s'adresse.",
+  "e.g. Reach out to private jet operators in Amsterdam and introduce our services":
+    "ex. Contacter des opérateurs de jets privés à Amsterdam et présenter nos services",
+  "What is the main goal of this copilot?":
+    "Quel est l'objectif principal de ce copilot ?",
+  "e.g. Book more appointments and generate qualified leads":
+    "ex. Obtenir plus de rendez-vous et générer des prospects qualifiés",
+  None: "Aucun",
+  "Copilot name": "Nom du copilot",
+  "Not set yet": "Pas encore défini",
+  "N/A": "N/D",
+  "Email Template": "Modèle d'e-mail",
+  "Ready to re-launch": "Prêt à être relancé",
+  "Ready to take-off": "Prêt pour le take-off",
+  "Incomplete — finish setup": "Incomplet — terminez la configuration",
+  "Monday - Sunday": "Lundi - dimanche",
+  All: "Toutes",
+  "{count} companies": "{count} entreprises",
+  "After first run": "Après la première exécution",
+  "Review your copilot": "Vérifiez votre copilot",
+  "Everything looks good! Review your settings before launching.":
+    "Tout semble correct ! Vérifiez vos paramètres avant le lancement.",
+  "Review your settings and finish the open steps before launching.":
+    "Vérifiez vos paramètres et terminez les étapes restantes avant le lancement.",
+  "Not specified": "Non renseigné",
+  "Sending as": "Envoi en tant que",
+  Location: "Localisation",
+  "Est. audience size": "Taille estimée",
+  Sequence: "Séquence",
+  "Total touches": "Contacts",
+  "You're ready to take off!": "Vous êtes prêt pour le take-off !",
+  "Almost ready to take off": "Presque prêt pour le take-off",
+  "You are ready to fly": "Vous êtes prêt à décoller",
+  "Finish setup to fly": "Terminez la configuration pour décoller",
+  "{done} of {total} steps complete": "{done} étapes sur {total} terminées",
+  Back: "Retour",
+  "Save, keep paused": "Enregistrer, laisser en pause",
+  "Save as Draft": "Enregistrer comme brouillon",
+  "Re-launching...": "Relance...",
+  "Re-launch Copilot": "Relancer le copilot",
+  "Launch Copilot": "Lancer le copilot",
+  "Loading copilot data…": "Chargement des données du copilot…",
+  "Complete all steps before launching":
+    "Terminez toutes les étapes avant le lancement",
+  "Test email request accepted": "Demande d'e-mail de test acceptée",
+  "your connected inbox": "votre boîte de réception connectée",
+  "Not now": "Pas maintenant",
+  "Re-launch copilot": "Relancer le copilot",
+  "Launch copilot": "Lancer le copilot",
+  "Re-launch without testing?": "Relancer sans tester ?",
+  "Launch without testing?": "Lancer sans tester ?",
+  Close: "Fermer",
+  "your target audience": "votre audience cible",
+  "your email account": "votre compte e-mail",
+  "A test takes about a minute and reaches nobody but you. Test emails don't count toward your monthly limit.":
+    "Un test prend environ une minute et n'atteint que vous. Les e-mails de test ne comptent pas dans votre limite mensuelle.",
+  "Re-launch anyway": "Relancer quand même",
+  "Launch anyway": "Lancer quand même",
+  "Send a test first": "Envoyer d'abord un test",
+  "Check {inbox} and make sure everything looks right. When you're happy with it, re-launch your copilot.":
+    "Vérifiez {inbox} et assurez-vous que tout est correct. Quand tout vous convient, relancez votre copilot.",
+  "Check {inbox} and make sure everything looks right. When you're happy with it, launch your copilot.":
+    "Vérifiez {inbox} et assurez-vous que tout est correct. Quand tout vous convient, lancez votre copilot.",
+  "This copilot will start emailing {audience} again from {sender}. You haven't read the email yourself yet.":
+    "Ce copilot va recommencer à écrire à {audience} depuis {sender}. Vous n'avez pas encore lu l'e-mail vous-même.",
+  "This copilot will start emailing {audience} from {sender}. You haven't read the email yourself yet.":
+    "Ce copilot va commencer à écrire à {audience} depuis {sender}. Vous n'avez pas encore lu l'e-mail vous-même.",
+  "Target Audience created successfully": "Audience cible créée",
+  "Failed to create target audience": "Impossible de créer l'audience cible",
+  "Type and press Enter to add industries…":
+    "Saisissez puis appuyez sur Entrée pour ajouter des secteurs…",
+  "Search countries…": "Rechercher des pays…",
+  "Select a country first…": "Sélectionnez d'abord un pays…",
+  "Search cities…": "Rechercher des villes…",
+  "Your Target Audience": "Votre audience cible",
+  "Loading target audiences...": "Chargement des audiences cibles...",
+  "No saved target audiences yet.":
+    "Aucune audience cible enregistrée pour l'instant.",
+  "Target Profile Summary": "Résumé de l'audience cible",
+  "This is who your copilot will reach.":
+    "Voici qui votre copilot va contacter.",
+  "None selected": "Aucune sélection",
+  Cities: "Villes",
+  companies: "entreprises",
+  "Calculated after the first run": "Calculée après la première exécution",
+  "Are you sure you want to delete this account?":
+    "Voulez-vous vraiment supprimer ce compte ?",
+  "Why connect my email account?": "Pourquoi connecter mon compte e-mail ?",
+  "1. Connect securely": "1. Connexion sécurisée",
+  "Your account is securely connected via OAuth, so we never see or store your password.":
+    "Votre compte est connecté de façon sécurisée via OAuth : nous ne voyons ni ne stockons jamais votre mot de passe.",
+  "2. Send from your own email address":
+    "2. Envoyez depuis votre propre adresse e-mail",
+  "This helps recipients recognize and trust the sender.":
+    "Les destinataires reconnaissent ainsi l'expéditeur et lui font confiance.",
+  "3. Built for deliverability": "3. Conçu pour la délivrabilité",
+  "Gradual warmup and daily limits to protect your sender reputation.":
+    "Montée en charge progressive et limites quotidiennes pour protéger votre réputation d'expéditeur.",
+  "4. Replies stay in your inbox": "4. Les réponses restent dans votre boîte",
+  "Replies go straight to your own inbox, so you can continue the conversation as usual.":
+    "Les réponses arrivent directement dans votre boîte de réception pour poursuivre la conversation comme d'habitude.",
+  "Step {n} of {total}": "Étape {n} sur {total}",
+  "Step {n}": "Étape {n}",
+  "Save & Continue": "Enregistrer et continuer",
+  "Search timezone...": "Rechercher un fuseau horaire...",
+  "No timezone found.": "Aucun fuseau horaire trouvé.",
+  "Feedback submission is not implemented yet.":
+    "L'envoi de commentaires n'est pas encore disponible.",
+  "We couldn’t send your feedback. Please try again.":
+    "Nous n'avons pas pu envoyer vos commentaires. Veuillez réessayer.",
+  "Thanks for your feedback": "Merci pour vos commentaires",
+  "Your feedback helps us improve copilot setup.":
+    "Vos commentaires nous aident à améliorer la configuration des copilots.",
+  Done: "Terminé",
+  "How easy was it to set up your copilot?":
+    "Était-il facile de configurer votre copilot ?",
+  "Tell us what worked and what we can improve.":
+    "Dites-nous ce qui a bien fonctionné et ce que nous pouvons améliorer.",
+  "Sending…": "Envoi…",
+  "Send feedback": "Envoyer",
+  "Closing…": "Fermeture…",
+  "Saving reminder…": "Enregistrement du rappel…",
+  "Your rating": "Votre note",
+  "(required)": "(obligatoire)",
+  "{value} out of 5": "{value} sur 5",
+  "Very difficult": "Très difficile",
+  "Very easy": "Très facile",
+  Comment: "Commentaire",
+  "(optional)": "(facultatif)",
+  "What could we make easier?": "Que pourrions-nous simplifier ?",
+  "All days": "Tous les jours",
+  Weekdays: "Jours ouvrés",
+  "{n} / day": "{n} / jour",
+  "From {start} to {end}": "De {start} à {end}",
+  "Default timezone": "Fuseau horaire par défaut",
+  current: "actuel",
+  "Copilot limit reached": "Limite de copilots atteinte",
+  "You are already on our highest plan. Contact support if you need more copilots.":
+    "Vous avez déjà notre abonnement le plus élevé. Contactez le support si vous avez besoin de plus de copilots.",
+  "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot, or upgrade to add more.":
+    "Votre abonnement {plan} comprend {max} copilot et vous l'utilisez déjà. Supprimez-le pour libérer une place, ou passez à un abonnement supérieur pour en ajouter.",
+  "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot, or upgrade to add more.":
+    "Votre abonnement {plan} comprend {max} copilots et vous les utilisez tous. Supprimez un copilot pour libérer une place, ou passez à un abonnement supérieur pour en ajouter.",
+  "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot.":
+    "Votre abonnement {plan} comprend {max} copilot et vous l'utilisez déjà. Supprimez-le pour libérer une place.",
+  "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot.":
+    "Votre abonnement {plan} comprend {max} copilots et vous les utilisez tous. Supprimez un copilot pour libérer une place.",
+  "Monthly email allowance reached ({used} of {max} used). Your copilots pause sending until the allowance renews on {date}.":
+    "Quota mensuel d'e-mails atteint ({used} sur {max} utilisés). Vos copilots suspendent les envois jusqu'au renouvellement le {date}.",
+  "Monthly email allowance reached ({used} of {max} used). Your copilots pause sending until the allowance renews.":
+    "Quota mensuel d'e-mails atteint ({used} sur {max} utilisés). Vos copilots suspendent les envois jusqu'au renouvellement.",
+  "You have used {used} of {max} emails this month. {remaining} left before your copilots pause.":
+    "Vous avez utilisé {used} e-mails sur {max} ce mois-ci. Plus que {remaining} avant que vos copilots ne s'arrêtent.",
+  Upgrade: "Passer au supérieur",
+  "View plan": "Voir l'abonnement",
+  Dismiss: "Ignorer",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until {date} when your allowance renews.":
+    "Votre abonnement {plan} comprend {max} e-mails par mois et vous les avez tous utilisés ({used}). Passez à un abonnement supérieur pour un quota plus élevé, ou attendez le {date}, date de renouvellement.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until your allowance renews.":
+    "Votre abonnement {plan} comprend {max} e-mails par mois et vous les avez tous utilisés ({used}). Passez à un abonnement supérieur pour un quota plus élevé, ou attendez le renouvellement.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews on {date}.":
+    "Votre abonnement {plan} comprend {max} e-mails par mois et vous les avez tous utilisés ({used}). Vous avez notre abonnement le plus élevé : les envois reprendront au renouvellement, le {date}.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews.":
+    "Votre abonnement {plan} comprend {max} e-mails par mois et vous les avez tous utilisés ({used}). Vous avez notre abonnement le plus élevé : les envois reprendront au renouvellement.",
+  "Monthly email allowance reached": "Quota mensuel d'e-mails atteint",
+  "You are already on our highest plan. Your allowance renews automatically next month.":
+    "Vous avez déjà notre abonnement le plus élevé. Votre quota se renouvelle automatiquement le mois prochain.",
+  "Yearly (save 20%)": "Annuel (20 % d'économie)",
+  "Maybe later": "Plus tard",
+  "Go to Billing": "Aller à la facturation",
+  "Got it": "Compris",
+  "The sending schedule is unavailable. Please check its settings.":
+    "Le planning d'envoi est indisponible. Veuillez vérifier ses paramètres.",
+  "Select at least one valid active day before sending a test email.":
+    "Sélectionnez au moins un jour actif valide avant d'envoyer un e-mail de test.",
+  "Select a valid schedule timezone before sending a test email.":
+    "Sélectionnez un fuseau horaire valide pour le planning avant d'envoyer un e-mail de test.",
+  "Please check the schedule's sending hours settings before sending a test email.":
+    "Veuillez vérifier les heures d'envoi du planning avant d'envoyer un e-mail de test.",
+  "Choose valid, different start and end times before sending a test email.":
+    "Choisissez des heures de début et de fin valides et différentes avant d'envoyer un e-mail de test.",
+  "Test emails are only allowed from {start} to {end} ({timezone}) on active days.":
+    "Les e-mails de test ne sont autorisés que de {start} à {end} ({timezone}) les jours actifs.",
+  "We couldn’t save your reminder. Please try again.":
+    "Nous n'avons pas pu enregistrer votre rappel. Veuillez réessayer.",
+  // New copilot wizard: step labels, audience size labels, variable hints
+  "Configure your copilot": "Configurez votre copilot",
+  "Choose who's sending": "Choisissez l'expéditeur",
+  "Choose who to reach": "Choisissez qui contacter",
+  "Create your message": "Créez votre message",
+  "Choose when to send": "Choisissez quand envoyer",
+  "Review and launch": "Vérifier et lancer",
+  Massive: "Très grande",
+  Large: "Grande",
+  Healthy: "Saine",
+  Moderate: "Moyenne",
+  Limited: "Limitée",
+  "The recipient's company name": "Le nom de l'entreprise du destinataire",
+  "The recipient's email address": "L'adresse e-mail du destinataire",
+  "The recipient's website": "Le site web du destinataire",
+  "The recipient's phone number": "Le numéro de téléphone du destinataire",
+  "Your name as the sender": "Votre nom en tant qu'expéditeur",
 };
 
 const es: Messages = {
@@ -2440,6 +3394,322 @@ const es: Messages = {
     "¿Cómo contacto con el soporte de facturación?",
   "If you have any questions about your subscription, invoices, payments, or billing, our team is here to help.":
     "Si tienes preguntas sobre tu suscripción, facturas, pagos o facturación, nuestro equipo está aquí para ayudarte.",
+  // New copilot wizard + limit dialogs
+  "{provider} connected successfully": "{provider} se conectó correctamente",
+  "Failed to load copilot. Please try again.":
+    "No se pudo cargar el copilot. Inténtalo de nuevo.",
+  "Copy of {name}": "Copia de {name}",
+  "Edit Copilot": "Editar copilot",
+  "Duplicate Copilot": "Duplicar copilot",
+  "Changes saved — the copilot stays paused until you re-launch it.":
+    "Cambios guardados: el copilot sigue en pausa hasta que lo relances.",
+  "Draft saved — you can launch anytime.":
+    "Borrador guardado: puedes lanzarlo cuando quieras.",
+  "Failed to save draft. Please try again.":
+    "No se pudo guardar el borrador. Inténtalo de nuevo.",
+  "Copilot launch accepted.": "Lanzamiento del copilot aceptado.",
+  "Failed to launch copilot. Please try again.":
+    "No se pudo lanzar el copilot. Inténtalo de nuevo.",
+  "Your monthly email allowance is used up. Upgrade your plan to re-launch this copilot.":
+    "Tu cupo mensual de correos se ha agotado. Mejora tu plan para relanzar este copilot.",
+  "Copilot re-launched.": "Copilot relanzado.",
+  "Loading copilot...": "Cargando copilot...",
+  "Build your outbound copilot in 6 simple steps.":
+    "Crea tu copilot de prospección en 6 sencillos pasos.",
+  "Discard & exit": "Descartar y salir",
+  "Editing pauses this copilot until you launch it again.":
+    "Al editar, este copilot se pausa hasta que lo vuelvas a lanzar.",
+  "No flight schedules available yet — use the form above to create one.":
+    "Aún no hay flight schedules: usa el formulario de arriba para crear uno.",
+  "Monday - Friday": "Lunes - viernes",
+  "Weekend only": "Solo fines de semana",
+  "Every day": "Todos los días",
+  Unlimited: "Ilimitado",
+  "Schedule Summary": "Resumen del horario",
+  "Here's how your copilot will send.": "Así enviará tu copilot.",
+  "Daily send limit": "Límite de envío diario",
+  "{n} emails per day": "{n} correos al día",
+  "Unlimited emails": "Correos ilimitados",
+  "Active days": "Días activos",
+  "Sending hours": "Horario de envío",
+  "Est. monthly volume": "Volumen mensual estimado",
+  "{volume} emails": "{volume} correos",
+  "Based on {n} active days/month": "Según {n} días activos/mes",
+  "These settings help maximize deliverability and keep your account safe.":
+    "Estos ajustes ayudan a maximizar la entregabilidad y a proteger tu cuenta.",
+  "Changes saved as a new schedule — the original schedule was not changed.":
+    "Cambios guardados como un horario nuevo: el horario original no se modificó.",
+  "Flight schedule created and linked.": "Flight schedule creado y vinculado.",
+  "Failed to create flight schedule. Please try again.":
+    "No se pudo crear el flight schedule. Inténtalo de nuevo.",
+  "Configure Flight Schedule": "Configurar el Flight Schedule",
+  "Choose when and how your copilot sends emails.":
+    "Elige cuándo y cómo envía correos tu copilot.",
+  "Schedule Name (if creating new)": "Nombre del horario (si es nuevo)",
+  "e.g. My Custom Schedule": "p. ej. Mi horario personalizado",
+  "Recommended: 20-50 per day for best deliverability":
+    "Recomendado: 20-50 al día para la mejor entregabilidad",
+  "Choose which days your copilot is allowed to send emails.":
+    "Elige qué días puede enviar correos tu copilot.",
+  "(your timezone)": "(tu zona horaria)",
+  "Set the daily time window when your copilot can send emails.":
+    "Define la franja horaria diaria en la que tu copilot puede enviar correos.",
+  "Default Timezone": "Zona horaria predeterminada",
+  "Custom schedule — a new schedule will be created and linked when you continue.":
+    "Horario personalizado: al continuar se creará y vinculará un horario nuevo.",
+  "A new schedule named “{name}” will be created and linked. The original schedule stays unchanged.":
+    "Se creará y vinculará un horario nuevo llamado «{name}». El horario original no cambia.",
+  "Modified from “{name}” — your changes will be saved as a new schedule. The original schedule stays unchanged.":
+    "Modificado a partir de «{name}»: tus cambios se guardarán como un horario nuevo. El horario original no cambia.",
+  "Using saved schedule: {name} — nothing will be changed when you continue.":
+    "Usando el horario guardado: {name}. No se cambiará nada al continuar.",
+  "Your Flight Schedules": "Tus flight schedules",
+  "Using: {name}": "En uso: {name}",
+  "Template summary": "Resumen de la plantilla",
+  "1-step sequence": "Secuencia de 1 paso",
+  "Failed to save template. Please try again.":
+    "No se pudo guardar la plantilla. Inténtalo de nuevo.",
+  "Select an email account before sending a test email.":
+    "Selecciona una cuenta de correo antes de enviar un correo de prueba.",
+  "Create your email template": "Crea tu plantilla de correo",
+  "Write the email your copilot will send to your target audience.":
+    "Escribe el correo que tu copilot enviará a tu público objetivo.",
+  "Send test email": "Enviar correo de prueba",
+  "Step 1 - Initial Email": "Paso 1 - Correo inicial",
+  "This is the first email your leads will receive.":
+    "Este es el primer correo que recibirán tus leads.",
+  "Your Templates": "Tus plantillas",
+  "Fetching templates...": "Cargando plantillas...",
+  "No templates yet": "Aún no hay plantillas",
+  "Once you save a template it will appear here, ready to use.":
+    "Cuando guardes una plantilla, aparecerá aquí lista para usar.",
+  Subj: "Asunto",
+  "Use this template": "Usar esta plantilla",
+  "Copilot Summary": "Resumen del copilot",
+  "Here’s a summary of your copilot.": "Este es un resumen de tu copilot.",
+  "Copilot Name": "Nombre del copilot",
+  "Private Jet Operators": "Operadores de jets privados",
+  Description: "Descripción",
+  "Book more appointments and generate qualified leads":
+    "Conseguir más citas y generar leads cualificados",
+  Goal: "Objetivo",
+  "You can edit all settings later at any time.":
+    "Puedes editar todos los ajustes más tarde en cualquier momento.",
+  "Paused while editing": "En pausa mientras editas",
+  "Draft saved": "Borrador guardado",
+  "Your changes are saved. Re-launch to start sending again.":
+    "Tus cambios están guardados. Relanza para volver a enviar.",
+  "Your progress is saved. Come back anytime to finish.":
+    "Tu progreso está guardado. Vuelve cuando quieras para terminar.",
+  "Failed to save copilot. Please try again.":
+    "No se pudo guardar el copilot. Inténtalo de nuevo.",
+  "Setup Your Copilot": "Configura tu copilot",
+  "Give your Copilot a name and describe its purpose.":
+    "Dale un nombre a tu copilot y describe su propósito.",
+  "Internal name to identify your copilot.":
+    "Nombre interno para identificar tu copilot.",
+  "e.g. Private Jet Operators": "p. ej. Operadores de jets privados",
+  "Describe what this copilot does and who it’s for.":
+    "Describe qué hace este copilot y para quién es.",
+  "e.g. Reach out to private jet operators in Amsterdam and introduce our services":
+    "p. ej. Contactar con operadores de jets privados en Ámsterdam y presentar nuestros servicios",
+  "What is the main goal of this copilot?":
+    "¿Cuál es el objetivo principal de este copilot?",
+  "e.g. Book more appointments and generate qualified leads":
+    "p. ej. Conseguir más citas y generar leads cualificados",
+  None: "Ninguno",
+  "Copilot name": "Nombre del copilot",
+  "Not set yet": "Aún sin definir",
+  "N/A": "N/D",
+  "Email Template": "Plantilla de correo",
+  "Ready to re-launch": "Listo para relanzar",
+  "Ready to take-off": "Listo para el take-off",
+  "Incomplete — finish setup": "Incompleto: termina la configuración",
+  "Monday - Sunday": "Lunes - domingo",
+  All: "Todas",
+  "{count} companies": "{count} empresas",
+  "After first run": "Tras la primera ejecución",
+  "Review your copilot": "Revisa tu copilot",
+  "Everything looks good! Review your settings before launching.":
+    "¡Todo se ve bien! Revisa tus ajustes antes de lanzar.",
+  "Review your settings and finish the open steps before launching.":
+    "Revisa tus ajustes y completa los pasos pendientes antes de lanzar.",
+  "Not specified": "Sin especificar",
+  "Sending as": "Enviando como",
+  Location: "Ubicación",
+  "Est. audience size": "Tamaño estimado",
+  Sequence: "Secuencia",
+  "Total touches": "Contactos",
+  "You're ready to take off!": "¡Todo listo para el take-off!",
+  "Almost ready to take off": "Casi listo para el take-off",
+  "You are ready to fly": "Estás listo para volar",
+  "Finish setup to fly": "Termina la configuración para volar",
+  "{done} of {total} steps complete": "{done} de {total} pasos completados",
+  Back: "Atrás",
+  "Save, keep paused": "Guardar y mantener en pausa",
+  "Save as Draft": "Guardar como borrador",
+  "Re-launching...": "Relanzando...",
+  "Re-launch Copilot": "Relanzar copilot",
+  "Launch Copilot": "Lanzar copilot",
+  "Loading copilot data…": "Cargando datos del copilot…",
+  "Complete all steps before launching":
+    "Completa todos los pasos antes de lanzar",
+  "Test email request accepted": "Solicitud de correo de prueba aceptada",
+  "your connected inbox": "tu bandeja de entrada conectada",
+  "Not now": "Ahora no",
+  "Re-launch copilot": "Relanzar copilot",
+  "Launch copilot": "Lanzar copilot",
+  "Re-launch without testing?": "¿Relanzar sin probar?",
+  "Launch without testing?": "¿Lanzar sin probar?",
+  Close: "Cerrar",
+  "your target audience": "tu público objetivo",
+  "your email account": "tu cuenta de correo",
+  "A test takes about a minute and reaches nobody but you. Test emails don't count toward your monthly limit.":
+    "Una prueba tarda un minuto y solo te llega a ti. Los correos de prueba no cuentan para tu límite mensual.",
+  "Re-launch anyway": "Relanzar de todos modos",
+  "Launch anyway": "Lanzar de todos modos",
+  "Send a test first": "Enviar primero una prueba",
+  "Check {inbox} and make sure everything looks right. When you're happy with it, re-launch your copilot.":
+    "Revisa {inbox} y comprueba que todo está bien. Cuando estés conforme, relanza tu copilot.",
+  "Check {inbox} and make sure everything looks right. When you're happy with it, launch your copilot.":
+    "Revisa {inbox} y comprueba que todo está bien. Cuando estés conforme, lanza tu copilot.",
+  "This copilot will start emailing {audience} again from {sender}. You haven't read the email yourself yet.":
+    "Este copilot volverá a escribir a {audience} desde {sender}. Aún no has leído el correo tú mismo.",
+  "This copilot will start emailing {audience} from {sender}. You haven't read the email yourself yet.":
+    "Este copilot empezará a escribir a {audience} desde {sender}. Aún no has leído el correo tú mismo.",
+  "Target Audience created successfully": "Público objetivo creado",
+  "Failed to create target audience": "No se pudo crear el público objetivo",
+  "Type and press Enter to add industries…":
+    "Escribe y pulsa Intro para añadir sectores…",
+  "Search countries…": "Buscar países…",
+  "Select a country first…": "Selecciona primero un país…",
+  "Search cities…": "Buscar ciudades…",
+  "Your Target Audience": "Tu público objetivo",
+  "Loading target audiences...": "Cargando públicos objetivo...",
+  "No saved target audiences yet.": "Aún no hay públicos objetivo guardados.",
+  "Target Profile Summary": "Resumen del público objetivo",
+  "This is who your copilot will reach.": "A ellos llegará tu copilot.",
+  "None selected": "Nada seleccionado",
+  Cities: "Ciudades",
+  companies: "empresas",
+  "Calculated after the first run": "Se calcula tras la primera ejecución",
+  "Are you sure you want to delete this account?":
+    "¿Seguro que quieres eliminar esta cuenta?",
+  "Why connect my email account?": "¿Por qué conectar mi cuenta de correo?",
+  "1. Connect securely": "1. Conexión segura",
+  "Your account is securely connected via OAuth, so we never see or store your password.":
+    "Tu cuenta se conecta de forma segura mediante OAuth, así que nunca vemos ni guardamos tu contraseña.",
+  "2. Send from your own email address":
+    "2. Envía desde tu propia dirección de correo",
+  "This helps recipients recognize and trust the sender.":
+    "Así los destinatarios reconocen al remitente y confían en él.",
+  "3. Built for deliverability": "3. Diseñado para la entregabilidad",
+  "Gradual warmup and daily limits to protect your sender reputation.":
+    "Calentamiento gradual y límites diarios para proteger tu reputación como remitente.",
+  "4. Replies stay in your inbox": "4. Las respuestas se quedan en tu bandeja",
+  "Replies go straight to your own inbox, so you can continue the conversation as usual.":
+    "Las respuestas llegan directamente a tu bandeja para que sigas la conversación como siempre.",
+  "Step {n} of {total}": "Paso {n} de {total}",
+  "Step {n}": "Paso {n}",
+  "Save & Continue": "Guardar y continuar",
+  "Search timezone...": "Buscar zona horaria...",
+  "No timezone found.": "No se encontró ninguna zona horaria.",
+  "Feedback submission is not implemented yet.":
+    "El envío de comentarios aún no está disponible.",
+  "We couldn’t send your feedback. Please try again.":
+    "No pudimos enviar tus comentarios. Inténtalo de nuevo.",
+  "Thanks for your feedback": "Gracias por tus comentarios",
+  "Your feedback helps us improve copilot setup.":
+    "Tus comentarios nos ayudan a mejorar la configuración de copilots.",
+  Done: "Listo",
+  "How easy was it to set up your copilot?":
+    "¿Qué tan fácil fue configurar tu copilot?",
+  "Tell us what worked and what we can improve.":
+    "Cuéntanos qué funcionó y qué podemos mejorar.",
+  "Sending…": "Enviando…",
+  "Send feedback": "Enviar comentarios",
+  "Closing…": "Cerrando…",
+  "Saving reminder…": "Guardando recordatorio…",
+  "Your rating": "Tu valoración",
+  "(required)": "(obligatorio)",
+  "{value} out of 5": "{value} de 5",
+  "Very difficult": "Muy difícil",
+  "Very easy": "Muy fácil",
+  Comment: "Comentario",
+  "(optional)": "(opcional)",
+  "What could we make easier?": "¿Qué podríamos hacer más fácil?",
+  "All days": "Todos los días",
+  Weekdays: "Días laborables",
+  "{n} / day": "{n} / día",
+  "From {start} to {end}": "De {start} a {end}",
+  "Default timezone": "Zona horaria predeterminada",
+  current: "actual",
+  "Copilot limit reached": "Límite de copilots alcanzado",
+  "You are already on our highest plan. Contact support if you need more copilots.":
+    "Ya tienes nuestro plan más alto. Contacta con soporte si necesitas más copilots.",
+  "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot, or upgrade to add more.":
+    "Tu plan {plan} incluye {max} copilot y ya lo estás usando. Elimínalo para liberar un hueco o mejora tu plan para añadir más.",
+  "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot, or upgrade to add more.":
+    "Tu plan {plan} incluye {max} copilots y los estás usando todos. Elimina uno para liberar un hueco o mejora tu plan para añadir más.",
+  "Your {plan} plan includes {max} copilot and you are using it. Delete it to free a slot.":
+    "Tu plan {plan} incluye {max} copilot y ya lo estás usando. Elimínalo para liberar un hueco.",
+  "Your {plan} plan includes {max} copilots and you are using all {max}. Delete one of your copilots to free a slot.":
+    "Tu plan {plan} incluye {max} copilots y los estás usando todos. Elimina uno para liberar un hueco.",
+  "Monthly email allowance reached ({used} of {max} used). Your copilots pause sending until the allowance renews on {date}.":
+    "Cupo mensual de correos alcanzado ({used} de {max} usados). Tus copilots pausan los envíos hasta que se renueve el {date}.",
+  "Monthly email allowance reached ({used} of {max} used). Your copilots pause sending until the allowance renews.":
+    "Cupo mensual de correos alcanzado ({used} de {max} usados). Tus copilots pausan los envíos hasta que se renueve.",
+  "You have used {used} of {max} emails this month. {remaining} left before your copilots pause.":
+    "Has usado {used} de {max} correos este mes. Quedan {remaining} antes de que tus copilots se pausen.",
+  Upgrade: "Mejorar",
+  "View plan": "Ver plan",
+  Dismiss: "Descartar",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until {date} when your allowance renews.":
+    "Tu plan {plan} incluye {max} correos al mes y ya has usado los {used}. Mejora tu plan para tener más cupo o espera al {date}, cuando se renueva.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until your allowance renews.":
+    "Tu plan {plan} incluye {max} correos al mes y ya has usado los {used}. Mejora tu plan para tener más cupo o espera a que se renueve.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews on {date}.":
+    "Tu plan {plan} incluye {max} correos al mes y ya has usado los {used}. Tienes nuestro plan más alto, así que los envíos se reanudan cuando se renueve el {date}.",
+  "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews.":
+    "Tu plan {plan} incluye {max} correos al mes y ya has usado los {used}. Tienes nuestro plan más alto, así que los envíos se reanudan cuando se renueve.",
+  "Monthly email allowance reached": "Cupo mensual de correos alcanzado",
+  "You are already on our highest plan. Your allowance renews automatically next month.":
+    "Ya tienes nuestro plan más alto. Tu cupo se renueva automáticamente el mes que viene.",
+  "Yearly (save 20%)": "Anual (ahorra un 20 %)",
+  "Maybe later": "Quizás más tarde",
+  "Go to Billing": "Ir a facturación",
+  "Got it": "Entendido",
+  "The sending schedule is unavailable. Please check its settings.":
+    "El horario de envío no está disponible. Revisa su configuración.",
+  "Select at least one valid active day before sending a test email.":
+    "Selecciona al menos un día activo válido antes de enviar un correo de prueba.",
+  "Select a valid schedule timezone before sending a test email.":
+    "Selecciona una zona horaria válida para el horario antes de enviar un correo de prueba.",
+  "Please check the schedule's sending hours settings before sending a test email.":
+    "Revisa el horario de envío antes de enviar un correo de prueba.",
+  "Choose valid, different start and end times before sending a test email.":
+    "Elige horas de inicio y fin válidas y distintas antes de enviar un correo de prueba.",
+  "Test emails are only allowed from {start} to {end} ({timezone}) on active days.":
+    "Los correos de prueba solo se permiten de {start} a {end} ({timezone}) en días activos.",
+  "We couldn’t save your reminder. Please try again.":
+    "No pudimos guardar tu recordatorio. Inténtalo de nuevo.",
+  // New copilot wizard: step labels, audience size labels, variable hints
+  "Configure your copilot": "Configura tu copilot",
+  "Choose who's sending": "Elige el remitente",
+  "Choose who to reach": "Elige a quién llegar",
+  "Create your message": "Crea tu mensaje",
+  "Choose when to send": "Elige cuándo enviar",
+  "Review and launch": "Revisar y lanzar",
+  Massive: "Muy grande",
+  Large: "Grande",
+  Healthy: "Saludable",
+  Moderate: "Moderada",
+  Limited: "Limitada",
+  "The recipient's company name": "El nombre de la empresa del destinatario",
+  "The recipient's email address": "La dirección de correo del destinatario",
+  "The recipient's website": "El sitio web del destinatario",
+  "The recipient's phone number": "El número de teléfono del destinatario",
+  "Your name as the sender": "Tu nombre como remitente",
 };
 
 export const MESSAGES: Record<string, Messages> = { nl, de, fr, es };
