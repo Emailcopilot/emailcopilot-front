@@ -20,6 +20,13 @@ import { useLeadStore } from "@/store/leadStore";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useI18n } from "@/lib/i18n";
 
+/**
+ * The API has no per-day stats yet (GET /leads returns 20 leads and sentAt is
+ * empty), so period numbers and the chart are greyed out. Flip to true once the
+ * back-end delivers daily stats.
+ */
+const DAILY_STATS_LIVE = false;
+
 export default function OverviewPage() {
   const { leads, getAllLeads } = useLeadStore();
   const { copilots, getAllCopilots } = useCopilotStore();
@@ -75,13 +82,22 @@ export default function OverviewPage() {
     [period, t, locale],
   );
 
+  // Total over all copilots, accurate until daily stats exist.
+  const totalSent = (copilots ?? []).reduce(
+    (sum, c) => sum + (Number(c.emailsSent) || 0),
+    0,
+  );
+
   const stats = [
     {
       label: "Emails Sent",
-      value: sentStats.total,
+      value: DAILY_STATS_LIVE
+        ? sentStats.total
+        : totalSent.toLocaleString(locale === "en" ? "en-US" : locale),
       change: sentStats.percentageChange,
       comparisonLabel,
       icon: Send,
+      footnote: DAILY_STATS_LIVE ? undefined : t("All time"),
     },
     {
       label: "Replies",
@@ -127,6 +143,7 @@ export default function OverviewPage() {
             change={s.change}
             comparisonLabel={s.comparisonLabel}
             comingSoon={"comingSoon" in s && s.comingSoon}
+            footnote={"footnote" in s ? s.footnote : undefined}
           />
         ))}
       </div>
@@ -134,6 +151,7 @@ export default function OverviewPage() {
         leads={leads}
         range={period}
         onRangeChange={(newRange) => setPeriod(newRange)}
+        comingSoon={!DAILY_STATS_LIVE}
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
         <CopilotsCard />
