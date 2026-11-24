@@ -279,7 +279,10 @@ export default function Step4Launch({
           : t("Review your settings and finish the open steps before launching.")}
       </p>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8">
+      <div
+        data-tour="tour-step6-review"
+        className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8"
+      >
         {/* Card 1: Setup */}
         <div
           onClick={() => setStep(1)}
@@ -540,7 +543,10 @@ export default function Step4Launch({
           <ArrowLeft size={15} /> {t("Back")}
         </button>
 
-        <div className="flex items-center gap-2 flex-wrap ml-auto">
+        <div
+          data-tour="tour-step6-actions"
+          className="flex items-center gap-2 flex-wrap ml-auto"
+        >
           <button
             type="button"
             onClick={(event) => { if (event.detail <= 1) void sendTestEmail(); }}

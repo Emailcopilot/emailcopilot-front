@@ -21,6 +21,7 @@ import { useDemoMode } from "@/lib/demo/demo-mode";
 import { DEMO_COPILOTS } from "@/lib/demo/demo-data";
 import { sortCopilotsArchivedLast } from "@/lib/sort-copilots";
 import { useI18n } from "@/lib/i18n";
+import { TourTriggerButton } from "@/components/tour";
 
 export default function CopilotsPage() {
   const router = useRouter();
@@ -186,6 +187,8 @@ export default function CopilotsPage() {
         title="Copilots"
         description="Manage your automated outreach campaigns."
         actionLabel="Create New Copilot"
+        actionDataTour="copilots-create"
+        secondaryAction={<TourTriggerButton fromBeginning />}
         onAction={handleCreate}
       />
 

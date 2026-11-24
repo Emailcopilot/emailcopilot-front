@@ -2,6 +2,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import MobileMenu from "@/components/layout/MobileMenu";
 import EmailLimitBanner from "@/components/ui/limits/EmailLimitBanner";
 import { DemoModeBanner } from "@/components/demo/DemoModeBanner";
+import { CopilotTourOverlay } from "@/components/tour";
 import { DashboardProviders } from "@/lib/providers";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -23,6 +24,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <EmailLimitBanner />
           {children}
         </main>
+        <CopilotTourOverlay />
       </div>
     </DashboardProviders>
   );

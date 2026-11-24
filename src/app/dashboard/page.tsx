@@ -23,6 +23,7 @@ import { decodeJwtPayload, getDisplayUsername } from "@/lib/userDisplay";
 import { useDemoMode } from "@/lib/demo/demo-mode";
 import { DEMO_COPILOTS, DEMO_LEADS } from "@/lib/demo/demo-data";
 import { useI18n } from "@/lib/i18n";
+import { TourTriggerButton } from "@/components/tour";
 
 /**
  * The API has no per-day stats yet (GET /leads returns 20 leads and sentAt is
@@ -171,6 +172,8 @@ export default function OverviewPage() {
         }
         description={`Here's what's happening with your outreach today`}
         actionLabel="Create New Copilot"
+        actionDataTour="copilots-create"
+        secondaryAction={<TourTriggerButton fromBeginning />}
         onAction={() => {
           if (isDemo) {
             exitDemo("/dashboard/copilots/new");

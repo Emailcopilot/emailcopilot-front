@@ -124,7 +124,7 @@ export default function ScheduleSideBar() {
 
       <div className="w-full h-px bg-slate-100 mb-6"></div>
 
-      <div className="mb-8">
+      <div data-tour="tour-step5-volume" className="mb-8">
         <h4 className="text-sm font-bold text-slate-900 mb-2">
           {t("Est. monthly volume")}
         </h4>

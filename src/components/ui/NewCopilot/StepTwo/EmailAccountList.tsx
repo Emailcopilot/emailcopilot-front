@@ -40,7 +40,7 @@ export default function EmailAccountList({
     if (displayAccounts.length === 0) return null;
 
     return (
-        <div className="mt-6">
+        <div data-tour="tour-step2-saved" className="mt-6">
             <div className="space-y-3">
                 {displayAccounts.map((profile) => (
                     <div key={profile.id} className="flex gap-2 items-center">

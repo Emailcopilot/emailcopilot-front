@@ -380,7 +380,7 @@ function CopilotTable({
             </tr>
           </thead>
           <tbody className=" relative">
-            {copilots.map((copilot) => {
+            {copilots.map((copilot, rowIndex) => {
               const steps = computeSteps(copilot);
 
               const sendLimit = copilot.flightSchedule?.sendLimit;
@@ -447,11 +447,13 @@ function CopilotTable({
                     className="w-px whitespace-nowrap px-5 py-4 align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <WorkflowStepper
-                      steps={steps}
-                      copilotId={copilot.id}
-                      readOnly={readOnly}
-                    />
+                    <div data-tour={rowIndex === 0 ? "copilots-workflow" : undefined}>
+                      <WorkflowStepper
+                        steps={steps}
+                        copilotId={copilot.id}
+                        readOnly={readOnly}
+                      />
+                    </div>
                   </td>
                   <td aria-hidden className="w-1/4 p-0" />
                   <td className="w-px whitespace-nowrap px-5 py-4 text-sm align-middle text-[#0F172A]">

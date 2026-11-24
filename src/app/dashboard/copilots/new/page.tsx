@@ -1,7 +1,12 @@
 "use client";
 
 import { Suspense, useState, useEffect, useCallback, useRef } from "react";
-import { MoreVertical, ChevronRight, Loader2, PauseCircle } from "lucide-react";
+import {
+  MoreVertical,
+  ChevronRight,
+  Loader2,
+  PauseCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { isAxiosError } from "axios";
@@ -31,6 +36,7 @@ import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { clearDemoPending } from "@/lib/demo/demo-storage";
 import { useDemoMode } from "@/lib/demo/demo-mode";
+import { TourTriggerButton } from "@/components/tour";
 import {
   getDemoCopilotById,
   isDemoCopilotId,
@@ -469,7 +475,8 @@ function NewCopilotPageContent() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <TourTriggerButton className="flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" />
           {/* Kebab — discard */}
           <div className="relative group">
             <button className="w-9 h-9 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors">
@@ -493,7 +500,10 @@ function NewCopilotPageContent() {
       </header>
 
       {mode === "edit" && editingLive && (
-        <div className="flex items-start gap-2.5 mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <div
+          data-tour="tour-step6-relaunch"
+          className="flex items-start gap-2.5 mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
+        >
           <PauseCircle size={18} className="mt-px shrink-0 text-amber-500" />
           <span>{t("Editing pauses this copilot until you launch it again.")}</span>
         </div>

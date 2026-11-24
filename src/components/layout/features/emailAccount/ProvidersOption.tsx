@@ -49,7 +49,7 @@ function ProvidersOption({
             {t("Recommended")}
           </h3>
 
-          <div className="space-y-3">
+          <div data-tour="tour-step2-oauth" className="space-y-3">
             {/* Connect with Gmail - highlighted */}
             <button
               type="button"
@@ -154,6 +154,7 @@ function ProvidersOption({
         {/* Connect other provider */}
         <button
           type="button"
+          data-tour="tour-step2-smtp"
           onClick={() => {
             if (guardDemo()) return;
             setShowOtherProviderPopUp(true);

@@ -63,6 +63,7 @@ function StepsActions({
       )}
       <button
         type="button"
+        data-tour={inline ? undefined : "tour-steps-continue"}
         onClick={() => {
           if (!canContinue) return;
           onPress();

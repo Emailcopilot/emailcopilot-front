@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ApiProvider } from "@/lib/ApiProvider";
 import GuardSubscriptionProvider from "./guardSubProvider";
 import { DemoModeProvider } from "@/lib/demo/demo-mode";
+import { TourProvider } from "@/components/tour";
 import { SetupFeedbackProvider } from "./SetupFeedbackProvider";
 import { I18nProvider } from "./i18n";
 
@@ -18,9 +19,11 @@ export function DashboardProviders({ children }: { children: ReactNode }) {
                     <QueryClientProvider client={queryClient}>
                         <Suspense fallback={null}>
                             <DemoModeProvider>
-                                <GuardSubscriptionProvider>
-                                    {children}
-                                </GuardSubscriptionProvider>
+                                <TourProvider>
+                                    <GuardSubscriptionProvider>
+                                        {children}
+                                    </GuardSubscriptionProvider>
+                                </TourProvider>
                             </DemoModeProvider>
                         </Suspense>
                     </QueryClientProvider>

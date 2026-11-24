@@ -20,6 +20,7 @@ import { useUser } from "@clerk/nextjs";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
 import { useI18n } from "@/lib/i18n";
 import { useDemoMode } from "@/lib/demo/demo-mode";
+import { useTour } from "@/components/tour";
 
 const DAYS = [
   { value: 1, label: "Mon" },
@@ -81,12 +82,19 @@ export default function ScheduleStep() {
   const [saveAsDefault, setSaveAsDefault] = useState(true);
   const { t } = useI18n();
   const { isDemo } = useDemoMode();
+  const { prepareAction } = useTour();
   // Open by default when nothing is linked yet (edit mode hydrates later).
   const [listOpen, setListOpen] = useState(!copilotData.flightScheduleId);
 
   useEffect(() => {
     if (copilotData.flightScheduleId) setListOpen(false);
   }, [copilotData.flightScheduleId]);
+
+  useEffect(() => {
+    if (prepareAction === "schedule-list-open") {
+      setListOpen(true);
+    }
+  }, [prepareAction]);
 
   // A brand-new (unlinked) schedule starts on the visitor's own zone instead
   // of the hardcoded default, so the picker opens where the user actually is.
@@ -275,7 +283,10 @@ export default function ScheduleStep() {
       </div>
 
       <div className="flex flex-col gap-8 w-full max-w-4xl">
-        <div className="border-b border-slate-100 pb-8">
+        <div
+          data-tour="tour-step5-name"
+          className="border-b border-slate-100 pb-8"
+        >
           <h3 className="text-sm font-bold text-slate-900 mb-2">
             {t("Schedule Name (if creating new)")}
           </h3>
@@ -289,7 +300,10 @@ export default function ScheduleStep() {
         </div>
 
         {/* Daily send limit */}
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8">
+        <div
+          data-tour="tour-step5-limit"
+          className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8"
+        >
           <div className=" col-span-1 lg:col-span-2 ">
             <h3 className="text-sm font-bold text-slate-900 mb-1">
               {t("Daily send limit")}
@@ -401,7 +415,10 @@ export default function ScheduleStep() {
         </div>
 
         {/* Active days */}
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8">
+        <div
+          data-tour="tour-step5-days"
+          className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8"
+        >
           <div className="col-span-1 lg:col-span-2">
             <h3 className="text-sm font-bold text-slate-900 mb-1">
               {t("Active days")}
@@ -433,7 +450,10 @@ export default function ScheduleStep() {
         </div>
 
         {/* Sending hours */}
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8">
+        <div
+          data-tour="tour-step5-hours"
+          className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8"
+        >
           <div className="col-span-1 lg:col-span-2">
             <h3 className="text-sm font-bold text-slate-900 mb-1 flex items-center pr-2">
               {t("Sending hours")}
@@ -621,7 +641,7 @@ export default function ScheduleStep() {
       )}
 
       {/* Saved schedules — collapsed dropdown so the form stays on top */}
-      <div className="mt-6">
+      <div data-tour="tour-step5-saved" className="mt-6">
         <button
           type="button"
           onClick={() => setListOpen((o) => !o)}

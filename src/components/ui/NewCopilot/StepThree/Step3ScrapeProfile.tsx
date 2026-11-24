@@ -370,7 +370,10 @@ export default function Step3ScrapeProfile() {
 
       <div className="space-y-8">
         {/* Industry */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start">
+        <div
+          data-tour="tour-step3-industry"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start"
+        >
           <div>
             <h3 className="text-sm relative font-bold text-gray-900">
               {t("Industry")}
@@ -405,7 +408,10 @@ export default function Step3ScrapeProfile() {
         </div>
 
         {/* Country */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start">
+        <div
+          data-tour="tour-step3-country"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start"
+        >
           <div>
             <h3 className="text-sm font-bold text-gray-900">{t("Country")}</h3>
             <p className="text-xs text-gray-500 mt-1">
@@ -431,7 +437,10 @@ export default function Step3ScrapeProfile() {
         </div>
 
         {/* Cities */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start">
+        <div
+          data-tour="tour-step3-city"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start"
+        >
           <div>
             <div className=" w-full flex justify-between items-center gap-2">
               <h3 className="text-sm font-bold text-gray-900">{t("City")}</h3>
@@ -509,7 +518,7 @@ export default function Step3ScrapeProfile() {
         </div>
       </div>
       <div>
-        <div className="space-y-4">
+        <div data-tour="tour-step3-saved" className="space-y-4">
           {loadingProfiles ? (
             <div className="text-sm text-gray-500">{t("Loading target audiences...")}</div>
           ) : profiles.length === 0 ? (

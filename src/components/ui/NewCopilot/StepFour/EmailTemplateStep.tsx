@@ -28,6 +28,7 @@ import SubjectLineInput from "@/components/ui/SubjectLineInput";
 import { useI18n } from "@/lib/i18n";
 import { useDemoMode } from "@/lib/demo/demo-mode";
 import { getDemoTemplateById } from "@/lib/demo/demo-data";
+import { useTour } from "@/components/tour";
 
 const initialEmailBody = `
 <p>Hi,</p>
@@ -46,7 +47,16 @@ export default function EmailTemplateStep() {
   const feedback = useSetupFeedbackActions();
   const { t } = useI18n();
   const { isDemo } = useDemoMode();
+  const { prepareAction } = useTour();
   const [activeTab, setActiveTab] = useState<"steps" | "variables">("steps");
+
+  useEffect(() => {
+    if (prepareAction === "template-tabs-variables") {
+      setActiveTab("variables");
+    } else if (prepareAction === "template-tabs-steps") {
+      setActiveTab("steps");
+    }
+  }, [prepareAction]);
   const [activeStep, setActiveStep] = useState(1);
   // const [smartSending, setSmartSending] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -439,6 +449,7 @@ export default function EmailTemplateStep() {
         </div>
         <button
           type="button"
+          data-tour="tour-step4-test"
           onClick={handleTestEmail}
           disabled={sendingTestEmail}
           title={t("Send a test email to your connected account")}
@@ -450,7 +461,10 @@ export default function EmailTemplateStep() {
       </div>
 
       {/* Template Name Input */}
-      <div className="flex flex-col md:flex-row md:items-center gap-4 mb-2">
+      <div
+        data-tour="tour-step4-name"
+        className="flex flex-col md:flex-row md:items-center gap-4 mb-2"
+      >
         <label className="text-sm font-semibold text-slate-800 whitespace-nowrap">
           {t("Template name")}
         </label>
@@ -471,7 +485,10 @@ export default function EmailTemplateStep() {
       {/* Main Content Split Area */}
       <div className="flex flex-col xl:flex-row gap-6">
         {/* Left Sidebar */}
-        <div className="w-full  xl:w-60 flex flex-col gap-4">
+        <div
+          data-tour="tour-step4-left"
+          className="w-full  xl:w-60 flex flex-col gap-4"
+        >
           {/* Tabs */}
           <div className="flex  bg-slate-100 rounded-xl border border-slate-200">
             <button
@@ -605,7 +622,7 @@ export default function EmailTemplateStep() {
           </div>
 
           {/* Subject Line */}
-          <div className="mb-6">
+          <div data-tour="tour-step4-subject" className="mb-6">
             <label htmlFor="copilot-subject-line" className="block text-sm font-bold text-slate-900 mb-2">
               {t("Subject line")}
             </label>
@@ -622,7 +639,7 @@ export default function EmailTemplateStep() {
           </div>
 
           {/* Email Body */}
-          <div>
+          <div data-tour="tour-step4-body">
             <div className="flex justify-between items-center mb-2">
               <label className="text-sm font-bold text-slate-900">
                 {t("Email body")}
@@ -779,7 +796,10 @@ export default function EmailTemplateStep() {
       </div>
       {/* Templates Popup */}
 
-      <div className="bg-white rounded-2xl  w-full  overflow-hidden flex flex-col max-h-[85vh] ">
+      <div
+        data-tour="tour-step4-saved"
+        className="bg-white rounded-2xl  w-full  overflow-hidden flex flex-col max-h-[85vh] "
+      >
         {/* Body */}
         <div className="p-6 overflow-y-auto flex-1 ">
           {/* Loading */}

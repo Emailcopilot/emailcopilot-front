@@ -84,7 +84,10 @@ function TargetAudienceSummary() {
         </div>
 
         {/* Est. audience size */}
-        <div className="flex gap-3 items-start border-t border-gray-200 pt-3">
+        <div
+          data-tour="tour-step3-size"
+          className="flex gap-3 items-start border-t border-gray-200 pt-3"
+        >
           <Users size={20} className="text-primary shrink-0 mt-1" />
           <div className="flex-1">
             <p className="text-xs font-semibold text-gray-900">

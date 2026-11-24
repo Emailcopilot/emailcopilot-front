@@ -57,7 +57,7 @@ function EmailProfileSidebar() {
         </div>
         <hr className="border-gray-200" />
         {/* Item 4 */}
-        <div className="flex gap-3">
+        <div data-tour="tour-step2-why" className="flex gap-3">
           <Inbox size={24} className="text-primary/90 shrink-0 mt-0.5" />
           <div>
             <p className="text-xs font-semibold text-gray-900 mb-2">

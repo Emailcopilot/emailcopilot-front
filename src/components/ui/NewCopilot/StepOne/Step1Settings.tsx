@@ -78,7 +78,10 @@ export default function Step1Settings() {
 
       <div className="space-y-10">
         {/* Name */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6">
+        <div
+          data-tour="tour-step1-name"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6"
+        >
           <div>
             <label
               className="block text-sm font-semibold relative text-gray-900 mb-1.5"
@@ -109,7 +112,10 @@ export default function Step1Settings() {
         </div>
 
         {/* Description */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6">
+        <div
+          data-tour="tour-step1-desc"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6"
+        >
           <div>
             <label
               className="block text-sm font-semibold text-gray-900 mb-1.5"
@@ -138,7 +144,10 @@ export default function Step1Settings() {
         </div>
 
         {/* Goal */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6">
+        <div
+          data-tour="tour-step1-goal"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6"
+        >
           <div>
             <label
               className="block text-sm font-semibold text-gray-900 mb-1.5"
