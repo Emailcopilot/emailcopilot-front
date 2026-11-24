@@ -5,6 +5,7 @@ import { User, Lock, Bell, Palette, Save, Eye, EyeOff, AlertTriangle } from "luc
 import { settingsApi } from "@/lib/api";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
+import { LOCALES, useI18n, type Locale } from "@/lib/i18n";
 
 type Settings = {
   firstName: string;
@@ -35,6 +36,7 @@ export default function SettingsPage() {
   const [pwSaving, setPwSaving] = useState(false);
 
   const { user } = useUser()
+  const { t, locale, setLocale } = useI18n();
 
 
 
@@ -88,8 +90,8 @@ export default function SettingsPage() {
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 xl:px-8 py-4 sm:py-8">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-500 text-sm mt-1">Manage your account preferences.</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t("Settings")}</h1>
+        <p className="text-gray-500 text-sm mt-1">{t("Manage your account preferences.")}</p>
       </div>
 
       <div className="flex flex-col md:flex-row gap-4 md:gap-8">
@@ -100,7 +102,7 @@ export default function SettingsPage() {
               const Icon = tab.icon;
               return (
                 <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors text-left ${activeTab === tab.id ? "bg-gray-100 font-medium text-gray-900" : "text-gray-500 hover:bg-gray-50 hover:text-gray-700"}`}>
-                  <Icon size={15} /> {tab.label}
+                  <Icon size={15} /> {t(tab.label)}
                 </button>
               );
             })}
@@ -111,29 +113,36 @@ export default function SettingsPage() {
         <div className="flex-1 min-w-0">
           {activeTab === "profile" && (
             <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-5">
-              <h2 className="font-semibold text-gray-900">Profile Information</h2>
+              <h2 className="font-semibold text-gray-900">{t("Profile Information")}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">First Name</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">{t("First Name")}</label>
                   <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" value={settings.firstName} onChange={e => setSettings({ ...settings, firstName: e.target.value })} />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Last Name</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">{t("Last Name")}</label>
                   <input className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" value={settings.lastName} onChange={e => setSettings({ ...settings, lastName: e.target.value })} />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Email Address</label>
+                <label className="block text-xs font-medium text-gray-700 mb-1">{t("Email Address")}</label>
                 <input type="email" className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" value={settings.email} onChange={e => setSettings({ ...settings, email: e.target.value })} />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Timezone</label>
+                <label className="block text-xs font-medium text-gray-700 mb-1">{t("Language")}</label>
+                <select className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white" value={locale} onChange={e => setLocale(e.target.value as Locale)}>
+                  {LOCALES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+                </select>
+                <p className="text-xs text-gray-400 mt-1">{t("The language of the app. Your email templates stay in the language you write them in.")}</p>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">{t("Timezone")}</label>
                 <select className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white" value={settings.timezone} onChange={e => setSettings({ ...settings, timezone: e.target.value })}>
                   {["UTC", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Asia/Tokyo", "Asia/Kolkata"].map(tz => <option key={tz} value={tz}>{tz}</option>)}
                 </select>
               </div>
               <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 btn-cta border border-transparent text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50">
-                <Save size={14} /> {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
+                <Save size={14} /> {saved ? t("Saved!") : saving ? t("Saving...") : t("Save Changes")}
               </button>
             </div>
           )}
@@ -141,7 +150,7 @@ export default function SettingsPage() {
           {activeTab === "security" && (
             <div className="space-y-5">
               <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                <h2 className="font-semibold text-gray-900 mb-4">Change Password</h2>
+                <h2 className="font-semibold text-gray-900 mb-4">{t("Change Password")}</h2>
                 <div className="space-y-3">
                   {[
                     { label: "Current Password", key: "current" },
@@ -149,7 +158,7 @@ export default function SettingsPage() {
                     { label: "Confirm New Password", key: "confirm" },
                   ].map(field => (
                     <div key={field.key}>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">{field.label}</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">{t(field.label)}</label>
                       <div className="relative">
                         <input type={showPw ? "text" : "password"} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm pr-9" value={pwForm[field.key as keyof typeof pwForm]} onChange={e => setPwForm({ ...pwForm, [field.key]: e.target.value })} />
                         {field.key === "next" && (
@@ -161,18 +170,18 @@ export default function SettingsPage() {
                     </div>
                   ))}
                   <button onClick={handlePasswordChange} disabled={pwSaving} className="flex items-center gap-2 btn-cta border border-transparent text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 mt-1">
-                    <Lock size={14} /> {pwSaving ? "Updating..." : "Update Password"}
+                    <Lock size={14} /> {pwSaving ? t("Updating...") : t("Update Password")}
                   </button>
                 </div>
               </div>
               <div className="bg-red-50 border border-red-200 rounded-xl p-6">
                 <div className="flex items-center gap-2 mb-2">
                   <AlertTriangle size={16} className="text-red-600" />
-                  <h2 className="font-semibold text-red-800">Danger Zone</h2>
+                  <h2 className="font-semibold text-red-800">{t("Danger Zone")}</h2>
                 </div>
-                <p className="text-sm text-red-600 mb-4">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                <p className="text-sm text-red-600 mb-4">{t("Permanently delete your account and all associated data. This action cannot be undone.")}</p>
                 <button onClick={handleDeleteAccount} className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors">
-                  Delete Account
+                  {t("Delete Account")}
                 </button>
               </div>
             </div>
@@ -203,7 +212,7 @@ export default function SettingsPage() {
                 ))}
               </div>
               <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 btn-cta border border-transparent text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 mt-6">
-                <Save size={14} /> {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
+                <Save size={14} /> {saved ? t("Saved!") : saving ? t("Saving...") : t("Save Changes")}
               </button>
             </div>
           )}
@@ -224,7 +233,7 @@ export default function SettingsPage() {
                 ))}
               </div>
               <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 btn-cta border border-transparent text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 mt-6">
-                <Save size={14} /> {saved ? "Saved!" : saving ? "Saving..." : "Save Changes"}
+                <Save size={14} /> {saved ? t("Saved!") : saving ? t("Saving...") : t("Save Changes")}
               </button>
             </div>
           )}
