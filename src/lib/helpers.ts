@@ -152,14 +152,14 @@ export function getPeriodStats(
   };
 }
 
-export function getDateRange(days = 7): string {
+export function getDateRange(days = 7, locale = "en-US"): string {
   const today = new Date();
 
   const startDate = new Date(today);
   startDate.setDate(today.getDate() - (days - 1));
 
   const formatDate = (date: Date) =>
-    date.toLocaleDateString("en-US", {
+    date.toLocaleDateString(locale, {
       day: "numeric",
       month: "short",
     });
