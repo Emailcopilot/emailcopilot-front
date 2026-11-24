@@ -6,6 +6,7 @@ import { getBrowserTimeZone } from "@/lib/helpers";
 import TimeZoneSelect from "@/components/ui/TimeZoneSelect";
 import type { Schedule } from "./FlightScheduleCard";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
+import { useI18n } from "@/lib/i18n";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -43,6 +44,7 @@ export default function FlightScheduleFormModal({
   onClose,
   onSave,
 }: FlightScheduleFormModalProps) {
+  const { t } = useI18n();
   const isEditing = !!schedule;
 
   // ── Form state (pre-populated when editing) ────────────────────────────────
@@ -86,7 +88,7 @@ export default function FlightScheduleFormModal({
     setError(null);
 
     if (activeDays.length === 0) {
-      setError("Please select at least one active day.");
+      setError(t("Please select at least one active day."));
       return;
     }
 
@@ -102,7 +104,7 @@ export default function FlightScheduleFormModal({
         timezone,
       });
     } catch {
-      setError("Failed to save flight schedule. Please try again.");
+      setError(t("Failed to save flight schedule. Please try again."));
     } finally {
       setSaving(false);
     }
@@ -124,10 +126,10 @@ export default function FlightScheduleFormModal({
         <div className="flex items-center justify-between px-8 pt-8 pb-4">
           <div>
             <h2 className="text-xl font-bold text-slate-900">
-              {isEditing ? "Edit Flight Schedule" : "New Flight Schedule"}
+              {isEditing ? t("Edit Flight Schedule") : t("New Flight Schedule")}
             </h2>
             <p className="text-sm text-slate-500 mt-1">
-              Configure when and how emails are sent.
+              {t("Configure when and how emails are sent.")}
             </p>
           </div>
           <button
@@ -147,13 +149,13 @@ export default function FlightScheduleFormModal({
             {/* ── Schedule name ─────────────────────────────────────────── */}
             <div>
               <label className="block text-sm font-semibold text-slate-900 mb-2">
-                Schedule Name
+                {t("Schedule Name")}
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Mornings, Afternoons, Weekend…"
+                placeholder={t("e.g. Mornings, Afternoons, Weekend…")}
                 className="w-full px-4 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white text-slate-800"
               />
             </div>
@@ -162,7 +164,7 @@ export default function FlightScheduleFormModal({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-sm font-semibold text-slate-900">
-                  Daily Send Limit
+                  {t("Daily Send Limit")}
                 </label>
                 <button
                   type="button"
@@ -179,7 +181,7 @@ export default function FlightScheduleFormModal({
                 </button>
               </div>
               <p className="text-xs text-slate-500 mb-3">
-                Maximum number of new emails to send per day.
+                {t("Maximum number of new emails to send per day.")}
               </p>
 
               {sendLimitActive ? (
@@ -209,7 +211,7 @@ export default function FlightScheduleFormModal({
                     </button>
                   </div>
                   <span className="text-xs text-slate-400">
-                    Recommended: 20–50 per day
+                    {t("Recommended: 20–50 per day")}
                   </span>
                 </div>
               ) : (
@@ -217,11 +219,12 @@ export default function FlightScheduleFormModal({
                   <CircleAlert className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-sm font-bold text-slate-900 mb-0.5">
-                      Unlimited sending
+                      {t("Unlimited sending")}
                     </h4>
                     <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                      Your copilot will send as many emails as possible within
-                      the active hours each day.
+                      {t(
+                        "Your copilot will send as many emails as possible within the active hours each day.",
+                      )}
                     </p>
                   </div>
                 </div>
@@ -231,10 +234,10 @@ export default function FlightScheduleFormModal({
             {/* ── Active days ───────────────────────────────────────────── */}
             <div>
               <label className="block text-sm font-semibold text-slate-900 mb-1">
-                Active Days
+                {t("Active Days")}
               </label>
               <p className="text-xs text-slate-500 mb-3">
-                Choose which days emails can be sent.
+                {t("Choose which days emails can be sent.")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {DAYS.map(({ value, label }) => {
@@ -250,7 +253,7 @@ export default function FlightScheduleFormModal({
                           : "border-slate-200 text-slate-500 bg-white hover:border-slate-300"
                       }`}
                     >
-                      {label}
+                      {t(label)}
                     </button>
                   );
                 })}
@@ -261,7 +264,7 @@ export default function FlightScheduleFormModal({
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-sm font-semibold text-slate-900">
-                  Sending Hours
+                  {t("Sending Hours")}
                 </label>
                 <button
                   type="button"
@@ -278,7 +281,7 @@ export default function FlightScheduleFormModal({
                 </button>
               </div>
               <p className="text-xs text-slate-500 mb-3">
-                Set the daily time window for sending emails.
+                {t("Set the daily time window for sending emails.")}
               </p>
 
               {sendingHoursActive ? (
@@ -286,7 +289,7 @@ export default function FlightScheduleFormModal({
                   {/* From */}
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-slate-700">
-                      From
+                      {t("From")}
                     </span>
                     <div className="relative">
                       <select
@@ -308,7 +311,7 @@ export default function FlightScheduleFormModal({
                   {/* To */}
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-slate-700">
-                      To
+                      {t("To")}
                     </span>
                     <div className="relative">
                       <select
@@ -332,10 +335,12 @@ export default function FlightScheduleFormModal({
                   <CircleAlert className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-sm font-bold text-slate-900 mb-0.5">
-                      Sending hours are off
+                      {t("Sending hours are off")}
                     </h4>
                     <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                      Availability: {formatAllDayAvailability(activeDays)} (selected active days only).
+                      {t("Availability: {value} (selected active days only).", {
+                        value: t(formatAllDayAvailability(activeDays)),
+                      })}
                     </p>
                   </div>
                 </div>
@@ -345,10 +350,10 @@ export default function FlightScheduleFormModal({
             {/* ── Timezone ──────────────────────────────────────────────── */}
             <div>
               <label className="block text-sm font-semibold text-slate-900 mb-1">
-                Timezone
+                {t("Timezone")}
               </label>
               <p className="text-xs text-slate-500 mb-3">
-                Timezone for sending and scheduling.
+                {t("Timezone for sending and scheduling.")}
               </p>
               <TimeZoneSelect
                 value={timezone}
@@ -372,7 +377,7 @@ export default function FlightScheduleFormModal({
               onClick={onClose}
               className="flex-1 border border-gray-200 rounded-lg py-2.5 text-sm font-medium hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              {t("Cancel")}
             </button>
             <button
               type="submit"
@@ -380,10 +385,10 @@ export default function FlightScheduleFormModal({
               className="flex-1 btn-cta border border-transparent text-white rounded-lg py-2.5 text-sm font-medium transition-colors disabled:opacity-50"
             >
               {saving
-                ? "Saving…"
+                ? t("Saving…")
                 : isEditing
-                  ? "Save Changes"
-                  : "Create Schedule"}
+                  ? t("Save Changes")
+                  : t("Create Schedule")}
             </button>
           </div>
         </form>
