@@ -5,7 +5,7 @@ import DashboardHeader from "@/components/layout/DashboardHeader";
 import TemplateTable from "@/components/ui/templates/TemplateTable";
 import TemplateModal from "@/components/ui/templates/TemplateModal";
 import Pagination from "@/components/ui/templates/Pagination";
-import { templatesApi } from "@/lib/api";
+import { copilotsApi, templatesApi } from "@/lib/api";
 import { useRowsPerPage } from "@/lib/hooks";
 import { toast } from "sonner";
 import type {
@@ -36,8 +36,26 @@ export default function TemplatesPage() {
   async function fetchTemplates() {
     try {
       setLoading(true);
-      const res = await templatesApi.getAll();
-      setTemplates(res.data);
+      // The API's usageCount is always 0, so count the copilots per
+      // template here. A failed copilots call just leaves the counts at 0.
+      const [res, copilotsRes] = await Promise.all([
+        templatesApi.getAll(),
+        copilotsApi.getAll().catch(() => ({ data: [] })),
+      ]);
+      const copilots: { templateId?: number | null }[] = Array.isArray(
+        copilotsRes.data,
+      )
+        ? copilotsRes.data
+        : [];
+      const usage = new Map<number, number>();
+      for (const c of copilots) {
+        if (c.templateId != null)
+          usage.set(c.templateId, (usage.get(c.templateId) ?? 0) + 1);
+      }
+      const list: Template[] = Array.isArray(res.data) ? res.data : [];
+      setTemplates(
+        list.map((t) => ({ ...t, usedIn: usage.get(t.id) ?? 0 })),
+      );
     } catch {
       setTemplates([]);
     } finally {
