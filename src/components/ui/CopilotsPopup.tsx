@@ -4,6 +4,7 @@ import type { PaginatedMeta } from "@/lib/types";
 import { Pagination } from "./Pagination";
 import { copilotsApi } from "@/lib/api";
 import CopilotStatus from "./CopilotStatus";
+import { useI18n } from "@/lib/i18n";
 import type { CopilotStatusType } from "@/store/copilotStore";
 import { useDemoMode } from "@/lib/demo/demo-mode";
 import type { DemoPopupCopilot } from "@/lib/demo/demo-data";
@@ -43,6 +44,7 @@ export function CopilotsPopup({
   onClose,
   demoCopilots,
 }: CopilotPopupProps) {
+  const { t } = useI18n();
   const { isDemo } = useDemoMode();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
@@ -105,10 +107,10 @@ export function CopilotsPopup({
         <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-white/80 backdrop-blur-xl shrink-0">
           <div>
             <h2 className="text-xl font-semibold bg-linear-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent line-clamp-1">
-              Your Copilots
+              {t("Your Copilots")}
             </h2>
             <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm font-medium">
-              <span>Select one to view activity</span>
+              <span>{t("Select one to view activity")}</span>
             </div>
           </div>
           <button
@@ -127,7 +129,7 @@ export function CopilotsPopup({
             </div>
           ) : copilotsList?.length === 0 ? (
             <div className="text-center py-16 text-gray-500 text-sm">
-              No copilot found.
+              {t("No copilot found.")}
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -140,7 +142,7 @@ export function CopilotsPopup({
                   {/* Name + status */}
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <h3 className="font-semibold text-gray-900 text-sm truncate group-hover:text-indigo-600 transition-colors">
-                      {copilot?.name || "Unnamed Copilot"}
+                      {copilot?.name || t("Unnamed Copilot")}
                     </h3>
 
                     <CopilotStatus
@@ -154,7 +156,7 @@ export function CopilotsPopup({
                     className="text-xs text-gray-500 line-clamp-2 mb-3 min-h-8"
                     title={copilot?.description}
                   >
-                    {copilot?.description || "No description"}
+                    {copilot?.description || t("No description")}
                   </p>
 
                   {/* Footer: scrape profile + emails sent */}
@@ -165,15 +167,15 @@ export function CopilotsPopup({
                       </div>
                       <span
                         className="truncate"
-                        title={copilot?.targetAudience?.name || "No Source"}
+                        title={copilot?.targetAudience?.name || t("No target audience")}
                       >
-                        {copilot?.targetAudience?.name || "No Source"}
+                        {copilot?.targetAudience?.name || t("No target audience")}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-1.5 text-xs font-medium text-gray-700 shrink-0">
                       <Mail size={12} className="text-emerald-500" />
-                      <span>{copilot?.emailsSent || 0} sent</span>
+                      <span>{t("{count} sent", { count: copilot?.emailsSent || 0 })}</span>
                     </div>
                   </div>
                 </div>

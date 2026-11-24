@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MoreVertical, type LucideIcon } from "lucide-react";
+import { MoreVertical, X, type LucideIcon } from "lucide-react";
 
 export interface ActionMenuItem {
   label: string;
@@ -73,9 +73,9 @@ export default function ActionMenu({
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-label={ariaLabel}
-        className="rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+        className="text-gray-300 transition-colors hover:text-gray-500"
       >
-        <MoreVertical size={16} />
+        {isOpen ? <X size={18} /> : <MoreVertical size={18} />}
       </button>
 
       {isOpen && (

@@ -275,6 +275,11 @@ function Pricing({ plans }: PricingProps) {
   const annualDiscount = maxAnnualDiscountPercent(plans);
   const startingPrice =
     plans.length > 0 ? Math.min(...plans.map((plan) => plan.price)) : null;
+  const annualPrices = plans
+    .map((plan) => plan.annual?.price)
+    .filter((price): price is number => price != null);
+  const startingAnnualPrice =
+    annualPrices.length > 0 ? Math.min(...annualPrices) : null;
 
   return (
     <section
@@ -292,8 +297,9 @@ function Pricing({ plans }: PricingProps) {
         </ScrollFloat>
         {startingPrice != null && (
           <p className="mt-3 text-gray-500 text-base md:text-lg">
-            Start as low as {formatEuro(startingPrice)} / month. Cancel your
-            monthly plan anytime.
+            {isAnnual && startingAnnualPrice != null
+              ? `Start as low as ${formatEuro(startingAnnualPrice)}/year. Lock in your progress for a full year at our best rate.`
+              : `Start as low as ${formatEuro(startingPrice)} / month. Cancel your monthly plan anytime.`}
           </p>
         )}
       </div>

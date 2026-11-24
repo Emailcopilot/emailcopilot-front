@@ -1,4 +1,7 @@
+"use client";
+
 import type { Invoice } from "@/lib/useBilling";
+import { useI18n } from "@/lib/i18n";
 
 interface InvoiceStatusProps {
   status: Invoice["status"];
@@ -21,13 +24,14 @@ function statusProps(status: Invoice["status"]): {
 }
 
 export default function InvoiceStatus({ status }: InvoiceStatusProps) {
+  const { t } = useI18n();
   const { label, className } = statusProps(status);
 
   return (
     <span
       className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${className}`}
     >
-      {label}
+      {t(label)}
     </span>
   );
 }

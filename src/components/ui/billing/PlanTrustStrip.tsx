@@ -1,4 +1,7 @@
+"use client";
+
 import { Lock, Mail, XCircle } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 const ITEMS = [
   {
@@ -20,6 +23,7 @@ const ITEMS = [
 
 /** Reassurance row shown underneath the plan cards. */
 export default function PlanTrustStrip() {
+  const { t } = useI18n();
   return (
     <div className="grid grid-cols-1 gap-6 rounded-xl bg-primary/5 p-6 sm:grid-cols-3">
       {ITEMS.map(({ icon: Icon, title, description }) => (
@@ -28,8 +32,8 @@ export default function PlanTrustStrip() {
             <Icon size={18} className="text-primary" />
           </div>
           <div>
-            <p className="text-sm font-bold text-gray-900">{title}</p>
-            <p className="mt-1 text-sm text-gray-500">{description}</p>
+            <p className="text-sm font-bold text-gray-900">{t(title)}</p>
+            <p className="mt-1 text-sm text-gray-500">{t(description)}</p>
           </div>
         </div>
       ))}

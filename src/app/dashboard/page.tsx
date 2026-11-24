@@ -22,6 +22,14 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import { decodeJwtPayload, getDisplayUsername } from "@/lib/userDisplay";
 import { useDemoMode } from "@/lib/demo/demo-mode";
 import { DEMO_COPILOTS, DEMO_LEADS } from "@/lib/demo/demo-data";
+import { useI18n } from "@/lib/i18n";
+
+/**
+ * The API has no per-day stats yet (GET /leads returns 20 leads and sentAt is
+ * empty), so period numbers and the chart are greyed out. Flip to true once the
+ * back-end delivers daily stats.
+ */
+const DAILY_STATS_LIVE = false;
 
 export default function OverviewPage() {
   const { leads, getAllLeads } = useLeadStore();
@@ -31,6 +39,7 @@ export default function OverviewPage() {
   const { isDemo, exitDemo } = useDemoMode();
 
   const router = useRouter();
+  const { t, locale } = useI18n();
 
   const [period, setPeriod] = useState<DateRange>("Last 7 days");
   const [displayUsername, setDisplayUsername] = useState("");
@@ -65,6 +74,7 @@ export default function OverviewPage() {
 
   const displayLeads = isDemo ? DEMO_LEADS : leads;
   const displayCopilots = isDemo ? DEMO_COPILOTS : copilots;
+  const statsLive = DAILY_STATS_LIVE || isDemo;
 
   const leadChartItems = useMemo(
     () => buildLeadChartItems(displayLeads, 60),
@@ -99,17 +109,32 @@ export default function OverviewPage() {
     sentStats.total > 0 ? (replyStats.total / sentStats.total) * 100 : 0;
 
   const comparisonLabel = useMemo(
-    () => "vs " + getDateRange(periodToDays(period)),
-    [period],
+    () =>
+      t("vs {range}", {
+        range: getDateRange(
+          periodToDays(period),
+          locale === "en" ? "en-US" : locale,
+        ),
+      }),
+    [period, t, locale],
+  );
+
+  // Total over all copilots, accurate until daily stats exist.
+  const totalSent = (displayCopilots ?? []).reduce(
+    (sum, c) => sum + (Number(c.emailsSent) || 0),
+    0,
   );
 
   const stats = [
     {
       label: "Emails Sent",
-      value: sentStats.total,
+      value: statsLive
+        ? sentStats.total
+        : totalSent.toLocaleString(locale === "en" ? "en-US" : locale),
       change: sentStats.percentageChange,
       comparisonLabel,
       icon: Send,
+      footnote: statsLive ? undefined : t("All time"),
     },
     {
       label: "Replies",
@@ -117,6 +142,7 @@ export default function OverviewPage() {
       change: replyStats.percentageChange,
       comparisonLabel,
       icon: BarChart3,
+      comingSoon: !statsLive,
     },
     {
       label: "Reply Rate",
@@ -124,6 +150,7 @@ export default function OverviewPage() {
       change: 0,
       comparisonLabel,
       icon: Users,
+      comingSoon: !statsLive,
     },
     {
       label: "Copilots",
@@ -139,8 +166,8 @@ export default function OverviewPage() {
       <DashboardHeader
         title={
           displayUsername
-            ? `Welcome back, ${displayUsername}!👋`
-            : "Welcome back!👋"
+            ? t("Welcome back, {name}!👋", { name: displayUsername })
+            : t("Welcome back!👋")
         }
         description={`Here's what's happening with your outreach today`}
         actionLabel="Create New Copilot"
@@ -162,6 +189,8 @@ export default function OverviewPage() {
             value={s.value as string | number}
             change={s.change}
             comparisonLabel={s.comparisonLabel}
+            comingSoon={"comingSoon" in s && s.comingSoon}
+            footnote={"footnote" in s ? s.footnote : undefined}
           />
         ))}
       </div>
@@ -169,6 +198,7 @@ export default function OverviewPage() {
         leads={displayLeads}
         range={period}
         onRangeChange={(newRange) => setPeriod(newRange)}
+        comingSoon={!statsLive}
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
         <CopilotsCard copilots={isDemo ? DEMO_COPILOTS : undefined} />

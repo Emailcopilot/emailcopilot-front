@@ -7,12 +7,15 @@ import UserCard from "../ui/UserCard";
 import { usePathname } from "next/navigation";
 import Logo from "../homepage/Logo";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import clsx from "clsx";
 import { isNavActive, navGroups } from "@/lib/nav-items";
+import { useI18n } from "@/lib/i18n";
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useI18n();
   const { user } = useUser();
 
   const toggleMenu = () => {
@@ -25,14 +28,25 @@ export default function MobileMenu() {
 
   return (
     <div className="z-120 relative">
-      {/* Hamburger Button - Only visible on mobile */}
-      <button
-        onClick={toggleMenu}
-        className="md:hidden fixed top-5 right-0 z-50 p-2 bg-primary text-white rounded-s-lg hover:bg-primary/80 transition-colors"
-        aria-label="Toggle menu"
-      >
-        {isOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
+      {/* Mobile top bar: logo + menu button, so the button never covers page content */}
+      <div className="md:hidden flex items-center justify-between h-14 pl-4 pr-2 bg-white border-b border-gray-200">
+        <Link href="/dashboard" aria-label="Overview">
+          <Image
+            src="/EmailcopilotLogo.svg"
+            alt="Emailcopilot"
+            width={146}
+            height={28}
+            loading="eager"
+          />
+        </Link>
+        <button
+          onClick={toggleMenu}
+          className="p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+          aria-label="Toggle menu"
+        >
+          {isOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
@@ -74,7 +88,7 @@ export default function MobileMenu() {
                   >
                     {group.label && (
                       <div className="px-3 pb-2 text-xs font-medium uppercase tracking-wider text-gray-400">
-                        {group.label}
+                        {t(group.label)}
                       </div>
                     )}
                     <div className="space-y-1">
@@ -101,7 +115,7 @@ export default function MobileMenu() {
                                 isActive ? "text-primary" : "text-gray-400"
                               }
                             />
-                            <span>{label}</span>
+                            <span>{t(label)}</span>
                           </Link>
                         );
                       })}

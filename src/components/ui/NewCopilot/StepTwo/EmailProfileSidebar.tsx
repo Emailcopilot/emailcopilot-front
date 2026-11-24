@@ -2,11 +2,14 @@
 
 import React from "react";
 import { ShieldCheck, Send, TrendingUp, Inbox } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+
 function EmailProfileSidebar() {
+  const { t } = useI18n();
   return (
     <div className="w-full  ">
       <h3 className="font-bold text-sm text-gray-900 mb-4">
-        Why connect my email account?
+        {t("Why connect my email account?")}
       </h3>
 
       <div className="space-y-4">
@@ -15,11 +18,12 @@ function EmailProfileSidebar() {
           <ShieldCheck size={24} className="text-primary/90 shrink-0 mt-0.5" />
           <div>
             <p className="text-xs font-semibold text-gray-900 mb-2">
-              1. Connect securely
+              {t("1. Connect securely")}
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
-              Your account is securely connected via OAuth, so we never see or
-              store your password.
+              {t(
+                "Your account is securely connected via OAuth, so we never see or store your password.",
+              )}
             </p>
           </div>
         </div>
@@ -29,10 +33,10 @@ function EmailProfileSidebar() {
           <Send size={24} className="text-primary/90 shrink-0 mt-0.5" />
           <div>
             <p className="text-xs font-semibold text-gray-900 mb-2">
-              2. Send from your own email address
+              {t("2. Send from your own email address")}
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
-              This is helping recipients recognize and trust the sender.
+              {t("This helps recipients recognize and trust the sender.")}
             </p>
           </div>
         </div>
@@ -42,10 +46,12 @@ function EmailProfileSidebar() {
           <TrendingUp size={24} className="text-primary/90 shrink-0 mt-0.5" />
           <div>
             <p className="text-xs font-semibold text-gray-900 mb-2">
-              3. Built for deliverability
+              {t("3. Built for deliverability")}
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
-              Gradual warmup and daily limits to protect your sender reputation.
+              {t(
+                "Gradual warmup and daily limits to protect your sender reputation.",
+              )}
             </p>
           </div>
         </div>
@@ -55,10 +61,12 @@ function EmailProfileSidebar() {
           <Inbox size={24} className="text-primary/90 shrink-0 mt-0.5" />
           <div>
             <p className="text-xs font-semibold text-gray-900 mb-2">
-              4. Replies stay in your inbox
+              {t("4. Replies stay in your inbox")}
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
-              Gradual warmup and daily limits to protect your sender reputation.
+              {t(
+                "Replies go straight to your own inbox, so you can continue the conversation as usual.",
+              )}
             </p>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { Users, Search } from "lucide-react";
 import { leadsApi } from "@/lib/api";
 import type { Lead, PaginatedMeta } from "@/lib/types";
 import LeadStatus from "@/components/ui/departure/LeadStatus";
-import LeadMenu from "@/components/ui/departure/LeadMenu";
+import LeadMenu, { getHiddenLeadIds } from "@/components/ui/departure/LeadMenu";
 import { Pagination } from "@/components/ui/Pagination";
 import EmailPreviewCard from "@/components/ui/EmialPreview";
 import { CopilotsPopup } from "@/components/ui/CopilotsPopup";
@@ -19,12 +19,13 @@ import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useDemoMode } from "@/lib/demo/demo-mode";
 import {
+  DEMO_COPILOTS,
   DEMO_LEADS,
   DEMO_TEMPLATES,
   DEMO_EMAIL_PREVIEW,
   DEMO_POPUP_COPILOTS,
 } from "@/lib/demo/demo-data";
-import type { DemoPopupCopilot } from "@/lib/demo/demo-data";
+import { useI18n } from "@/lib/i18n";
 
 const MOCK_META: PaginatedMeta = {
   total: 50,
@@ -138,6 +139,7 @@ function Tooltip({
 }
 
 function LeadsPageContent() {
+  const { t } = useI18n();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [meta, setMeta] = useState<PaginatedMeta>(MOCK_META);
   const [loading, setLoading] = useState(true);
@@ -241,10 +243,15 @@ function LeadsPageContent() {
         let data = DEMO_LEADS;
 
         if (targetCopilotId != null) {
+          const matchedDemoCopilot = DEMO_COPILOTS.find(
+            (c) => c.id === targetCopilotId,
+          );
           data = data.filter(
             (lead) =>
               lead.id === targetCopilotId ||
-              lead.copilotName === String(targetCopilotId),
+              lead.copilotName === String(targetCopilotId) ||
+              (matchedDemoCopilot != null &&
+                lead.copilotName === matchedDemoCopilot.name),
           );
         }
 
@@ -281,7 +288,8 @@ function LeadsPageContent() {
         ...(targetCopilotId != null ? { copilotId: targetCopilotId } : {}),
       });
       if (seq !== requestSeqRef.current) return;
-      setLeads(res.data.data);
+      const hidden = getHiddenLeadIds();
+      setLeads(res.data.data.filter((lead: Lead) => !hidden.has(lead.id)));
       setMeta(res.data.meta);
     } catch {
       if (seq === requestSeqRef.current) {
@@ -356,25 +364,24 @@ function LeadsPageContent() {
 
       {/* Search stays mounted through loading and empty states so typing
           keeps focus and a no-results query can always be cleared. */}
-      <div className="bg-white border border-[#E2E8F0] rounded-lg px-4 sm:px-5 py-4 mb-4 flex items-center">
-        <div className="relative w-full sm:w-[378px]">
+      <div className="w-full p-2 border border-[#E2E8F0] mb-3 bg-white rounded-lg flex items-center">
+        <div className="relative min-w-48 flex-1">
           <Search
-            size={20}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#59637C]"
+            size={14}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
           />
           <input
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Search company, email, website or phone..."
-            className="w-full h-11 border border-[#E2E8F0] rounded-lg pl-10 pr-4 text-[15px] font-light bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]"
-            style={{ color: "#59637C" }}
+            placeholder={t("Search company, email, website or phone...")}
+            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-100"
           />
         </div>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center h-48 text-gray-400">
-          Loading...
+          {t("Loading...")}
         </div>
       ) : leads.length === 0 && search.trim() ? (
         <div className="bg-white border border-[#E2E8F0] rounded-lg flex flex-col items-center justify-center py-12 px-6 text-center">
@@ -382,17 +389,18 @@ function LeadsPageContent() {
             <Search size={18} className="text-gray-400" />
           </div>
           <h2 className="font-semibold text-sm text-gray-900 mb-1">
-            No results found
+            {t("No results found")}
           </h2>
           <p className="text-sm text-gray-500 mb-4">
-            No leads match &quot;{search.trim()}&quot;. Try a different search
-            term.
+            {t('No leads match "{query}". Try a different search term.', {
+              query: search.trim(),
+            })}
           </p>
           <button
             onClick={() => handleSearchChange("")}
             className="px-4 py-2 border border-[#E2E8F0] rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            Clear search
+            {t("Clear search")}
           </button>
         </div>
       ) : leads.length === 0 ? (
@@ -400,13 +408,74 @@ function LeadsPageContent() {
           <div className="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center mx-auto mb-4">
             <Users size={20} className="text-primary" />
           </div>
-          <h2 className="font-bold text-gray-900 mb-2">No leads yet</h2>
+          <h2 className="font-bold text-gray-900 mb-2">{t("No leads yet")}</h2>
           <p className="text-sm text-gray-500 mb-5">
-            Leads will appear here once your copilots start sending emails.
+            {t("Leads will appear here once your copilots start sending emails.")}
           </p>
         </div>
       ) : (
         <>
+          {/* Mobile / tablet: one card per lead (the wide table only fits from lg). */}
+          <div className="lg:hidden bg-white border border-[#E2E8F0] rounded-lg overflow-hidden mb-6">
+            {leads.map((lead, index) => {
+              const status = lead.suppressed
+                ? "suppressed"
+                : lead.status || "sent";
+              return (
+                <div
+                  key={lead.id + index}
+                  className="px-4 py-4 border-b last:border-b-0 border-[#E2E8F0]"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-semibold truncate text-sm text-[#0F172A] mb-1">
+                        {lead.companyName || "—"}
+                      </div>
+                      {lead.email && (
+                        <a
+                          href={`mailto:${lead.email}`}
+                          className="block truncate text-xs text-blue-500"
+                        >
+                          {lead.email}
+                        </a>
+                      )}
+                      {(lead.website || lead.phone) && (
+                        <div className="mt-0.5 truncate text-xs text-[#59637C]">
+                          {[lead.website, lead.phone]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </div>
+                      )}
+                      <div className="mt-0.5 truncate text-xs text-[#59637C]">
+                        {lead.copilotName || t("Unknown Copilot")}
+                        {lead.sentAt && <> · {formatDateTime(lead.sentAt)}</>}
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <LeadStatus status={status} isSmall />
+                        <button
+                          type="button"
+                          onClick={() => handleShowPreview(lead)}
+                          className="rounded-md px-2 py-1 text-[10px] font-medium"
+                          style={{ backgroundColor: "#F5F7FF", color: "#2563EB" }}
+                        >
+                          {t("Show email")}
+                        </button>
+                      </div>
+                    </div>
+                    {!isDemo && (
+                      <LeadMenu
+                        lead={lead}
+                        onDeleted={handleDeleteLead}
+                        onSuppressionChange={handleSuppressionChange}
+                      />
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="hidden lg:contents">
           <div className="bg-white border border-[#E2E8F0] rounded-lg overflow-hidden mb-6 [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:flex-1 [@media(min-height:1081px)]:flex-col">
             <div className="overflow-auto max-h-[calc(100dvh-320px)]">
               <table className="w-full text-sm min-w-225">
@@ -416,34 +485,34 @@ function LeadsPageContent() {
                       Copilot
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Company
+                      {t("Company")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Address
+                      {t("Address")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Website
+                      {t("Website")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Email
+                      {t("Email")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Phone
+                      {t("Phone")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 bg-white text-[#94A3B8] px-6 py-3">
-                      Target Audience
+                      {t("Target Audience")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Departured at
+                      {t("Sent at")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Template
+                      {t("Template")}
                     </th>
-                    <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5  text-[#94A3B8] px-6 py-3">
-                      Status
+                    <th className="sticky top-0 right-22 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5  text-[#94A3B8] px-6 py-3">
+                      {t("Status")}
                     </th>
-                    <th className="font-semibold text-gray-900 px-6 py-5 z-40 sticky top-0 right-0 bg-white shadow-[inset_0_-1px_0_#E2E8F0]">
-                      <span className="sr-only">Actions</span>
+                    <th className="sticky top-0 right-0 z-40 w-22 min-w-22 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-center text-xs leading-5 text-[#94A3B8] px-5 py-3">
+                      {t("Actions")}
                     </th>
                   </tr>
                 </thead>
@@ -451,18 +520,18 @@ function LeadsPageContent() {
                   {leads.map((lead, index) => (
                     <tr
                       key={lead.id + index}
-                      className=" border-b text-sm border-[#E2E8F0] hover:bg-gray-50 transition-colors"
+                      className="group/row border-b text-sm border-[#E2E8F0] hover:bg-gray-50 transition-colors"
                     >
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2">
-                          <Tooltip text={lead.copilotName || "Unknown Copilot"}>
+                          <Tooltip text={lead.copilotName || t("Unknown Copilot")}>
                             <a
                               target="_blank"
                               rel="noopener noreferrer"
                               href={`/dashboard/copilots#${lead.copilotName?.replace(" ", "-") || "unknown-copilot"}`}
                               className="font-semibold whitespace-nowrap text-sm text-[#0F172A]"
                             >
-                              {lead.copilotName || "Unknown Copilot"}
+                              {lead.copilotName || t("Unknown Copilot")}
                             </a>
                           </Tooltip>
                         </div>
@@ -470,7 +539,7 @@ function LeadsPageContent() {
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2">
                           <Tooltip text={lead.companyName}>
-                            <div className="font-semibold line-clamp-2 max-w-48 text-sm text-[#0F172A]">
+                            <div className="line-clamp-2 max-w-48 text-sm text-[#0F172A]">
                               {lead.companyName}
                             </div>
                           </Tooltip>
@@ -484,7 +553,7 @@ function LeadsPageContent() {
                                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.address)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="font-semibold line-clamp-2 max-w-48 text-sm text-[#0F172A]"
+                                className="line-clamp-2 max-w-48 text-sm text-[#0F172A]"
                               >
                                 {lead.address}
                               </a>
@@ -501,7 +570,7 @@ function LeadsPageContent() {
                               target="_blank"
                               rel="noopener noreferrer"
                               href={normalizeUrl(lead.website || "#")}
-                              className="font-semibold line-clamp-2 text-sm text-blue-500 hover:text-blue-600 transition-colors"
+                              className="line-clamp-2 text-sm text-blue-500 hover:text-blue-600 transition-colors"
                             >
                               {lead.website}
                             </a>
@@ -513,7 +582,7 @@ function LeadsPageContent() {
                           href={`mailto:${lead.email}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-500 hover:text-blue-600 font-medium group transition-colors"
+                          className="flex items-center gap-2 text-blue-500 hover:text-blue-600 group transition-colors"
                         >
                           <Tooltip text={lead.email}>
                             <a
@@ -537,7 +606,7 @@ function LeadsPageContent() {
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   href={`https://wa.me/${lead.phone.replace("+", "")}`}
-                                  className="font-semibold whitespace-nowrap text-sm text-[#0F172A]"
+                                  className="whitespace-nowrap text-sm text-[#0F172A]"
                                 >
                                   {lead.phone}
                                 </a>
@@ -555,7 +624,7 @@ function LeadsPageContent() {
                               <Tooltip text={lead.sourceQuery}>
                                 <a
                                   href={`/dashboard/target-audiences#${lead.sourceQuery.replace(" ", "-")}`}
-                                  className="font-semibold whitespace-nowrap text-sm text-[#0F172A]"
+                                  className="whitespace-nowrap text-sm text-[#0F172A]"
                                 >
                                   {lead.sourceQuery}
                                 </a>
@@ -573,13 +642,13 @@ function LeadsPageContent() {
                             text={
                               lead.sentAt
                                 ? formatDateTime(lead.sentAt)
-                                : "Unknown"
+                                : t("Unknown")
                             }
                           >
-                            <div className="font-semibold whitespace-nowrap text-sm text-[#0F172A]">
+                            <div className="whitespace-nowrap text-sm text-[#0F172A]">
                               {lead.sentAt
                                 ? formatDateTime(lead.sentAt)
-                                : "Unknown"}
+                                : t("Unknown")}
                             </div>
                           </Tooltip>
                         </div>
@@ -590,24 +659,26 @@ function LeadsPageContent() {
                           onClick={() => handleShowPreview(lead)}
                         >
                           <div
-                            className="inline-flex min-w-[60px] items-center justify-center rounded-lg px-3.5 py-1.5 text-xs leading-4 font-semibold capitalize transition-colors hover:brightness-95"
+                            className="inline-flex items-center justify-center rounded-md px-3 py-2 text-[12px] font-medium capitalize transition-colors hover:brightness-95"
                             style={{
                               backgroundColor: "#F5F7FF",
                               color: "#2563EB",
                             }}
                           >
-                            show
+                            {t("show")}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5 align-middle transition-colors">
+                      <td className="px-6 py-5 sticky right-22 z-20 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] align-middle transition-colors">
                         <div className="flex items-center gap-2 ">
                           <Tooltip
                             text={
                               lead.suppressed
-                                ? "Suppressed"
-                                : lead.status.charAt(0).toUpperCase() +
-                                    lead.status.slice(1) || "Sent"
+                                ? t("Excluded")
+                                : t(
+                                    lead.status.charAt(0).toUpperCase() +
+                                      lead.status.slice(1) || "Sent",
+                                  )
                             }
                           >
                             <LeadStatus
@@ -620,7 +691,7 @@ function LeadsPageContent() {
                           </Tooltip>
                         </div>
                       </td>
-                      <td className="px-6 py-5 sticky w-16 align-middle right-0 z-30 transition-colors">
+                      <td className="px-5 py-5 sticky w-22 min-w-22 align-middle right-0 z-20 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] transition-colors">
                         <div className="flex items-center justify-center">
                           {!isDemo && (
                             <LeadMenu
@@ -636,6 +707,7 @@ function LeadsPageContent() {
                 </tbody>
               </table>
             </div>
+          </div>
           </div>
 
           {meta && (
@@ -653,11 +725,11 @@ function LeadsPageContent() {
         <EmailPreviewCard
           subject={
             templateData?.subject ||
-            (templateData === null ? "Loading..." : undefined)
+            (templateData === null ? t("Loading...") : undefined)
           }
           body={
             templateData?.body ||
-            (templateData === null ? "Loading..." : undefined)
+            (templateData === null ? t("Loading...") : undefined)
           }
           onClose={handleClosePreview}
         />

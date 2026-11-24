@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { emailAccountsApi } from "@/lib/api";
 import { EmailAccount } from "@/lib/types";
 import { clearDemoPending } from "@/lib/demo/demo-storage";
+import { translate as t } from "@/lib/i18n";
 
 type EmailAccountPayload = Record<string, unknown>;
 
@@ -41,7 +42,7 @@ export const useEmailAccountStore = create<EmailAccountStore>((set, get) => ({
       set({ accounts: response.data });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to fetch email accounts");
+      toast.error(t("Failed to fetch email accounts"));
     } finally {
       set({ isLoading: false });
     }
@@ -52,10 +53,11 @@ export const useEmailAccountStore = create<EmailAccountStore>((set, get) => ({
     try {
       await emailAccountsApi.create(data);
       await get().fetchAccounts();
-      toast.success("Email account created successfully");
+      clearDemoPending();
+      toast.success(t("Email account created successfully"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to create email account");
+      toast.error(t("Failed to create email account"));
     } finally {
       set({ isSaving: false });
     }
@@ -63,7 +65,7 @@ export const useEmailAccountStore = create<EmailAccountStore>((set, get) => ({
 
   deleteAccount: async (id) => {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this email account?",
+      t("Are you sure you want to delete this email account?"),
     );
 
     if (!confirmed) return;
@@ -75,10 +77,10 @@ export const useEmailAccountStore = create<EmailAccountStore>((set, get) => ({
         accounts: state.accounts.filter((account) => account.id !== id),
       }));
 
-      toast.success("Email account deleted successfully");
+      toast.success(t("Email account deleted successfully"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete email account");
+      toast.error(t("Failed to delete email account"));
     }
   },
 
@@ -91,14 +93,16 @@ export const useEmailAccountStore = create<EmailAccountStore>((set, get) => ({
 
       if (result.data.smtpStatus === "error") {
         toast.error(
-          "Email account verification failed,please make sure the account is correctly configured.",
+          t(
+            "Email account verification failed. Please make sure the account is correctly configured.",
+          ),
         );
       } else {
-        toast.success("Email account verified successfully");
+        toast.success(t("Email account verified successfully"));
       }
     } catch (error) {
       console.error(error);
-      toast.error("Failed to verify email account");
+      toast.error(t("Failed to verify email account"));
     } finally {
       set({ verifyingId: null });
     }
@@ -113,7 +117,7 @@ export const useEmailAccountStore = create<EmailAccountStore>((set, get) => ({
       window.location.href = response.data.authUrl;
     } catch (error) {
       console.error(error);
-      toast.error("Failed to connect via OAuth");
+      toast.error(t("Failed to connect via OAuth"));
     } finally {
       set({ oauthConnecting: false });
     }

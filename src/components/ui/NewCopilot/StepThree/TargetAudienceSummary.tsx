@@ -4,25 +4,22 @@ import React from "react";
 import { Building2, Globe, Map, Users } from "lucide-react";
 import { useCopilotStore } from "../../../../store/copilotStore";
 import { useWizardTargetAudiences } from "@/lib/useWizardOptions";
-import { estimateAudienceSize } from "@/lib/estimates";
+import { useI18n } from "@/lib/i18n";
 
 function TargetAudienceSummary() {
   const { copilotData } = useCopilotStore();
+  const { t, locale } = useI18n();
   const { industries, countries, cities } = copilotData.targetProfile;
   const { data: targetAudiences = [] } = useWizardTargetAudiences();
 
   const linkedAudience = targetAudiences.find(
     (a) => String(a.id) === String(copilotData.targetAudienceId),
   );
-  const realSize = linkedAudience?.resultsCount;
-  const isEstimate = realSize == null || realSize <= 0;
-  const estimatedSize = isEstimate
-    ? estimateAudienceSize(
-        copilotData.flightSchedule,
-        copilotData.targetAudienceId,
-        copilotData.name,
-      )
-    : realSize;
+  // Only show a size once the scraper has a real count. There is no reliable
+  // estimate before the first run (a back-end estimate is planned).
+  const realSize = linkedAudience?.resultsCount ?? 0;
+  const hasSize = realSize > 0;
+  const estimatedSize = realSize;
   let label = "";
 
   let colorClass = "text-gray-600 bg-gray-100";
@@ -37,7 +34,7 @@ function TargetAudienceSummary() {
     label = "Healthy";
     colorClass = "text-amber-600 bg-amber-100";
   } else if (estimatedSize > 500) {
-    label = "moderate";
+    label = "Moderate";
     colorClass = "text-orange-600 bg-orange-100";
   } else if (estimatedSize > 100) {
     label = "Limited";
@@ -46,10 +43,10 @@ function TargetAudienceSummary() {
   return (
     <div className="w-full ">
       <h3 className="font-bold text-sm text-gray-900">
-        Target Profile Summary
+        {t("Target Profile Summary")}
       </h3>
       <p className="text-xs text-gray-500 mt-1 mb-4">
-        This is who your copilot will reach.
+        {t("This is who your copilot will reach.")}
       </p>
 
       <div className="space-y-5">
@@ -57,9 +54,9 @@ function TargetAudienceSummary() {
         <div className="flex gap-3 border-t border-gray-200 pt-3">
           <Building2 size={20} className="text-primary shrink-0 mt-1" />
           <div>
-            <p className="text-xs font-semibold text-gray-900">Industry</p>
+            <p className="text-xs font-semibold text-gray-900">{t("Industry")}</p>
             <p className="text-xs text-gray-500 mt-1">
-              {industries.length > 0 ? industries.join(", ") : "None selected"}
+              {industries.length > 0 ? industries.join(", ") : t("None selected")}
             </p>
           </div>
         </div>
@@ -68,9 +65,9 @@ function TargetAudienceSummary() {
         <div className="flex gap-3 border-t border-gray-200 pt-3">
           <Globe size={20} className="text-primary shrink-0 mt-1" />
           <div>
-            <p className="text-xs font-semibold text-gray-900">Country</p>
+            <p className="text-xs font-semibold text-gray-900">{t("Country")}</p>
             <p className="text-xs text-gray-500 mt-1">
-              {countries.length > 0 ? countries.join(", ") : "All"}
+              {countries.length > 0 ? countries.join(", ") : t("All")}
             </p>
           </div>
         </div>
@@ -79,9 +76,9 @@ function TargetAudienceSummary() {
         <div className="flex gap-3 border-t border-gray-200 pt-3">
           <Map size={20} className="text-primary shrink-0 mt-1" />
           <div>
-            <p className="text-xs font-semibold text-gray-900">Cities</p>
+            <p className="text-xs font-semibold text-gray-900">{t("Cities")}</p>
             <p className="text-xs text-gray-500 mt-1">
-              {cities.length > 0 ? cities.join(", ") : "All"}
+              {cities.length > 0 ? cities.join(", ") : t("All")}
             </p>
           </div>
         </div>
@@ -91,23 +88,30 @@ function TargetAudienceSummary() {
           <Users size={20} className="text-primary shrink-0 mt-1" />
           <div className="flex-1">
             <p className="text-xs font-semibold text-gray-900">
-              Est. audience size
+              {t("Est. audience size")}
             </p>
             <div className="flex  justify-between mt-1">
-              <p className="text-xl font-bold text-gray-900">
-                {isEstimate ? "~" : ""}
-                {estimatedSize.toLocaleString()}{" "}
-                <span className="text-xs font-normal text-gray-500">
-                  companies
-                </span>
-              </p>
+              {hasSize ? (
+                <p className="text-xl font-bold text-gray-900">
+                  {estimatedSize.toLocaleString(locale)}{" "}
+                  <span className="text-xs font-normal text-gray-500">
+                    {t("companies")}
+                  </span>
+                </p>
+              ) : (
+                <p className="text-xs text-gray-500">
+                  {t("Calculated after the first run")}
+                </p>
+              )}
             </div>
           </div>
-          <span
-            className={`text-[8px] font-semibold px-1 py-0.5 rounded-sm ${colorClass}`}
-          >
-            {label}
-          </span>
+          {hasSize && label && (
+            <span
+              className={`text-[8px] font-semibold px-1 py-0.5 rounded-sm ${colorClass}`}
+            >
+              {t(label)}
+            </span>
+          )}
         </div>
       </div>
     </div>

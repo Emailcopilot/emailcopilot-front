@@ -3,6 +3,7 @@
 import type { Plan, PlanId } from "@/lib/useBilling";
 import { formatBillingDate, handlePlanNameChange } from "@/lib/helpers";
 import LimitUpgradeDialog from "./LimitUpgradeDialog";
+import { useI18n } from "@/lib/i18n";
 
 interface EmailLimitDialogProps {
   open: boolean;
@@ -26,31 +27,49 @@ export default function EmailLimitDialog({
   tiers,
   onClose,
 }: EmailLimitDialogProps) {
+  const { t, locale } = useI18n();
   const planName = currentPlanId
     ? handlePlanNameChange(currentPlanId)
-    : "current";
-  const resetLabel = resetAt ? formatBillingDate(resetAt) : null;
+    : t("current");
+  const resetLabel = resetAt
+    ? formatBillingDate(resetAt, locale === "en" ? "en-US" : locale)
+    : null;
+  const vars = { plan: planName, max, used, date: resetLabel ?? "" };
 
   const description =
     tiers.length > 0
-      ? `Your ${planName} plan includes ${max} emails per month and you have used all ${used}. Upgrade for a higher monthly allowance${
-          resetLabel ? `, or wait until ${resetLabel}` : ""
-        } when your allowance renews.`
-      : `Your ${planName} plan includes ${max} emails per month and you have used all ${used}. You are on our highest plan, so sending resumes when your allowance renews${
-          resetLabel ? ` on ${resetLabel}` : ""
-        }.`;
+      ? resetLabel
+        ? t(
+            "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until {date} when your allowance renews.",
+            vars,
+          )
+        : t(
+            "Your {plan} plan includes {max} emails per month and you have used all {used}. Upgrade for a higher monthly allowance, or wait until your allowance renews.",
+            vars,
+          )
+      : resetLabel
+        ? t(
+            "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews on {date}.",
+            vars,
+          )
+        : t(
+            "Your {plan} plan includes {max} emails per month and you have used all {used}. You are on our highest plan, so sending resumes when your allowance renews.",
+            vars,
+          );
 
   return (
     <LimitUpgradeDialog
       open={open}
       onClose={onClose}
-      title="Monthly email allowance reached"
+      title={t("Monthly email allowance reached")}
       description={description}
       currentPlanId={currentPlanId}
       tiers={tiers}
       reason="emails"
       featureKeyword="email"
-      emptyTiersMessage="You are already on our highest plan. Your allowance renews automatically next month."
+      emptyTiersMessage={t(
+        "You are already on our highest plan. Your allowance renews automatically next month.",
+      )}
     />
   );
 }

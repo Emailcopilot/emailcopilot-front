@@ -1,6 +1,7 @@
 import React from "react";
 import { Copilot, OverallStatus } from "./CopilotTable";
 import CopilotCard from "@/components/ui/copilots/CopilotCard";
+import { useI18n } from "@/lib/i18n";
 
 export interface CardContent {
   badgeLabel: string;
@@ -32,12 +33,13 @@ function CopilotCardsList({
   readOnly = false,
   className = "",
 }: CopilotCardsListProps) {
+  const { t } = useI18n();
   const [menuCopilotId, setMenuCopilotId] = React.useState<number | null>(null);
   if (!copilots || copilots.length === 0) {
     return (
       <div className="w-full rounded-lg border border-gray-100 bg-white">
         <div className="py-16 text-center text-sm text-gray-400">
-          No copilots yet.
+          {t("No copilots yet.")}
         </div>
       </div>
     );

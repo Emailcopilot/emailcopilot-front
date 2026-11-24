@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Copy, Edit2, Trash2, MoreVertical, X } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 interface TemplateActionsProps {
   onEdit: () => void;
@@ -13,6 +14,7 @@ export default function TemplateActions({
   onDelete,
   onDuplicate,
 }: TemplateActionsProps) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -49,7 +51,7 @@ export default function TemplateActions({
         onClick={handleToggle}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Template actions"
+        aria-label={t("Template actions")}
         className="text-gray-300 transition-colors hover:text-gray-500"
       >
         {open ? <X size={18} /> : <MoreVertical size={18} />}
@@ -71,7 +73,7 @@ export default function TemplateActions({
               className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <Copy size={13} />
-              Duplicate
+              {t("Duplicate")}
             </button>
             <button
               onMouseDown={(e) => {
@@ -82,7 +84,7 @@ export default function TemplateActions({
               className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
             >
               <Edit2 size={13} />
-              Edit
+              {t("Edit")}
             </button>
             <div className="my-1 border-t border-gray-100" />
             <button
@@ -94,7 +96,7 @@ export default function TemplateActions({
               className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
             >
               <Trash2 size={13} />
-              Delete
+              {t("Delete")}
             </button>
           </div>,
           document.body,

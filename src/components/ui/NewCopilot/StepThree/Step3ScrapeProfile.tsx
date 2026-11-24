@@ -7,8 +7,6 @@ import {
   Map as MapIcon,
   MapPin,
   Building2,
-  CheckCircle2,
-  CircleAlert,
 } from "lucide-react";
 import { Country, City, ICountry, ICity } from "country-state-city";
 import StepsActions from "../StepsActions";
@@ -17,6 +15,7 @@ import { useWizardTargetAudiences } from "@/lib/useWizardOptions";
 import { targetAudiencesApi } from "@/lib/api";
 import { toast } from "sonner";
 import Switcher from "../../Switcher";
+import { useI18n } from "@/lib/i18n";
 // ── TagInput ─────────────────────────────────────────────────────────────────
 
 interface TagInputProps {
@@ -38,10 +37,11 @@ function TagInput({
   onAdd,
   onRemove,
   onClearAll,
-  placeholder = "Type to search…",
-  emptyMessage = "No results found",
+  placeholder,
+  emptyMessage,
   allowCustom = false,
 }: TagInputProps) {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
 
@@ -146,7 +146,9 @@ function TagInput({
           ref={inputRef}
           type="text"
           value={query}
-          placeholder={selected.length === 0 ? placeholder : ""}
+          placeholder={
+            selected.length === 0 ? (placeholder ?? t("Type to search…")) : ""
+          }
           className="no-focus-ring flex-1 min-w-20 outline-none focus:outline-none focus:ring-0 focus:border-none text-sm bg-transparent placeholder:text-gray-400"
           onChange={(e) => {
             setQuery(e.target.value);
@@ -197,7 +199,7 @@ function TagInput({
 
       {open && query.length > 0 && filtered.length === 0 && !allowCustom && (
         <div className="absolute z-50 mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-lg py-3 px-3 text-sm text-gray-400 text-center">
-          {emptyMessage}
+          {emptyMessage ?? t("No results found")}
         </div>
       )}
     </div>
@@ -244,6 +246,7 @@ export default function Step3ScrapeProfile() {
   const { industries, countries, cities } = copilotData.targetProfile;
   const [loading, setLoading] = useState(false);
   const [enableCity, setEnableCity] = useState(false);
+  const { t } = useI18n();
   const { data: profiles = [], isLoading: loadingProfiles } =
     useWizardTargetAudiences();
 
@@ -314,7 +317,7 @@ export default function Step3ScrapeProfile() {
         await persistDraft();
         setStep(4);
       } catch {
-        toast.error("Failed to save draft. Please try again.");
+        toast.error(t("Failed to save draft. Please try again."));
       } finally {
         setLoading(false);
       }
@@ -336,14 +339,14 @@ export default function Step3ScrapeProfile() {
       try {
         await persistDraft();
       } catch {
-        toast.error("Failed to save draft. Please try again.");
+        toast.error(t("Failed to save draft. Please try again."));
         return;
       }
       setStep(4);
-      toast.success("Target Audience created successfully");
+      toast.success(t("Target Audience created successfully"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to create target audience");
+      toast.error(t("Failed to create target audience"));
     } finally {
       setLoading(false);
     }
@@ -351,10 +354,11 @@ export default function Step3ScrapeProfile() {
 
   return (
     <>
-      <h2 className="text-lg font-bold mb-1">Define your Target Audience</h2>
+      <h2 className="text-lg font-bold mb-1">{t("Define your Target Audience")}</h2>
       <p className="text-sm text-gray-500 mb-12">
-        Tell your copilot who you want to reach and we’ll find the best
-        matches.
+        {t(
+          "Tell your copilot who you want to reach and we’ll find the best matches.",
+        )}
       </p>
 
       <div className="space-y-8">
@@ -362,13 +366,13 @@ export default function Step3ScrapeProfile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start">
           <div>
             <h3 className="text-sm relative font-bold text-gray-900">
-              Industry
+              {t("Industry")}
               <span className="text-sm font-semibold  text-red-500 absolute">
                 *
               </span>
             </h3>
             <p className="text-xs text-gray-500 mt-1">
-              Choose the industry of your target companies.
+              {t("Choose the industry of your target companies.")}
             </p>
           </div>
           <div className="lg:col-span-2">
@@ -388,7 +392,7 @@ export default function Step3ScrapeProfile() {
                 })
               }
               onClearAll={() => updateTargetProfile({ industries: [] })}
-              placeholder="Type and press Enter to add industries…"
+              placeholder={t("Type and press Enter to add industries…")}
             />
           </div>
         </div>
@@ -396,9 +400,9 @@ export default function Step3ScrapeProfile() {
         {/* Country */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start">
           <div>
-            <h3 className="text-sm font-bold text-gray-900">Country</h3>
+            <h3 className="text-sm font-bold text-gray-900">{t("Country")}</h3>
             <p className="text-xs text-gray-500 mt-1">
-              In which countries are your target companies located?
+              {t("In which countries are your target companies located?")}
             </p>
           </div>
           <div className="lg:col-span-2">
@@ -414,7 +418,7 @@ export default function Step3ScrapeProfile() {
               }}
               onRemove={handleRemoveCountry}
               onClearAll={handleClearCountries}
-              placeholder="Search countries…"
+              placeholder={t("Search countries…")}
             />
           </div>
         </div>
@@ -423,23 +427,28 @@ export default function Step3ScrapeProfile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start">
           <div>
             <div className=" w-full flex justify-between items-center gap-2">
-              <h3 className="text-sm font-bold text-gray-900">City</h3>
+              <h3 className="text-sm font-bold text-gray-900">{t("City")}</h3>
             </div>
             <p className="text-xs text-gray-500 mt-1">
-              In which cities are your target companies located?
+              {t("In which cities are your target companies located?")}
             </p>
           </div>
-          {!enableCity ? (
-            <div className="w-full lg:col-span-2 flex justify-between items-start gap-2">
-              <div className=" relative flex items-start gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50/50">
-                <CircleAlert className="w-6 h-6 text-blue-500 shrink-0" />
+          {/* The switch sits inside the card and is labelled, so it's clear
+              that OFF = all cities, ON = only the cities picked below. */}
+          <div className="w-full lg:col-span-2 rounded-xl border border-gray-200 p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <MapIcon size={15} className="text-gray-400 shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 mb-1">
-                    All cities included
-                  </h3>
-                  <p className="text-xs text-slate-700 font-medium leading-relaxed">
-                    Your Copilot will search all cities within the selected
-                    country.
+                  <p className="text-sm font-semibold text-gray-900">
+                    {t("Target specific cities")}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {enableCity
+                      ? t("Only companies in the cities you pick below.")
+                      : t(
+                          "All cities within the selected countries are included.",
+                        )}
                   </p>
                 </div>
               </div>
@@ -448,39 +457,36 @@ export default function Step3ScrapeProfile() {
                 onClick={() => setEnableCity(!enableCity)}
               />
             </div>
-          ) : (
-            <div className="w-full lg:col-span-2 flex justify-between items-start gap-2">
-              <TagInput
-                icon={<MapIcon size={15} />}
-                options={availableCities}
-                selected={cities}
-                onAdd={(v) => {
-                  if (copilotData.targetAudienceId) {
-                    updateCopilotData({ targetAudienceId: null });
+            {enableCity && (
+              <div className="mt-3">
+                <TagInput
+                  icon={<MapIcon size={15} />}
+                  options={availableCities}
+                  selected={cities}
+                  onAdd={(v) => {
+                    if (copilotData.targetAudienceId) {
+                      updateCopilotData({ targetAudienceId: null });
+                    }
+                    updateTargetProfile({ cities: [...cities, v] });
+                  }}
+                  onRemove={(v) =>
+                    updateTargetProfile({ cities: cities.filter((c) => c !== v) })
                   }
-                  updateTargetProfile({ cities: [...cities, v] });
-                }}
-                onRemove={(v) =>
-                  updateTargetProfile({ cities: cities.filter((c) => c !== v) })
-                }
-                onClearAll={() => updateTargetProfile({ cities: [] })}
-                placeholder={
-                  countries.length === 0
-                    ? "Select a country first…"
-                    : "Search cities…"
-                }
-                emptyMessage={
-                  countries.length === 0
-                    ? "Please select a country first"
-                    : "No cities found"
-                }
-              />
-              <Switcher
-                isOn={enableCity}
-                onClick={() => setEnableCity(!enableCity)}
-              />
-            </div>
-          )}
+                  onClearAll={() => updateTargetProfile({ cities: [] })}
+                  placeholder={
+                    countries.length === 0
+                      ? t("Select a country first…")
+                      : t("Search cities…")
+                  }
+                  emptyMessage={
+                    countries.length === 0
+                      ? t("Please select a country first")
+                      : t("No cities found")
+                  }
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -491,17 +497,17 @@ export default function Step3ScrapeProfile() {
         </div>
         <div className="relative flex justify-center">
           <span className="bg-white px-3 text-xs font-semibold text-gray-800">
-            Your Target Audience
+            {t("Your Target Audience")}
           </span>
         </div>
       </div>
       <div>
         <div className="space-y-4">
           {loadingProfiles ? (
-            <div className="text-sm text-gray-500">Loading profiles...</div>
+            <div className="text-sm text-gray-500">{t("Loading target audiences...")}</div>
           ) : profiles.length === 0 ? (
             <div className="text-sm text-gray-500 bg-gray-50 border border-gray-100 rounded-lg p-6 text-center">
-              No existing scrape profiles found.
+              {t("No saved target audiences yet.")}
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -527,25 +533,17 @@ export default function Step3ScrapeProfile() {
                     }
                   }}
                 >
-                  {copilotData.targetAudienceId === profile.id && (
-                    <div className="absolute top-4 right-4 text-primary">
-                      <CheckCircle2
-                        size={20}
-                        className="fill-current text-white"
-                      />
-                    </div>
-                  )}
-                  <h4 className="font-semibold text-gray-900 pr-8 line-clamp-1">
+                  <h4 className="font-semibold text-gray-900 line-clamp-1">
                     {profile.name}
                   </h4>
                   <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
                     <div className="flex items-center gap-1.5">
                       <MapPin size={14} className="text-gray-400" />
-                      <span>{profile?.country || "All"} </span>
+                      <span>{profile?.country || t("All")} </span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Building2 size={14} className="text-gray-400" />
-                      <span>{profile?.city || "All"} </span>
+                      <span>{profile?.city || t("All")} </span>
                     </div>
                   </div>
                 </div>
@@ -555,9 +553,7 @@ export default function Step3ScrapeProfile() {
         </div>
       </div>
       <StepsActions
-        onPress={() => {
-          handleONpress();
-        }}
+        onPress={() => handleONpress()}
         isLoading={loading}
         canContinue={canContinue}
       />

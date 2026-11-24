@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { getCopilotStatusAppearance } from "@/lib/copilot-status-appearance";
+import { useI18n } from "@/lib/i18n";
 import {
   Search,
   ChevronDown,
@@ -21,12 +23,12 @@ export interface StatusOption {
 
 export const DEFAULT_STATUS_OPTIONS: StatusOption[] = [
   { value: "all", label: "All status", dotClassName: "bg-blue-500" },
-  { value: "active", label: "Scheduled", dotClassName: "bg-primary" },
-  { value: "draft", label: "Draft", dotClassName: "bg-gray-200" },
-  { value: "running", label: "In Flight", dotClassName: "bg-sky-200" },
-  { value: "paused", label: "Paused", dotClassName: "bg-error" },
-  { value: "archived", label: "Archived", dotClassName: "bg-gray-400" },
-  { value: "completed", label: "Completed", dotClassName: "bg-success" },
+  { value: "active", label: "Scheduled", dotClassName: getCopilotStatusAppearance("active").dotClassName },
+  { value: "draft", label: "Draft", dotClassName: getCopilotStatusAppearance("draft").dotClassName },
+  { value: "running", label: "In Flight", dotClassName: getCopilotStatusAppearance("running").dotClassName },
+  { value: "paused", label: "Paused", dotClassName: getCopilotStatusAppearance("paused").dotClassName },
+  { value: "archived", label: "Archived", dotClassName: getCopilotStatusAppearance("archived").dotClassName },
+  { value: "completed", label: "Completed", dotClassName: getCopilotStatusAppearance("completed").dotClassName },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -95,6 +97,7 @@ export function StatusDropdown({
   onChange,
   options = DEFAULT_STATUS_OPTIONS,
 }: StatusDropdownProps) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useClickOutside(() => setOpen(false));
   const selected = options.find((o) => o.value === value) ?? options[0];
@@ -106,14 +109,14 @@ export function StatusDropdown({
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
       >
-        {selected.label}
+        {t(selected.label)}
         <ChevronDown
           size={14}
           className={`text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open && (
-        <div className="absolute left-0 top-full z-42 mt-1.5 w-44 rounded-lg border border-gray-100 bg-white py-1.5 shadow-lg">
+        <div className="absolute left-0 top-full z-60 mt-1.5 w-44 rounded-lg border border-gray-100 bg-white py-1.5 shadow-lg">
           {options.map((opt) => {
             const isSelected = opt.value === value;
             return (
@@ -133,7 +136,7 @@ export function StatusDropdown({
                 <span
                   className={`h-1.5 w-1.5 shrink-0 rounded-full ${opt.dotClassName}`}
                 />
-                {opt.label}
+                {t(opt.label)}
               </button>
             );
           })}
@@ -178,7 +181,7 @@ function TagsDropdown({
         />
       </button>
       {open && (
-        <div className="absolute left-0 top-full z-42 mt-1.5 w-48 rounded-lg border border-gray-100 bg-white py-1.5 shadow-lg">
+        <div className="absolute left-0 top-full z-60 mt-1.5 w-48 rounded-lg border border-gray-100 bg-white py-1.5 shadow-lg">
           {options.map((opt) => {
             const isSelected = opt.value === value;
             return (
@@ -236,7 +239,7 @@ interface ViewModeToggleProps {
 
 function ViewModeToggle({ value, onChange }: ViewModeToggleProps) {
   return (
-    <div className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white p-1">
+    <div className="hidden md:flex items-center gap-1 rounded-lg border border-gray-200 bg-white p-1">
       <button
         type="button"
         onClick={() => onChange("list")}
@@ -302,6 +305,7 @@ function CopilotToolbar({
   searchPlaceholder = "Search copilots...",
   className = "",
 }: CopilotToolbarProps) {
+  const { t } = useI18n();
   return (
     <div className={`flex flex-wrap items-center gap-3 ${className}`}>
       <div className="relative min-w-48 flex-1">
@@ -311,7 +315,7 @@ function CopilotToolbar({
         />
         <input
           className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-100"
-          placeholder={searchPlaceholder}
+          placeholder={t(searchPlaceholder)}
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
         />

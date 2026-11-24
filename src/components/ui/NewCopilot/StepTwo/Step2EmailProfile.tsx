@@ -8,6 +8,7 @@ import ProvidersOption from "@/components/layout/features/emailAccount/Providers
 import EmailAccountList from "./EmailAccountList";
 import { useEmailAccountStore } from "@/store/emailAccountStore";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n";
 
 export default function Step2EmailProfile() {
   const { copilotData, setStep, persistDraft, draftId } = useCopilotStore();
@@ -16,6 +17,7 @@ export default function Step2EmailProfile() {
     null,
   );
   const [saving, setSaving] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     fetchAccounts();
@@ -59,7 +61,7 @@ export default function Step2EmailProfile() {
             await persistDraft();
             setStep(3);
           } catch {
-            toast.error("Failed to save draft. Please try again.");
+            toast.error(t("Failed to save draft. Please try again."));
           } finally {
             setSaving(false);
           }

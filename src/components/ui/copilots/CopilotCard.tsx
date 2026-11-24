@@ -1,7 +1,9 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import {
-  Building2,
+  Calendar,
+  Mail,
+  MoveRight,
   Send,
   Loader2,
   CheckCircle2,
@@ -12,6 +14,7 @@ import {
   X,
 } from "lucide-react";
 import CopilotStatus from "../CopilotStatus";
+import { useI18n } from "@/lib/i18n";
 import {
   Copilot,
   OverallStatus,
@@ -23,6 +26,7 @@ import { useBilling } from "@/lib/useBilling";
 import { useRouter } from "next/navigation";
 import { copilotsApi } from "@/lib/api";
 import { toast } from "sonner";
+import { getCopilotStatusAppearance } from "@/lib/copilot-status-appearance";
 
 export interface CardContent {
   badgeLabel: string;
@@ -34,11 +38,12 @@ export interface CardContent {
 }
 
 export const handleCardProp = (status: string) => {
+  const { badgeClass } = getCopilotStatusAppearance(status);
   switch (status.toLocaleLowerCase()) {
     case "draft":
       return {
         badgeLabel: "Ready for Take-off",
-        badgeClass: "bg-gray-100 text-gray-500",
+        badgeClass,
         subtitle: "Fully configured and ready to launch",
         progressBarColor: "bg-gray-200",
         buttonLabel: "Take-off",
@@ -48,7 +53,7 @@ export const handleCardProp = (status: string) => {
     case "running":
       return {
         badgeLabel: "In Flight",
-        badgeClass: "bg-sky-50 text-sky-600",
+        badgeClass,
         progressBarColor: "bg-sky-200",
         subtitle: "Campaign is currently running",
         buttonLabel: "Running",
@@ -58,7 +63,7 @@ export const handleCardProp = (status: string) => {
     case "completed":
       return {
         badgeLabel: "Completed",
-        badgeClass: "bg-success/5 text-success",
+        badgeClass,
         progressBarColor: "bg-success",
         subtitle: "Campaign has finished running",
         buttonLabel: "View Details",
@@ -68,7 +73,7 @@ export const handleCardProp = (status: string) => {
     case "active":
       return {
         badgeLabel: "Scheduled",
-        badgeClass: "bg-primary/5 text-primary",
+        badgeClass,
         progressBarColor: "bg-primary",
         subtitle: "Campaign is currently active",
         buttonLabel: "View Details",
@@ -78,7 +83,7 @@ export const handleCardProp = (status: string) => {
     case "paused":
       return {
         badgeLabel: "Paused",
-        badgeClass: "bg-error/5 text-error",
+        badgeClass,
         progressBarColor: "bg-error",
         subtitle: "Campaign is currently paused",
         buttonLabel: "Resume",
@@ -88,7 +93,7 @@ export const handleCardProp = (status: string) => {
     case "archived":
       return {
         badgeLabel: "Archived",
-        badgeClass: "bg-gray-100 text-gray-400",
+        badgeClass,
         progressBarColor: "bg-gray-200",
         subtitle: "Campaign is archived",
         buttonLabel: "View Details",
@@ -98,7 +103,7 @@ export const handleCardProp = (status: string) => {
     default:
       return {
         badgeLabel: status,
-        badgeClass: "bg-gray-100 text-gray-400",
+        badgeClass,
         progressBarColor: "bg-gray-200",
         subtitle: "No further action available right now",
         buttonLabel: status,
@@ -108,17 +113,20 @@ export const handleCardProp = (status: string) => {
   }
 };
 
-/* ------------------------------------------------------------------ *
- * Progress: emailsSent vs targetAudience.resultsCount
- * ------------------------------------------------------------------ */
-
-function computeProgress(copilot: Copilot): { percent: number; total: number } {
-  const total =
-    (copilot.targetAudience as { resultsCount?: number } | null)
-      ?.resultsCount ?? 0;
-  if (total <= 0) return { percent: 0, total: 0 };
-  const percent = Math.min(100, Math.round((copilot.emailsSent / total) * 100));
-  return { percent, total };
+/** "24 Nov, 14:45" (in the app language), or null when nothing was sent. */
+function formatLastSent(
+  date: string | null | undefined,
+  locale: string,
+): string | null {
+  if (!date) return null;
+  const d = new Date(date);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleString(locale === "en" ? "en-GB" : locale, {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 /* ------------------------------------------------------------------ */
@@ -149,7 +157,7 @@ function CopilotCard({
   readOnly = false,
   className = "",
 }: CopilotCardProps) {
-  const { percent, total } = computeProgress(copilot);
+  const { t, locale } = useI18n();
   const [isLoading, setIsLoading] = React.useState(false);
   const [showEmailLimit, setShowEmailLimit] = React.useState(false);
   const { limits, plans } = useBilling();
@@ -169,12 +177,12 @@ function CopilotCard({
     try {
       await copilotsApi.run(copilot.id);
 
-      toast.success("Copilot resumed successfully.");
+      toast.success(t("Copilot resumed successfully."));
       if (onRefresh) {
         onRefresh();
       }
     } catch (error) {
-      toast.error("Error resuming copilot. Please try again.");
+      toast.error(t("Error resuming copilot. Please try again."));
       console.error("Error resuming copilot:", error);
     } finally {
       setIsLoading(false);
@@ -186,18 +194,18 @@ function CopilotCard({
       case "paused":
         return {
           action: () => handleResume(),
-          label: "resume",
+          label: "Resume",
         };
       case "draft":
         return {
           action: () =>
             router.push(`/dashboard/copilots/new?edit=${copilot.id}`),
-          label: "Edit",
+          label: "Continue setup",
         };
       default:
         return {
           action: () => router.push(`/dashboard/departure`),
-          label: "View Details",
+          label: "View in Departure",
         };
     }
   };
@@ -221,12 +229,16 @@ function CopilotCard({
             }
       }
       tabIndex={readOnly ? -1 : 0}
-      className={`flex w-full flex-col gap-3 rounded-md border border-gray-200 bg-white p-4 relative focus-visible:outline-2 focus-visible:outline-primary/40 ${readOnly ? "cursor-default" : "cursor-pointer"} ${className}`}
+      className={`flex h-full w-full flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 relative focus-visible:outline-2 focus-visible:outline-primary/40 ${readOnly ? "cursor-default" : "cursor-pointer"} ${className}`}
     >
-      <div className="flex items-start justify-between">
-        <h3 className="text-[15px] font-semibold text-gray-900">
-          {copilot.name}
-        </h3>
+      {/* 1. What is it: name + status */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <h3 className="truncate text-[15px] font-semibold text-gray-900">
+            {copilot.name}
+          </h3>
+          <CopilotStatus status={copilot.status} isSmall />
+        </div>
         {!readOnly && (
           <button
             type="button"
@@ -234,57 +246,62 @@ function CopilotCard({
               e.stopPropagation();
               onActionsClick?.();
             }}
-            aria-label="Copilot actions"
-            className="text-gray-300 transition-colors hover:text-gray-500"
+            aria-label={t("Copilot actions")}
+            className="shrink-0 text-gray-300 transition-colors hover:text-gray-500"
           >
             {showMenu ? <X size={18} /> : <MoreVertical size={18} />}
           </button>
         )}
       </div>
 
-      <CopilotStatus status={copilot.status} />
-
-      <p className="text-[13px] leading-snug text-gray-500">
-        {handleCardProp(copilot.status).subtitle}
-      </p>
-
-      <div className="flex items-center gap-1.5 text-[13px] text-gray-500">
-        <Building2 size={14} className="text-gray-400" />
-        {copilot?.targetAudience?.resultsCount ?? 0} companies
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
-          <div
-            className={`h-full rounded-full transition-all ${handleCardProp(copilot.status).progressBarColor} `}
-            style={{
-              width:
-                copilot.emailsSent === 0
-                  ? "0%"
-                  : `${(copilot.emailsSent * 100) / (copilot.emailsSent ?? 1)}%`,
-            }}
-          />
+      {/* 2. How is it going */}
+      <div className="grid grid-cols-2 gap-2 rounded-lg bg-gray-50 px-3 py-2.5">
+        <div>
+          <div className="text-[11px] text-gray-400">{t("Sent")}</div>
+          <div className="text-[15px] font-semibold text-gray-900">
+            {(copilot.emailsSent ?? 0).toLocaleString("en-US")}
+          </div>
         </div>
-        <span className="text-[11px] text-gray-400">
-          {copilot.emailsSent.toLocaleString("en-US")}
-          {total > 0 ? ` / ${total.toLocaleString("en-US")} sent` : " sent"}
-        </span>
+        <div>
+          <div className="text-[11px] text-gray-400">{t("Last sent")}</div>
+          <div className="mt-0.5 text-[13px] font-medium text-gray-900">
+            {formatLastSent(copilot.lastRunAt, locale) ?? t("Not yet")}
+          </div>
+        </div>
       </div>
 
-      {!readOnly && (
-        <button
-          type="button"
-          // disabled={!handleCardProp(copilot.status).buttonEnabled}
-          onClick={(e) => {
-            e.stopPropagation();
-            action();
-          }}
-          className={`mt-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-[14px] font-medium transition-colors border ${"cursor-pointer border-primary text-primary bg-white hover:bg-primary hover:text-white"}`}
-        >
-          {!isLoading && handleCardProp(copilot.status).icon}
+      {/* 3. How it's set up: who sends, and when */}
+      <div className="flex flex-col gap-1.5 text-xs text-[#59637C]">
+        <div className="flex min-w-0 items-center gap-1.5">
+          <Mail size={14} className="shrink-0 text-gray-400" />
+          <span className="truncate">
+            {copilot.emailAccount?.email || t("No email account")}
+          </span>
+        </div>
+        <div className="flex min-w-0 items-center gap-1.5">
+          <Calendar size={14} className="shrink-0 text-gray-400" />
+          <span className="truncate">
+            {copilot.flightSchedule?.name || t("No flight schedule")}
+          </span>
+        </div>
+      </div>
 
-          <span>{isLoading ? "Loading..." : label}</span>
-        </button>
+      {/* 4. What can I do */}
+      {!readOnly && (
+        <div className="mt-auto flex justify-end border-t border-gray-100 pt-2.5">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              action();
+            }}
+            disabled={isLoading}
+            className="inline-flex items-center gap-2 text-[13px] font-medium text-primary transition-colors hover:text-primary-hover disabled:opacity-50"
+          >
+            {isLoading ? t("Loading...") : t(label)}
+            <MoveRight size={14} />
+          </button>
+        </div>
       )}
       {showMenu && !readOnly && (
         <div

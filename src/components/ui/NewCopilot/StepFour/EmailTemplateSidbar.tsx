@@ -1,7 +1,9 @@
 import React from "react";
 import { Mail, ChevronRight } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export default function EmailTemplateSidbar() {
+  const { t } = useI18n();
   const stepsList = [
     {
       id: 1,
@@ -26,8 +28,8 @@ export default function EmailTemplateSidbar() {
   ];
   return (
     <div className="w-full  ">
-      <h2 className="text-lg font-bold mb-1">Template summary</h2>
-      <p className="text-xs text-primary mb-5">1-Step sequence</p>
+      <h2 className="text-lg font-bold mb-1">{t("Template summary")}</h2>
+      <p className="text-xs text-primary mb-5">{t("1-step sequence")}</p>
 
       <div className="flex flex-col gap-3 mt-10">
         {stepsList.map((step) => (
@@ -42,9 +44,9 @@ export default function EmailTemplateSidbar() {
               </div>
               <div>
                 <div className={`text-xs font-bold ${"text-slate-700"}`}>
-                  {step.title}
+                  {t(step.title)}
                 </div>
-                <div className="text-xs text-slate-500 mt-2">{step.desc}</div>
+                <div className="text-xs text-slate-500 mt-2">{t(step.desc)}</div>
               </div>
             </div>
           </button>

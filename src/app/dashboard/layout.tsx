@@ -5,11 +5,9 @@ import { DemoModeBanner } from "@/components/demo/DemoModeBanner";
 import { DashboardProviders } from "@/lib/providers";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-
-
   return (
     <DashboardProviders>
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex flex-col md:flex-row h-screen overflow-hidden">
         {/* Desktop Sidebar - Hidden on mobile */}
         <div className="hidden md:block">
           <Sidebar />
@@ -17,7 +15,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Mobile Menu */}
         <MobileMenu />
         {/* Main Content */}
-        <main id="dashboard-main" className="flex-1 overflow-y-auto bg-gray-50 w-full md:w-auto">
+        <main
+          id="dashboard-main"
+          className="flex-1 min-h-0 overflow-y-auto bg-gray-50 w-full md:w-auto pb-20 md:pb-0"
+        >
           <DemoModeBanner />
           <EmailLimitBanner />
           {children}

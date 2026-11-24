@@ -6,10 +6,12 @@ import { flightSchedulesApi } from "@/lib/api";
 import { toast } from "sonner";
 import type { Schedule } from "@/components/ui/flightSchedule/FlightScheduleCard";
 import { useCopilotStore } from "../../../../store/copilotStore";
+import { useI18n } from "@/lib/i18n";
 
 function ScheduleList({ onSelect }: { onSelect?: () => void }) {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useI18n();
 
   const { copilotData, updateCopilotData } = useCopilotStore();
   const selectedId = copilotData.flightScheduleId;
@@ -20,7 +22,7 @@ function ScheduleList({ onSelect }: { onSelect?: () => void }) {
       const res = await flightSchedulesApi.getAll();
       setSchedules(res.data);
     } catch {
-      toast.error("Failed to load flight schedules.");
+      toast.error(t("Failed to load flight schedules."));
       setSchedules([]);
     } finally {
       setLoading(false);
@@ -53,8 +55,9 @@ function ScheduleList({ onSelect }: { onSelect?: () => void }) {
         </div>
       ) : schedules.length === 0 ? (
         <div className="text-center text-gray-500 text-sm">
-          No flight schedules available yet — use the form above to create
-          one.
+          {t(
+            "No flight schedules available yet — use the form above to create one.",
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
