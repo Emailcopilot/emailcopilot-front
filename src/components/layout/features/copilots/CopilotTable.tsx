@@ -13,6 +13,7 @@ import { handleCardProp } from "@/components/ui/copilots/CopilotCard";
 import CopilotStatus from "@/components/ui/CopilotStatus";
 import type { CopilotStatusType } from "@/store/copilotStore";
 import { createPortal } from "react-dom";
+import { useI18n } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
 /* Types — trimmed to the fields this component actually reads.       */
@@ -193,6 +194,7 @@ function StepColumn({
   copilotId: string | number;
 }) {
   const router = useRouter();
+  const { t } = useI18n();
   const { setStep } = useCopilotStore();
   return (
     <div
@@ -200,12 +202,12 @@ function StepColumn({
         setStep((index + 1) as Step),
         router.push(`/dashboard/copilots/new?edit=${copilotId}`)
       )}
-      title={`${index + 1}. ${step.title}: ${step.label}`}
+      title={`${index + 1}. ${t(step.title)}: ${t(step.label)}`}
       className="flex items-center gap-1.5 group hover:bg-primary/5 border border-gray-100 hover:border-primary rounded-lg px-2 py-1"
     >
       <StepIcon state={step.state} />
       <span className="text-[12px] font-medium group-hover:text-primary text-gray-700 whitespace-nowrap">
-        {SHORT_STEP_TITLES[step.title] ?? step.title}
+        {t(SHORT_STEP_TITLES[step.title] ?? step.title)}
       </span>
     </div>
   );
@@ -263,6 +265,7 @@ function CopilotTable({
   onSelectionChange,
   className = "",
 }: CopilotTableProps) {
+  const { t } = useI18n();
   const selectable = !!selectedIds && !!onSelectionChange;
   // Archived copilots can't be archived again, so they can't be selected.
   const selectableIds = copilots
@@ -313,7 +316,7 @@ function CopilotTable({
     return (
       <div className="w-full relative rounded-lg border border-[#E2E8F0] bg-white">
         <div className="py-16 text-center text-sm text-gray-400">
-          No copilots yet.
+          {t("No copilots yet.")}
         </div>
       </div>
     );
@@ -335,7 +338,7 @@ function CopilotTable({
                 <th className="sticky top-0 z-40 w-px rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] py-2.5 pl-5 pr-0 text-left">
                   <input
                     type="checkbox"
-                    aria-label="Select all copilots on this page"
+                    aria-label={t("Select all copilots on this page")}
                     checked={allSelected}
                     ref={(el) => {
                       if (el) el.indeterminate = someSelected;
@@ -347,23 +350,23 @@ function CopilotTable({
                 </th>
               )}
               <th className="sticky top-0 z-40 w-px rounded-tl-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
-                Copilots
+                {t("Copilots")}
               </th>
               <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
               <th className="sticky top-0 z-40 w-px bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
-                Workflow status
+                {t("Workflow status")}
               </th>
               <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
               <th className="sticky top-0 z-40 w-px bg-white shadow-[inset_0_-1px_0_#E2E8F0] whitespace-nowrap px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
-                Sent
+                {t("Sent")}
               </th>
               <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
               <th className="w-px whitespace-nowrap sticky right-22 top-0 z-50 bg-white shadow-[inset_0_-1px_0_#E2E8F0] px-5 py-2.5 text-left font-normal text-xs leading-5 text-[#94A3B8]">
-                Status
+                {t("Status")}
               </th>
               <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
               <th className="sticky right-0 top-0 z-50 rounded-tr-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] w-22 min-w-22 px-5 py-2.5 text-center font-normal text-xs leading-5 text-[#94A3B8]">
-                Actions
+                {t("Actions")}
               </th>
             </tr>
           </thead>
@@ -400,7 +403,7 @@ function CopilotTable({
                         disabled={copilot.status === "archived"}
                         title={
                           copilot.status === "archived"
-                            ? "Already archived"
+                            ? t("Already archived")
                             : undefined
                         }
                         className="size-4 cursor-pointer accent-primary align-middle disabled:cursor-not-allowed disabled:opacity-40"
