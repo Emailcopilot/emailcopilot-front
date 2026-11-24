@@ -1,5 +1,6 @@
 import React from "react";
 import { Copy, Pencil, Trash2 } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export interface TargetAudienceMenuProps {
   id: number;
@@ -24,6 +25,7 @@ function TargetAudienceMenu({
   onDelete,
   className = "",
 }: TargetAudienceMenuProps) {
+  const { t } = useI18n();
   const items: MenuItem[] = [
     {
       key: "duplicate",
@@ -67,7 +69,7 @@ function TargetAudienceMenu({
             }`}
           >
             {item.icon}
-            {item.label}
+            {t(item.label)}
           </button>
         </React.Fragment>
       ))}
