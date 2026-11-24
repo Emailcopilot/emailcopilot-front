@@ -213,15 +213,26 @@ export default function CopilotsPage() {
             />
           </div>
         ) : (
-          <CopilotTable
-            copilots={paginatedData}
-            onRefresh={fetchCopilots}
-            selectedIds={selectedIds}
-            onSelectionChange={(ids) => {
-              setSelectedIds(ids);
-              setConfirmArchive(false);
-            }}
-          />
+          <>
+            {/* Phones: the wide table doesn't fit, show cards instead. */}
+            <div className="md:hidden">
+              <CopilotCardsList
+                copilots={paginatedData}
+                onRefresh={fetchCopilots}
+              />
+            </div>
+            <div className="hidden md:contents">
+              <CopilotTable
+                copilots={paginatedData}
+                onRefresh={fetchCopilots}
+                selectedIds={selectedIds}
+                onSelectionChange={(ids) => {
+                  setSelectedIds(ids);
+                  setConfirmArchive(false);
+                }}
+              />
+            </div>
+          </>
         )}
       </div>
 
