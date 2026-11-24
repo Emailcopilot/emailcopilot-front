@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Fragment, useEffect, type ReactNode } from "react";
 import {
   CheckCircle2,
   Loader2,
@@ -9,6 +9,19 @@ import {
   TriangleAlert,
   X,
 } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+
+/** Puts React nodes (e.g. bold names) into a translated "{key}" sentence. */
+function rich(text: string, nodes: Record<string, ReactNode>) {
+  return text.split(/(\{\w+\})/).map((part, i) => {
+    const key = part.match(/^\{(\w+)\}$/)?.[1];
+    return key && key in nodes ? (
+      <Fragment key={i}>{nodes[key]}</Fragment>
+    ) : (
+      part
+    );
+  });
+}
 
 interface TestEmailGateModalProps {
   open: boolean;
@@ -39,6 +52,7 @@ export default function TestEmailGateModal({
   onLaunch,
   onCancel,
 }: TestEmailGateModalProps) {
+  const { t } = useI18n();
   useEffect(() => {
     if (!open) return;
 
@@ -76,17 +90,25 @@ export default function TestEmailGateModal({
                   id="test-email-gate-title"
                   className="text-lg font-bold text-gray-900"
                 >
-                  Test email request accepted
+                  {t("Test email request accepted")}
                 </h2>
               </div>
 
               <p className="mt-3 text-sm text-gray-500">
-                Check{" "}
-                <span className="font-medium text-gray-900">
-                  {sentTo || "your connected inbox"}
-                </span>{" "}
-                and make sure everything looks right. When you&apos;re happy
-                with it, {relaunch ? "re-launch" : "launch"} your copilot.
+                {rich(
+                  t(
+                    relaunch
+                      ? "Check {inbox} and make sure everything looks right. When you're happy with it, re-launch your copilot."
+                      : "Check {inbox} and make sure everything looks right. When you're happy with it, launch your copilot.",
+                  ),
+                  {
+                    inbox: (
+                      <span className="font-medium text-gray-900">
+                        {sentTo || t("your connected inbox")}
+                      </span>
+                    ),
+                  },
+                )}
               </p>
             </div>
 
@@ -96,7 +118,7 @@ export default function TestEmailGateModal({
                 onClick={onCancel}
                 className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
               >
-                Not now
+                {t("Not now")}
               </button>
               <button
                 type="button"
@@ -104,7 +126,7 @@ export default function TestEmailGateModal({
                 className="flex items-center gap-2 rounded-lg btn-cta border border-transparent px-4 py-2.5 text-sm font-semibold text-white transition-colors"
               >
                 <Rocket size={14} />{" "}
-                {relaunch ? "Re-launch copilot" : "Launch copilot"}
+                {relaunch ? t("Re-launch copilot") : t("Launch copilot")}
               </button>
             </div>
           </>
@@ -119,13 +141,15 @@ export default function TestEmailGateModal({
                   id="test-email-gate-title"
                   className="text-lg font-bold text-gray-900"
                 >
-                  {relaunch ? "Re-launch" : "Launch"} without testing?
+                  {relaunch
+                    ? t("Re-launch without testing?")
+                    : t("Launch without testing?")}
                 </h2>
                 <button
                   type="button"
                   onClick={onCancel}
                   disabled={sending}
-                  aria-label="Close"
+                  aria-label={t("Close")}
                   className="ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50"
                 >
                   <X size={18} />
@@ -133,23 +157,25 @@ export default function TestEmailGateModal({
               </div>
 
               <p className="mt-3 text-sm text-gray-500">
-                This copilot will {relaunch ? "start emailing again" : "start emailing"}
-                {audienceLabel ? (
-                  <>
-                    {" "}
-                    <span className="font-medium text-gray-900">
-                      {audienceLabel}
-                    </span>
-                  </>
-                ) : null}
-                {sentTo ? (
-                  <>
-                    {" "}
-                    from{" "}
-                    <span className="font-medium text-gray-900">{sentTo}</span>
-                  </>
-                ) : null}
-                . You haven&apos;t read the email yourself yet.
+                {rich(
+                  t(
+                    relaunch
+                      ? "This copilot will start emailing {audience} again from {sender}. You haven't read the email yourself yet."
+                      : "This copilot will start emailing {audience} from {sender}. You haven't read the email yourself yet.",
+                  ),
+                  {
+                    audience: (
+                      <span className="font-medium text-gray-900">
+                        {audienceLabel || t("your target audience")}
+                      </span>
+                    ),
+                    sender: (
+                      <span className="font-medium text-gray-900">
+                        {sentTo || t("your email account")}
+                      </span>
+                    ),
+                  },
+                )}
               </p>
 
               <div className="mt-4 flex items-start gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5">
@@ -158,8 +184,9 @@ export default function TestEmailGateModal({
                   className="mt-0.5 shrink-0 text-emerald-600"
                 />
                 <p className="text-xs leading-relaxed text-emerald-700">
-                  A test takes about a minute and reaches nobody but you. Test
-                  emails don&apos;t count toward your monthly limit.
+                  {t(
+                    "A test takes about a minute and reaches nobody but you. Test emails don't count toward your monthly limit.",
+                  )}
                 </p>
               </div>
             </div>
@@ -171,7 +198,7 @@ export default function TestEmailGateModal({
                 disabled={sending}
                 className="text-sm font-medium text-gray-500 transition-colors hover:text-gray-900 disabled:opacity-50"
               >
-                {relaunch ? "Re-launch anyway" : "Launch anyway"}
+                {relaunch ? t("Re-launch anyway") : t("Launch anyway")}
               </button>
               <button
                 type="button"
@@ -184,7 +211,7 @@ export default function TestEmailGateModal({
                 ) : (
                   <Mail size={14} />
                 )}
-                {sending ? "Sending..." : "Send a test first"}
+                {sending ? t("Sending...") : t("Send a test first")}
               </button>
             </div>
           </>
