@@ -349,6 +349,65 @@ function LeadsPageContent() {
         </div>
       ) : (
         <>
+          {/* Mobile / tablet: one card per lead (the wide table only fits from lg). */}
+          <div className="lg:hidden bg-white border border-[#E2E8F0] rounded-lg overflow-hidden mb-6">
+            {leads.map((lead, index) => {
+              const status = lead.suppressed
+                ? "suppressed"
+                : lead.status || "sent";
+              return (
+                <div
+                  key={lead.id + index}
+                  className="px-4 py-4 border-b last:border-b-0 border-[#E2E8F0]"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-semibold truncate text-sm text-[#0F172A] mb-1">
+                        {lead.companyName || "—"}
+                      </div>
+                      {lead.email && (
+                        <a
+                          href={`mailto:${lead.email}`}
+                          className="block truncate text-xs text-blue-500"
+                        >
+                          {lead.email}
+                        </a>
+                      )}
+                      {(lead.website || lead.phone) && (
+                        <div className="mt-0.5 truncate text-xs text-[#59637C]">
+                          {[lead.website, lead.phone]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </div>
+                      )}
+                      <div className="mt-0.5 truncate text-xs text-[#59637C]">
+                        {lead.copilotName || "Unknown Copilot"}
+                        {lead.sentAt && <> · {formatDateTime(lead.sentAt)}</>}
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <LeadStatus status={status} isSmall />
+                        <button
+                          type="button"
+                          onClick={() => handleShowPreview(lead)}
+                          className="rounded-md px-2 py-1 text-[10px] font-medium"
+                          style={{ backgroundColor: "#F5F7FF", color: "#2563EB" }}
+                        >
+                          Show email
+                        </button>
+                      </div>
+                    </div>
+                    <LeadMenu
+                      lead={lead}
+                      onDeleted={handleDeleteLead}
+                      onSuppressionChange={handleSuppressionChange}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="hidden lg:contents">
           <div className="bg-white border border-[#E2E8F0] rounded-lg overflow-hidden mb-6 [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:flex-1 [@media(min-height:1081px)]:flex-col">
             <div className="overflow-auto max-h-[calc(100dvh-320px)]">
               <table className="w-full text-sm min-w-225">
@@ -576,6 +635,7 @@ function LeadsPageContent() {
                 </tbody>
               </table>
             </div>
+          </div>
           </div>
 
           {meta && (
