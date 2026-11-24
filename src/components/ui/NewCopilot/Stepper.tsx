@@ -11,6 +11,7 @@ import {
   CalendarDays,
   Plane,
 } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 const steps = [
   {
@@ -53,6 +54,7 @@ const steps = [
 
 export default function Stepper() {
   const { currentStep, highestStep, setStep } = useCopilotStore();
+  const { t } = useI18n();
   const current = steps.find((s) => s.id === currentStep) ?? steps[0];
 
   return (
@@ -60,19 +62,19 @@ export default function Stepper() {
     {/* Phones: compact "Step x of 6" with a segmented progress bar */}
     <div className="md:hidden py-4 mb-4">
       <div className="text-xs text-gray-400">
-        Step {current.id} of {steps.length}
+        {t("Step {n} of {total}", { n: current.id, total: steps.length })}
       </div>
       <div className="mt-1 flex items-center gap-2 text-[var(--color-primary)]">
         {current.icon}
-        <span className="text-sm font-semibold">{current.label}</span>
+        <span className="text-sm font-semibold">{t(current.label)}</span>
       </div>
-      <div className="text-xs text-gray-400 mt-0.5">{current.sub}</div>
+      <div className="text-xs text-gray-400 mt-0.5">{t(current.sub)}</div>
       <div className="mt-3 flex gap-1.5">
         {steps.map((step) => (
           <button
             key={step.id}
             type="button"
-            aria-label={`Step ${step.id}: ${step.label}`}
+            aria-label={`${t("Step {n}", { n: step.id })}: ${t(step.label)}`}
             onClick={() => {
               if (step.id <= highestStep) setStep(step.id as Step);
             }}
@@ -150,10 +152,10 @@ export default function Stepper() {
                         : "text-gray-900",
                   )}
                 >
-                  {step.label}
+                  {t(step.label)}
                 </span>
                 <span className="text-xs text-gray-400 mt-0.5 whitespace-nowrap">
-                  {step.sub}
+                  {t(step.sub)}
                 </span>
               </button>
 
