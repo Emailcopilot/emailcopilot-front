@@ -7,6 +7,7 @@ import { ANNUAL_DISCOUNT_PERCENT } from "@/lib/helpers";
 import SegmentedControl from "../SegmentedControl";
 import PlanCard from "./PlanCard";
 import PlanTrustStrip from "./PlanTrustStrip";
+import { useI18n } from "@/lib/i18n";
 
 export type BillingInterval = "monthly" | "annual";
 
@@ -26,6 +27,7 @@ export default function PlanSelector({
   onChoose,
   onBack,
 }: PlanSelectorProps) {
+  const { t } = useI18n();
   const [interval, setInterval] = useState<BillingInterval>("monthly");
 
   return (
@@ -37,30 +39,30 @@ export default function PlanSelector({
           className="mb-4 flex items-center gap-1 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900"
         >
           <ChevronLeft size={16} />
-          Back to billing
+          {t("Back to billing")}
         </button>
       )}
 
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900">Choose your plan</h2>
+        <h2 className="text-2xl font-bold text-gray-900">{t("Choose your plan")}</h2>
         <p className="mt-1 text-sm text-gray-500">
-          Cancel anytime. No long-term commitments.
+          {t("Cancel anytime. No long-term commitments.")}
         </p>
       </div>
 
       <div className="mt-6 flex justify-center">
         <SegmentedControl<BillingInterval>
-          ariaLabel="Billing interval"
+          ariaLabel={t("Billing interval")}
           value={interval}
           onChange={setInterval}
           options={[
-            { value: "monthly", label: "Monthly" },
+            { value: "monthly", label: t("Monthly") },
             {
               value: "annual",
-              label: "Annual",
+              label: t("Annual"),
               badge: (
                 <span className="rounded-md bg-success/10 px-2 py-0.5 text-[11px] font-semibold text-success">
-                  Save {ANNUAL_DISCOUNT_PERCENT}%
+                  {t("Save {percent}%", { percent: ANNUAL_DISCOUNT_PERCENT })}
                 </span>
               ),
             },
