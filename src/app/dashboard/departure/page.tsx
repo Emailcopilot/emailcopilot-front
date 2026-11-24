@@ -17,6 +17,7 @@ import { useDebounce, useRowsPerPage } from "@/lib/hooks";
 import DashboardHeader from "@/components/layout/DashboardHeader";
 import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 const MOCK_META: PaginatedMeta = {
   total: 50,
@@ -130,6 +131,7 @@ function Tooltip({
 }
 
 function LeadsPageContent() {
+  const { t } = useI18n();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [meta, setMeta] = useState<PaginatedMeta>(MOCK_META);
   const [loading, setLoading] = useState(true);
@@ -308,7 +310,7 @@ function LeadsPageContent() {
           <input
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Search company, email, website or phone..."
+            placeholder={t("Search company, email, website or phone...")}
             className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-100"
           />
         </div>
@@ -316,7 +318,7 @@ function LeadsPageContent() {
 
       {loading ? (
         <div className="flex items-center justify-center h-48 text-gray-400">
-          Loading...
+          {t("Loading...")}
         </div>
       ) : leads.length === 0 && search.trim() ? (
         <div className="bg-white border border-[#E2E8F0] rounded-lg flex flex-col items-center justify-center py-12 px-6 text-center">
@@ -324,17 +326,18 @@ function LeadsPageContent() {
             <Search size={18} className="text-gray-400" />
           </div>
           <h2 className="font-semibold text-sm text-gray-900 mb-1">
-            No results found
+            {t("No results found")}
           </h2>
           <p className="text-sm text-gray-500 mb-4">
-            No leads match &quot;{search.trim()}&quot;. Try a different search
-            term.
+            {t('No leads match "{query}". Try a different search term.', {
+              query: search.trim(),
+            })}
           </p>
           <button
             onClick={() => handleSearchChange("")}
             className="px-4 py-2 border border-[#E2E8F0] rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
-            Clear search
+            {t("Clear search")}
           </button>
         </div>
       ) : leads.length === 0 ? (
@@ -342,9 +345,9 @@ function LeadsPageContent() {
           <div className="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center mx-auto mb-4">
             <Users size={20} className="text-primary" />
           </div>
-          <h2 className="font-bold text-gray-900 mb-2">No leads yet</h2>
+          <h2 className="font-bold text-gray-900 mb-2">{t("No leads yet")}</h2>
           <p className="text-sm text-gray-500 mb-5">
-            Leads will appear here once your copilots start sending emails.
+            {t("Leads will appear here once your copilots start sending emails.")}
           </p>
         </div>
       ) : (
@@ -381,7 +384,7 @@ function LeadsPageContent() {
                         </div>
                       )}
                       <div className="mt-0.5 truncate text-xs text-[#59637C]">
-                        {lead.copilotName || "Unknown Copilot"}
+                        {lead.copilotName || t("Unknown Copilot")}
                         {lead.sentAt && <> · {formatDateTime(lead.sentAt)}</>}
                       </div>
                       <div className="mt-2 flex items-center gap-2">
@@ -392,7 +395,7 @@ function LeadsPageContent() {
                           className="rounded-md px-2 py-1 text-[10px] font-medium"
                           style={{ backgroundColor: "#F5F7FF", color: "#2563EB" }}
                         >
-                          Show email
+                          {t("Show email")}
                         </button>
                       </div>
                     </div>
@@ -417,34 +420,34 @@ function LeadsPageContent() {
                       Copilot
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Company
+                      {t("Company")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Address
+                      {t("Address")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Website
+                      {t("Website")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Email
+                      {t("Email")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Phone
+                      {t("Phone")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 bg-white text-[#94A3B8] px-6 py-3">
-                      Target Audience
+                      {t("Target Audience")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Departured at
+                      {t("Sent at")}
                     </th>
                     <th className="sticky top-0 z-30 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5 text-[#94A3B8] px-6 py-3">
-                      Template
+                      {t("Template")}
                     </th>
                     <th className="sticky top-0 right-22 z-40 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-left text-xs leading-5  text-[#94A3B8] px-6 py-3">
-                      Status
+                      {t("Status")}
                     </th>
                     <th className="sticky top-0 right-0 z-40 w-22 min-w-22 bg-white shadow-[inset_0_-1px_0_#E2E8F0] font-normal text-center text-xs leading-5 text-[#94A3B8] px-5 py-3">
-                      Actions
+                      {t("Actions")}
                     </th>
                   </tr>
                 </thead>
@@ -456,14 +459,14 @@ function LeadsPageContent() {
                     >
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2">
-                          <Tooltip text={lead.copilotName || "Unknown Copilot"}>
+                          <Tooltip text={lead.copilotName || t("Unknown Copilot")}>
                             <a
                               target="_blank"
                               rel="noopener noreferrer"
                               href={`/dashboard/copilots#${lead.copilotName?.replace(" ", "-") || "unknown-copilot"}`}
                               className="font-semibold whitespace-nowrap text-sm text-[#0F172A]"
                             >
-                              {lead.copilotName || "Unknown Copilot"}
+                              {lead.copilotName || t("Unknown Copilot")}
                             </a>
                           </Tooltip>
                         </div>
@@ -574,13 +577,13 @@ function LeadsPageContent() {
                             text={
                               lead.sentAt
                                 ? formatDateTime(lead.sentAt)
-                                : "Unknown"
+                                : t("Unknown")
                             }
                           >
                             <div className="whitespace-nowrap text-sm text-[#0F172A]">
                               {lead.sentAt
                                 ? formatDateTime(lead.sentAt)
-                                : "Unknown"}
+                                : t("Unknown")}
                             </div>
                           </Tooltip>
                         </div>
@@ -597,7 +600,7 @@ function LeadsPageContent() {
                               color: "#2563EB",
                             }}
                           >
-                            show
+                            {t("show")}
                           </div>
                         </div>
                       </td>
@@ -606,9 +609,11 @@ function LeadsPageContent() {
                           <Tooltip
                             text={
                               lead.suppressed
-                                ? "Excluded"
-                                : lead.status.charAt(0).toUpperCase() +
-                                    lead.status.slice(1) || "Sent"
+                                ? t("Excluded")
+                                : t(
+                                    lead.status.charAt(0).toUpperCase() +
+                                      lead.status.slice(1) || "Sent",
+                                  )
                             }
                           >
                             <LeadStatus
@@ -653,11 +658,11 @@ function LeadsPageContent() {
         <EmailPreviewCard
           subject={
             templateData?.subject ||
-            (templateData === null ? "Loading..." : undefined)
+            (templateData === null ? t("Loading...") : undefined)
           }
           body={
             templateData?.body ||
-            (templateData === null ? "Loading..." : undefined)
+            (templateData === null ? t("Loading...") : undefined)
           }
           onClose={handleClosePreview}
         />
