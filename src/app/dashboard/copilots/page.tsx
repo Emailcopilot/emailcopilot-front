@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { Archive, Loader2, Plus, Send, X } from "lucide-react";
 import { toast } from "sonner";
 import { copilotsApi } from "@/lib/api";
@@ -45,29 +45,14 @@ export default function CopilotsPage() {
   // Pagination state — same responsive rows-per-page as the templates table
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = useRowsPerPage(20);
+  const fetchSeqRef = useRef(0);
 
-  useEffect(() => {
-    if (isDemo) {
-      setCopilots(DEMO_COPILOTS);
-      setLoading(false);
-      return;
-    }
-
-    fetchCopilots();
-  }, [isDemo]);
-
-  // Deep link from the wizard's own guard (/dashboard/copilots?limit=copilots).
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("limit") !== "copilots") return;
-    setLimitDialogOpen(true);
-    window.history.replaceState(null, "", "/dashboard/copilots");
-  }, []);
-
-  async function fetchCopilots() {
+  const fetchCopilots = useCallback(async () => {
+    const seq = ++fetchSeqRef.current;
     try {
       setLoading(true);
       const res = await copilotsApi.getAll();
+      if (seq !== fetchSeqRef.current) return;
       console.log("Fetched copilots from copilot page :", res.data);
       setCopilots(res.data);
       // Creating, deleting or archiving a copilot changes the plan usage.
@@ -76,11 +61,33 @@ export default function CopilotsPage() {
         router.push("/dashboard/copilots/new");
       }
     } catch {
+      if (seq !== fetchSeqRef.current) return;
       setCopilots([]);
     } finally {
-      setLoading(false);
+      if (seq === fetchSeqRef.current) {
+        setLoading(false);
+      }
     }
-  }
+  }, [queryClient, router]);
+
+  useEffect(() => {
+    if (isDemo) {
+      fetchSeqRef.current += 1;
+      setCopilots(DEMO_COPILOTS);
+      setLoading(false);
+      return;
+    }
+
+    fetchCopilots();
+  }, [fetchCopilots, isDemo]);
+
+  // Deep link from the wizard's own guard (/dashboard/copilots?limit=copilots).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("limit") !== "copilots") return;
+    setLimitDialogOpen(true);
+    window.history.replaceState(null, "", "/dashboard/copilots");
+  }, []);
 
   const planId = currentPlanId(limits);
   const tiers = higherTiers(plans, planId);

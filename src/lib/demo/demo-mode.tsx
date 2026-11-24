@@ -19,6 +19,15 @@ import {
   useDemoPending,
 } from "./demo-storage";
 import { isDemoCopilotId } from "./demo-data";
+import { useBilling } from "@/lib/useBilling";
+import {
+  evaluateBillingOnboarding,
+  hasPriorPaidInvoices,
+  readBillingOnboardingState,
+  shouldArmBillingOnboarding,
+  writeBillingOnboardingState,
+} from "@/lib/billing-onboarding";
+import { readTourSeen } from "@/components/tour/tour-storage";
 
 interface DemoModeContextValue {
   isDemo: boolean;
@@ -32,10 +41,7 @@ const DemoModeContext = createContext<DemoModeContextValue>({
   clearDemoPending: () => {},
 });
 
-const BLOCKED_PREFIXES = [
-  "/dashboard/settings",
-  "/dashboard/billing",
-];
+const BLOCKED_PREFIXES = ["/dashboard/settings", "/dashboard/billing"];
 
 function isDemoEligible(pathname: string, search: string) {
   if (!pathname.startsWith("/dashboard")) return false;
@@ -69,21 +75,46 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const search = searchParams.toString();
   const pending = useDemoPending();
+  const {
+    hasActivePlan,
+    limits,
+    subscription,
+    invoices,
+    loading: billingLoading,
+    subscriptionLoaded,
+    invoicesLoaded,
+  } = useBilling();
 
   const [dismissed, setDismissed] = useState(false);
+
+  const canUseDemo = hasActivePlan === true;
+  const confirmedNoPlan = limits != null && !hasActivePlan;
+  const billingLoaded =
+    !billingLoading && limits !== null && subscriptionLoaded && invoicesLoaded;
 
   const demoParam = searchParams.get("demo");
   const urlDemo = demoParam === "true";
   const explicitOff = demoParam === "false";
   const eligible = useMemo(
-    () => isDemoEligible(pathname, search),
-    [pathname, search],
+    () => canUseDemo && isDemoEligible(pathname, search),
+    [canUseDemo, pathname, search],
   );
-  const autoDemo = pending && !dismissed && eligible;
-  const isDemo = (urlDemo || autoDemo) && !dismissed;
+  const autoDemo = canUseDemo && pending && !dismissed && eligible;
+  const isDemo = canUseDemo && (urlDemo || autoDemo) && !dismissed;
 
   const previousDemoParam = useRef(demoParam);
   const prevUrlDemoRef = useRef(false);
+  const prevOnboardingUserIdRef = useRef<string | null>(null);
+  const prevConfirmedPlanRef = useRef<boolean | null>(null);
+
+  const stripDemoParam = useCallback(() => {
+    const params = new URLSearchParams(search);
+    params.delete("demo");
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, {
+      scroll: false,
+    });
+  }, [pathname, router, search]);
 
   useEffect(() => {
     setDemoUserId(userId ?? null);
@@ -96,11 +127,18 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (previousDemoParam.current === demoParam) return;
     previousDemoParam.current = demoParam;
-    if (demoParam === "true") setDismissed(false);
-  }, [demoParam]);
+    if (demoParam === "true" && canUseDemo) setDismissed(false);
+  }, [demoParam, canUseDemo]);
 
   useEffect(() => {
-    if (!userId) return;
+    if (confirmedNoPlan) {
+      clearStoredDemoPending();
+      setDismissed(true);
+      if (urlDemo) stripDemoParam();
+      return;
+    }
+
+    if (!userId || !canUseDemo) return;
 
     const enteredUrlDemo = urlDemo && !prevUrlDemoRef.current;
     prevUrlDemoRef.current = urlDemo;
@@ -112,9 +150,91 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
 
     if (explicitOff) {
       clearStoredDemoPending();
+      writeBillingOnboardingState(userId, "done");
       setDismissed(true);
     }
-  }, [urlDemo, explicitOff, userId]);
+  }, [
+    canUseDemo,
+    confirmedNoPlan,
+    explicitOff,
+    stripDemoParam,
+    urlDemo,
+    userId,
+  ]);
+
+  // Track first-time buyers via Billing so post-payment activation lands them
+  // straight in Demo Mode (and auto-starts the Copilot tour) once, while
+  // returning/established customers stay undisturbed.
+  useEffect(() => {
+    const normalizedUserId = userId ?? null;
+    if (prevOnboardingUserIdRef.current !== normalizedUserId) {
+      prevOnboardingUserIdRef.current = normalizedUserId;
+      prevConfirmedPlanRef.current = null;
+    }
+
+    if (!normalizedUserId || !billingLoaded || !limits) return;
+
+    const tourSeen = readTourSeen(normalizedUserId);
+    const onboardingState = readBillingOnboardingState(normalizedUserId);
+    const transitionedToActive =
+      prevConfirmedPlanRef.current === false && limits.hasActivePlan === true;
+
+    if (!limits.hasActivePlan) {
+      if (
+        shouldArmBillingOnboarding({
+          billingLoaded,
+          limits,
+          invoices,
+          state: onboardingState,
+          tourSeen,
+        })
+      ) {
+        writeBillingOnboardingState(normalizedUserId, "armed");
+      } else if (
+        (hasPriorPaidInvoices(invoices) || tourSeen) &&
+        onboardingState !== "done"
+      ) {
+        writeBillingOnboardingState(normalizedUserId, "done");
+      }
+      prevConfirmedPlanRef.current = false;
+      return;
+    }
+
+    const decision = evaluateBillingOnboarding({
+      pathname,
+      billingLoaded,
+      limits,
+      subscription,
+      invoices,
+      state: onboardingState,
+      tourSeen,
+      transitionedToActive,
+    });
+
+    if (decision.action === "mark-done") {
+      writeBillingOnboardingState(normalizedUserId, "done");
+    } else if (decision.action === "activate-demo") {
+      writeBillingOnboardingState(normalizedUserId, "done");
+      setDemoUserId(normalizedUserId);
+      setStoredDemoPending(true);
+      setDismissed(false);
+      const targetPath = decision.redirectTo.split("?")[0];
+      if (pathname !== targetPath || !urlDemo) {
+        router.replace(decision.redirectTo, { scroll: false });
+      }
+    }
+
+    prevConfirmedPlanRef.current = true;
+  }, [
+    billingLoaded,
+    invoices,
+    limits,
+    pathname,
+    router,
+    subscription,
+    urlDemo,
+    userId,
+  ]);
 
   useEffect(() => {
     if (!autoDemo || urlDemo) return;
@@ -128,15 +248,6 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
     setDemoRuntimeActive(isDemo);
     return () => setDemoRuntimeActive(false);
   }, [isDemo]);
-
-  const stripDemoParam = useCallback(() => {
-    const params = new URLSearchParams(search);
-    params.delete("demo");
-    const query = params.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, {
-      scroll: false,
-    });
-  }, [pathname, router, search]);
 
   const exitDemo = useCallback(
     (href?: string) => {
@@ -156,8 +267,9 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
   const clearDemoPending = useCallback(() => {
     setDismissed(true);
     clearStoredDemoPending();
+    if (userId) writeBillingOnboardingState(userId, "done");
     stripDemoParam();
-  }, [stripDemoParam]);
+  }, [stripDemoParam, userId]);
 
   const value = useMemo(
     () => ({ isDemo, exitDemo, clearDemoPending }),

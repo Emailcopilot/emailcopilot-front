@@ -10,12 +10,13 @@ export function DemoModeBanner() {
   const { isDemo, clearDemoPending } = useDemoMode();
   const { t } = useI18n();
   const pathname = usePathname();
-  const { startTour, translations } = useTour();
+  const { canUseTour, startTour, translations } = useTour();
 
   if (!isDemo) return null;
 
   const canShowTour =
-    pathname === "/dashboard" || pathname.startsWith("/dashboard/copilots");
+    canUseTour &&
+    (pathname === "/dashboard" || pathname.startsWith("/dashboard/copilots"));
 
   return (
     <div className="flex w-full items-center justify-between gap-3 border-b border-amber-200 bg-amber-50 px-4 py-2.5 text-amber-900 sm:px-6">
@@ -28,7 +29,7 @@ export function DemoModeBanner() {
         </p>
       </div>
       <div className="flex shrink-0 items-center gap-1.5">
-        {canShowTour && (
+        {/* {canShowTour && (
           <button
             type="button"
             onClick={() => startTour({ mode: "essentials" })}
@@ -37,7 +38,7 @@ export function DemoModeBanner() {
             <Compass size={14} />
             <span>{translations.ui.takeTour}</span>
           </button>
-        )}
+        )} */}
         <button
           type="button"
           onClick={() => clearDemoPending()}

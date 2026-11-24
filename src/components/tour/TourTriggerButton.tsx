@@ -10,7 +10,9 @@ export function TourTriggerButton({
   fromBeginning?: boolean;
   className?: string;
 }) {
-  const { startTour, translations } = useTour();
+  const { canUseTour, startTour, translations } = useTour();
+
+  if (!canUseTour) return null;
 
   return (
     <button
