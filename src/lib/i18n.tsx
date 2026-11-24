@@ -41,6 +41,27 @@ function detectLocale(): Locale {
   return isLocale(browser) ? browser : "en";
 }
 
+type Vars = Record<string, string | number>;
+
+function translateFor(locale: Locale, text: string, vars?: Vars): string {
+  const out = locale === "en" ? text : (MESSAGES[locale]?.[text] ?? text);
+  if (!vars) return out;
+  return out.replace(/\{(\w+)\}/g, (m, key: string) =>
+    key in vars ? String(vars[key]) : m,
+  );
+}
+
+/** Locale of the running app, for code outside React (stores, helpers). */
+let activeLocale: Locale = "en";
+
+/**
+ * Translate outside React components (e.g. toasts in a zustand store).
+ * Inside components use `useI18n().t` so the text re-renders on a switch.
+ */
+export function translate(text: string, vars?: Vars): string {
+  return translateFor(activeLocale, text, vars);
+}
+
 interface I18nValue {
   locale: Locale;
   setLocale: (locale: Locale) => void;
@@ -65,6 +86,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    activeLocale = locale;
     document.documentElement.lang = locale;
   }, [locale]);
 
@@ -78,14 +100,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback(
-    (text: string, vars?: Record<string, string | number>) => {
-      const out =
-        locale === "en" ? text : (MESSAGES[locale]?.[text] ?? text);
-      if (!vars) return out;
-      return out.replace(/\{(\w+)\}/g, (m, key: string) =>
-        key in vars ? String(vars[key]) : m,
-      );
-    },
+    (text: string, vars?: Vars) => translateFor(locale, text, vars),
     [locale],
   );
 
