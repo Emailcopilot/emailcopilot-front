@@ -47,7 +47,10 @@ export default function QuickStart() {
   const { t } = useI18n();
   const { isDemo, exitDemo } = useDemoMode();
   return (
-    <div className="bg-white border border-gray-100 rounded-lg p-5  w-full col-span-1 lg:col-span-2 xl:col-span-1 ">
+    <div
+      data-tour="tour-dash-quick-start"
+      className="bg-white border border-gray-100 rounded-lg p-5  w-full col-span-1 lg:col-span-2 xl:col-span-1 "
+    >
       <h2 className="text-lg font-bold text-gray-900 mb-3">{t("Quick start")}</h2>
 
       <ul className="">

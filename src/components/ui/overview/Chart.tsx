@@ -164,6 +164,7 @@ export default function PerformanceChart({
   if (comingSoon) {
     return (
       <div
+        data-tour="tour-dash-performance"
         className="bg-gray-50 border mb-8 border-gray-200 rounded-xl px-4 sm:px-6 py-5 font-sans w-full max-w-full"
         title={t("This metric isn't live yet")}
       >
@@ -183,7 +184,10 @@ export default function PerformanceChart({
   }
 
   return (
-    <div className="bg-white border mb-8 border-gray-200 rounded-xl px-4 sm:px-6 py-5 font-sans w-full max-w-full">
+    <div
+      data-tour="tour-dash-performance"
+      className="bg-white border mb-8 border-gray-200 rounded-xl px-4 sm:px-6 py-5 font-sans w-full max-w-full"
+    >
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 mb-2">
         <h2 className="text-base font-semibold text-gray-900 flex-1">
           {t("Performance")}

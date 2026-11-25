@@ -12,6 +12,7 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       restart: "Restart",
       close: "Close tour",
       stepOf: (current, total) => `${current} of ${total}`,
+      dashboardOverview: "Dashboard overview",
       beforeStart: "Before you start",
       wizardStep: (step) => `Step ${step} of 6`,
       kinds: {
@@ -26,6 +27,51 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       },
     },
     steps: {
+      "dash-sent": {
+        title: "What actually went out",
+        body: "Emails Sent counts what left your connected addresses across your copilots. Follow-ups are included, so the total climbs faster than the number of companies reached.",
+        anchor: "Emails Sent",
+      },
+      "dash-replies": {
+        title: "The one that matters",
+        body: "People who wrote back. A reply means a real person read your email and decided to answer.",
+        anchor: "Replies",
+      },
+      "dash-reply-rate": {
+        title: "Which campaign is working",
+        body: "The share of prospects who replied. It lets you compare one copilot with another, or two versions of an email, to see which one landed.",
+        anchor: "Reply Rate",
+      },
+      "dash-copilots-kpi": {
+        title: "How many are running",
+        body: "All your copilots, drafts included. View all opens your list where each campaign shows its current status.",
+        anchor: "Copilots",
+      },
+      "dash-performance": {
+        title: "Did the change work",
+        body: "Track Emails Sent and Replies side by side. Use the selector on the right to switch between 7, 14, and 30 days and see whether edits moved the needle.",
+        anchor: "Performance",
+      },
+      "dash-copilots-card": {
+        title: "What is running",
+        body: "Your recent copilots with sent counts and status badges. A paused copilot sends nothing until you launch it again.",
+        anchor: "Copilots",
+      },
+      "dash-departure-card": {
+        title: "Who got it",
+        body: "The latest companies contacted, newest first, along with delivery status. View all opens the full Departure page.",
+        anchor: "Departure",
+      },
+      "dash-quick-start": {
+        title: "Build the pieces on their own",
+        body: "Create an email account, audience, template, or schedule from here anytime and attach it to any copilot. Next, let's jump to Copilots to see how all six steps fit together.",
+        anchor: "Quick start",
+      },
+      "dash-plan": {
+        title: "When you need more room",
+        body: "The bar on the bottom left tracks how much of your monthly quota is used. Manage Plan is where you switch plans, grab invoices, and update billing.",
+        anchor: "Manage Plan",
+      },
       "copilots-create": {
         title: "A copilot is one campaign",
         body: "It holds who you contact, what you send them and when. You build your first one in six steps, and nothing goes out until you press launch.",
@@ -220,6 +266,7 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       restart: "Opnieuw",
       close: "Tour sluiten",
       stepOf: (current, total) => `${current} van ${total}`,
+      dashboardOverview: "Dashboardoverzicht",
       beforeStart: "Voordat je begint",
       wizardStep: (step) => `Stap ${step} van 6`,
       kinds: {
@@ -234,6 +281,51 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       },
     },
     steps: {
+      "dash-sent": {
+        title: "Wat er echt is verstuurd",
+        body: "Verzonden e-mails telt alles wat vanaf je gekoppelde adressen is verstuurd. Follow-ups tellen mee, dus het totaal stijgt sneller dan het aantal bereikte bedrijven.",
+        anchor: "Verzonden e-mails",
+      },
+      "dash-replies": {
+        title: "Het cijfer dat telt",
+        body: "Mensen die hebben geantwoord. Een antwoord betekent dat een echt persoon je bericht heeft gelezen en gereageerd heeft.",
+        anchor: "Antwoorden",
+      },
+      "dash-reply-rate": {
+        title: "Welke campagne werkt",
+        body: "Het percentage ontvangers dat reageerde. Hiermee vergelijk je copilots of e-mailversies om te zien wat het beste aanslaat.",
+        anchor: "Antwoordpercentage",
+      },
+      "dash-copilots-kpi": {
+        title: "Hoeveel er draaien",
+        body: "Al je copilots, inclusief concepten. Via Bekijk alles open je het overzicht met de actuele status per campagne.",
+        anchor: "Copilots",
+      },
+      "dash-performance": {
+        title: "Heeft de aanpassing gewerkt?",
+        body: "Volg verzonden e-mails en antwoorden naast elkaar. Schakel rechts tussen 7, 14 en 30 dagen om te zien of je aanpassingen resultaat opleveren.",
+        anchor: "Prestaties",
+      },
+      "dash-copilots-card": {
+        title: "Wat er actief is",
+        body: "Je recentste copilots met aantal verzonden e-mails en status. Een gepauzeerde copilot verstuurt niets totdat je hem weer lanceert.",
+        anchor: "Copilots",
+      },
+      "dash-departure-card": {
+        title: "Wie het ontvangen heeft",
+        body: "De laatst benaderde bedrijven, nieuwste bovenaan, met de bezorgstatus. Bekijk alles opent de volledige Departure-pagina.",
+        anchor: "Departure",
+      },
+      "dash-quick-start": {
+        title: "Bouw de onderdelen los",
+        body: "Maak hier direct een e-mailaccount, doelgroep, template of Flight Schedule aan om aan elke copilot te koppelen. Hierna bekijken we op Copilots hoe alle zes stappen samenwerken.",
+        anchor: "Snel starten",
+      },
+      "dash-plan": {
+        title: "Wanneer je meer ruimte nodig hebt",
+        body: "De balk linksonder toont hoeveel van je maandelijkse limiet is gebruikt. Bij Abonnement beheren pas je je plan aan en vind je facturen.",
+        anchor: "Abonnement beheren",
+      },
       "copilots-create": {
         title: "Eén copilot is één campagne",
         body: "Hierin bewaar je wie je benadert, wat je stuurt en wanneer. Je bouwt je eerste copilot in zes stappen en er gaat niets uit totdat je op lanceren klikt.",
@@ -428,6 +520,7 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       restart: "Neu starten",
       close: "Tour schließen",
       stepOf: (current, total) => `${current} von ${total}`,
+      dashboardOverview: "Dashboard-Übersicht",
       beforeStart: "Bevor du startest",
       wizardStep: (step) => `Schritt ${step} von 6`,
       kinds: {
@@ -442,6 +535,51 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       },
     },
     steps: {
+      "dash-sent": {
+        title: "Was wirklich rausging",
+        body: "Gesendete E-Mails zählt alles, was über deine verbundenen Postfächer versandt wurde. Follow-ups zählen mit, daher steigt die Zahl schneller als die erreichten Unternehmen.",
+        anchor: "Gesendete E-Mails",
+      },
+      "dash-replies": {
+        title: "Die Zahl, die zählt",
+        body: "Personen, die geantwortet haben. Eine Antwort heißt, dass ein echter Mensch deine Nachricht gelesen und reagiert hat.",
+        anchor: "Antworten",
+      },
+      "dash-reply-rate": {
+        title: "Welche Kampagne funktioniert",
+        body: "Der Anteil der Kontakte, die geantwortet haben. So vergleichst du Copilots oder Textvarianten und erkennst, was überzeugt.",
+        anchor: "Antwortrate",
+      },
+      "dash-copilots-kpi": {
+        title: "Wie viele laufen",
+        body: "Alle deine Copilots inklusive Entwürfen. Mit Alle ansehen öffnest du die Liste mit dem Status jeder Kampagne.",
+        anchor: "Copilots",
+      },
+      "dash-performance": {
+        title: "Hat die Änderung gewirkt?",
+        body: "Vergleiche gesendete E-Mails und Antworten im Zeitverlauf. Rechts wechselst du zwischen 7, 14 und 30 Tagen, um Verbesserungen zu prüfen.",
+        anchor: "Leistung",
+      },
+      "dash-copilots-card": {
+        title: "Was gerade läuft",
+        body: "Deine neuesten Copilots mit Versandzahl und Status. Ein pausierter Copilot sendet nichts, bis du ihn erneut startest.",
+        anchor: "Copilots",
+      },
+      "dash-departure-card": {
+        title: "Wer etwas erhalten hat",
+        body: "Die zuletzt kontaktierten Unternehmen zuerst, samt Zustellstatus. Alle ansehen öffnet das komplette Departure-Protokoll.",
+        anchor: "Departure",
+      },
+      "dash-quick-start": {
+        title: "Bausteine einzeln anlegen",
+        body: "Erstelle hier E-Mail-Konten, Zielgruppen, Vorlagen oder einen Flight Schedule separat und nutze sie beliebig wieder. Als Nächstes schauen wir unter Copilots, wie alle sechs Schritte zusammenspielen.",
+        anchor: "Schnellstart",
+      },
+      "dash-plan": {
+        title: "Wenn du mehr Volumen brauchst",
+        body: "Der Balken unten links zeigt dein verbrauchtes Monatskontingent. Unter Tarif verwalten wechselst du Tarife und findest deine Rechnungen.",
+        anchor: "Tarif verwalten",
+      },
       "copilots-create": {
         title: "Ein Copilot ist eine Kampagne",
         body: "Hier bündelst du, wen du kontaktierst, was du sendest und wann. In sechs Schritten ist dein erster Copilot startklar – und vor dem Start geht nichts heraus.",
@@ -636,6 +774,7 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       restart: "Recommencer",
       close: "Fermer le tour",
       stepOf: (current, total) => `${current} sur ${total}`,
+      dashboardOverview: "Vue d’ensemble",
       beforeStart: "Avant de commencer",
       wizardStep: (step) => `Étape ${step} sur 6`,
       kinds: {
@@ -650,6 +789,51 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       },
     },
     steps: {
+      "dash-sent": {
+        title: "Ce qui est réellement parti",
+        body: "E-mails envoyés compte tout ce qui est parti de vos boîtes connectées. Les relances sont incluses : le chiffre monte donc plus vite que le nombre d'entreprises contactées.",
+        anchor: "E-mails envoyés",
+      },
+      "dash-replies": {
+        title: "Celui qui compte",
+        body: "Les personnes qui ont répondu. Une réponse, c'est une vraie personne qui a lu votre e-mail et a décidé d'y répondre.",
+        anchor: "Réponses",
+      },
+      "dash-reply-rate": {
+        title: "Quelle campagne fonctionne",
+        body: "La part des destinataires qui ont répondu. C'est ce qui permet de comparer un copilot à un autre ou deux variantes d'un même message.",
+        anchor: "Taux de réponse",
+      },
+      "dash-copilots-kpi": {
+        title: "Combien tournent",
+        body: "Tous vos copilots, brouillons compris. Tout voir ouvre la liste détaillée avec l'état de chaque campagne.",
+        anchor: "Copilots",
+      },
+      "dash-performance": {
+        title: "Est-ce que le changement a marché",
+        body: "Suivez l'évolution des envois et des réponses. Le sélecteur à droite fait passer la vue à 7, 14 ou 30 jours pour vérifier vos ajustements.",
+        anchor: "Performances",
+      },
+      "dash-copilots-card": {
+        title: "Ce qui tourne",
+        body: "Chaque copilot avec son compteur et son état. Un copilot en pause n'envoie rien tant que vous ne l'avez pas relancé.",
+        anchor: "Copilots",
+      },
+      "dash-departure-card": {
+        title: "Qui l’a reçu",
+        body: "Les dernières entreprises contactées, les plus récentes en haut, avec le statut d'envoi. Tout voir ouvre la page Departure complète.",
+        anchor: "Departure",
+      },
+      "dash-quick-start": {
+        title: "Créez les briques séparément",
+        body: "Créez une boîte d'envoi, une cible, un modèle ou un Flight Schedule d'ici, puis rattachez-les à n'importe quel copilot. Ensuite, passons à Copilots pour voir les six étapes ensemble.",
+        anchor: "Démarrage rapide",
+      },
+      "dash-plan": {
+        title: "Quand il vous faut plus de place",
+        body: "La barre en bas à gauche montre la part de votre quota mensuel utilisée. Gérer l'abonnement vous permet de changer de formule et de retrouver vos factures.",
+        anchor: "Gérer l'abonnement",
+      },
       "copilots-create": {
         title: "Un copilot, c’est une campagne",
         body: "Il contient qui vous contactez, ce que vous leur envoyez et quand. Vous construisez le premier en six étapes, et rien ne part tant que vous n'avez pas appuyé sur lancer.",
@@ -844,6 +1028,7 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       restart: "Reiniciar",
       close: "Cerrar tour",
       stepOf: (current, total) => `${current} de ${total}`,
+      dashboardOverview: "Resumen del panel",
       beforeStart: "Antes de empezar",
       wizardStep: (step) => `Paso ${step} de 6`,
       kinds: {
@@ -858,6 +1043,51 @@ export const TOUR_TRANSLATIONS: Record<TourLocale, TourLocaleBundle> = {
       },
     },
     steps: {
+      "dash-sent": {
+        title: "Lo que realmente salió",
+        body: "Correos enviados suma todo lo enviado desde tus bandejas conectadas. Incluye seguimientos, así que la cifra crece más rápido que las empresas contactadas.",
+        anchor: "Correos enviados",
+      },
+      "dash-replies": {
+        title: "El dato que importa",
+        body: "Personas que respondieron. Una respuesta significa que alguien real leyó tu mensaje y decidió contestar.",
+        anchor: "Respuestas",
+      },
+      "dash-reply-rate": {
+        title: "Qué campaña funciona",
+        body: "El porcentaje de contactos que respondieron. Sirve para comparar copilots o versiones de un correo y ver cuál rinde mejor.",
+        anchor: "Tasa de respuesta",
+      },
+      "dash-copilots-kpi": {
+        title: "Cuántos están activos",
+        body: "Todos tus copilots, incluidos borradores. Ver todo abre la lista con el estado de cada campaña.",
+        anchor: "Copilots",
+      },
+      "dash-performance": {
+        title: "¿Funcionó el cambio?",
+        body: "Compara envíos y respuestas en el tiempo. Cambia el selector derecho entre 7, 14 y 30 días para medir tus ajustes.",
+        anchor: "Rendimiento",
+      },
+      "dash-copilots-card": {
+        title: "Qué está en marcha",
+        body: "Tus copilots recientes con volumen enviado y estado. Un copilot en pausa no envía nada hasta que vuelvas a lanzarlo.",
+        anchor: "Copilots",
+      },
+      "dash-departure-card": {
+        title: "Quién lo recibió",
+        body: "Las últimas empresas contactadas, las más recientes primero, con su estado de entrega. Ver todo abre la vista completa de Departure.",
+        anchor: "Departure",
+      },
+      "dash-quick-start": {
+        title: "Crea cada pieza por separado",
+        body: "Crea aquí cuentas de correo, audiencias, plantillas o un Flight Schedule y reutilízalos en cualquier copilot. Ahora pasemos a Copilots para ver los seis pasos unidos.",
+        anchor: "Inicio rápido",
+      },
+      "dash-plan": {
+        title: "Cuando necesites más margen",
+        body: "La barra abajo a la izquierda muestra cuánto de tu cuota mensual llevas usado. En Gestionar plan puedes mejorar tu suscripción y descargar facturas.",
+        anchor: "Gestionar plan",
+      },
       "copilots-create": {
         title: "Un copilot es una campaña",
         body: "Reúne a quién contactas, qué envías y cuándo. Configuras el primero en seis pasos y no sale ningún correo hasta que pulses lanzar.",

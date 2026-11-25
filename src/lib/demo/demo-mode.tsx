@@ -31,12 +31,14 @@ import { readTourSeen } from "@/components/tour/tour-storage";
 
 interface DemoModeContextValue {
   isDemo: boolean;
+  enterDemo: (href?: string) => void;
   exitDemo: (href?: string) => void;
   clearDemoPending: () => void;
 }
 
 const DemoModeContext = createContext<DemoModeContextValue>({
   isDemo: false,
+  enterDemo: () => {},
   exitDemo: () => {},
   clearDemoPending: () => {},
 });
@@ -249,6 +251,32 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
     return () => setDemoRuntimeActive(false);
   }, [isDemo]);
 
+  const enterDemo = useCallback(
+    (href?: string) => {
+      if (!canUseDemo) return;
+      if (userId) writeBillingOnboardingState(userId, "done");
+      setDemoUserId(userId ?? null);
+      setDismissed(false);
+      setStoredDemoPending(true);
+      setDemoRuntimeActive(true);
+
+      if (href) {
+        const [targetPath, rawQuery = ""] = href.split("?");
+        const params = new URLSearchParams(rawQuery);
+        params.set("demo", "true");
+        router.push(`${targetPath}?${params.toString()}`);
+        return;
+      }
+
+      if (!urlDemo) {
+        const params = new URLSearchParams(search);
+        params.set("demo", "true");
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      }
+    },
+    [canUseDemo, pathname, router, search, urlDemo, userId],
+  );
+
   const exitDemo = useCallback(
     (href?: string) => {
       setDismissed(true);
@@ -272,8 +300,8 @@ export function DemoModeProvider({ children }: { children: React.ReactNode }) {
   }, [stripDemoParam, userId]);
 
   const value = useMemo(
-    () => ({ isDemo, exitDemo, clearDemoPending }),
-    [isDemo, exitDemo, clearDemoPending],
+    () => ({ isDemo, enterDemo, exitDemo, clearDemoPending }),
+    [isDemo, enterDemo, exitDemo, clearDemoPending],
   );
 
   return (

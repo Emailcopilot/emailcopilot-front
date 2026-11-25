@@ -14,6 +14,7 @@ interface StatCardProps {
   comingSoon?: boolean;
   /** Shown instead of the trend, e.g. "All time" when there is no period data. */
   footnote?: string;
+  dataTour?: string;
 }
 
 export default function StatCard({
@@ -24,11 +25,13 @@ export default function StatCard({
   comparisonLabel = "",
   comingSoon = false,
   footnote,
+  dataTour,
 }: StatCardProps) {
   const { t } = useI18n();
   if (comingSoon) {
     return (
       <div
+        data-tour={dataTour}
         className="bg-gray-50 border border-gray-200 rounded-lg p-5 w-full"
         title={t("This metric isn't live yet")}
       >
@@ -58,7 +61,10 @@ export default function StatCard({
   const trendColor = isPositive ? "text-emerald-500" : "text-red-500";
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-5 w-full">
+    <div
+      data-tour={dataTour}
+      className="bg-white border border-gray-200 rounded-lg p-5 w-full"
+    >
       <div className="flex items-center gap-4">
         <div
           className={`flex items-center justify-center w-12 h-12 rounded-md ${label === "Replies" ? "bg-success/5" : "bg-primary/5"} shrink-0`}

@@ -24,7 +24,10 @@ export default function CopilotsCard({
   ).slice(0, 3);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-5  w-full ">
+    <div
+      data-tour="tour-dash-copilots-card"
+      className="bg-white border border-gray-200 rounded-lg p-5  w-full "
+    >
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-gray-900">Copilots</h2>
         {copilots.length > 0 && (

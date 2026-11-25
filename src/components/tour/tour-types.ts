@@ -2,9 +2,12 @@ export type TourLocale = "en" | "nl" | "de" | "fr" | "es";
 
 export type TourMode = "essentials" | "full";
 
+export type TourScope = "dashboard" | "copilots";
+
 export type TourKind = "req" | "opt" | "info";
 
 export type TourScreen =
+  | "dashboard"
   | "copilots"
   | "step1"
   | "step2"
@@ -21,6 +24,15 @@ export type TourPrepareAction =
   | "schedule-list-open";
 
 export type TourStepId =
+  | "dash-sent"
+  | "dash-replies"
+  | "dash-reply-rate"
+  | "dash-copilots-kpi"
+  | "dash-performance"
+  | "dash-copilots-card"
+  | "dash-departure-card"
+  | "dash-quick-start"
+  | "dash-plan"
   | "copilots-create"
   | "copilots-workflow"
   | "step1-name"
@@ -85,6 +97,7 @@ export interface TourLocaleUi {
   restart: string;
   close: string;
   stepOf: (current: number, total: number) => string;
+  dashboardOverview: string;
   beforeStart: string;
   wizardStep: (step: number) => string;
   kinds: Record<TourKind, string>;

@@ -52,9 +52,11 @@ export function TourTooltip({
   }, [onMeasure, step.id, copy.body, copy.title]);
 
   const categoryText =
-    step.wizardStep != null
-      ? ui.wizardStep(step.wizardStep)
-      : ui.beforeStart;
+    step.screen === "dashboard"
+      ? ui.dashboardOverview
+      : step.wizardStep != null
+        ? ui.wizardStep(step.wizardStep)
+        : ui.beforeStart;
 
   const isLast = stepIndex >= totalSteps - 1;
   const side = placement.side;

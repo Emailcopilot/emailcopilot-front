@@ -6,6 +6,7 @@ export type {
   TourLocale,
   TourMode,
   TourPrepareAction,
+  TourScope,
   TourScreen,
   TourStepConfig,
   TourStepId,

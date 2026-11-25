@@ -14,10 +14,12 @@ export default function UserCard({
   user,
   isActive,
   onpress,
+  planTourId,
 }: {
   user: DisplayUser | null | undefined;
   isActive: boolean;
   onpress?: () => void;
+  planTourId?: string;
 }) {
   const { limits } = useBilling();
   const quota = emailQuota(limits);
@@ -56,7 +58,7 @@ export default function UserCard({
   return (
     <div className="p-4 space-y-3">
       {/* Plan Card */}
-      <div className="bg-gray-50  rounded-xl p-4">
+      <div data-tour={planTourId} className="bg-gray-50  rounded-xl p-4">
         {isActive && (
           <>
             <div className="flex items-baseline gap-2 mb-3">

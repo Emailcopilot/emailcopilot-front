@@ -1,6 +1,71 @@
-import type { TourMode, TourStepConfig } from "./tour-types";
+import type { TourMode, TourScope, TourStepConfig } from "./tour-types";
 
 export const COPILOT_TOUR_STEPS: TourStepConfig[] = [
+  // Dashboard Overview — KPIs, analytics, cards, quick start, plan quota
+  {
+    id: "dash-sent",
+    screen: "dashboard",
+    target: "tour-dash-sent",
+    kind: "info",
+    essential: true,
+  },
+  {
+    id: "dash-replies",
+    screen: "dashboard",
+    target: "tour-dash-replies",
+    kind: "info",
+    essential: false,
+  },
+  {
+    id: "dash-reply-rate",
+    screen: "dashboard",
+    target: "tour-dash-reply-rate",
+    kind: "info",
+    essential: false,
+  },
+  {
+    id: "dash-copilots-kpi",
+    screen: "dashboard",
+    target: "tour-dash-copilots-kpi",
+    kind: "info",
+    essential: false,
+  },
+  {
+    id: "dash-performance",
+    screen: "dashboard",
+    target: "tour-dash-performance",
+    kind: "info",
+    essential: true,
+  },
+  {
+    id: "dash-copilots-card",
+    screen: "dashboard",
+    target: "tour-dash-copilots-card",
+    kind: "info",
+    essential: false,
+  },
+  {
+    id: "dash-departure-card",
+    screen: "dashboard",
+    target: "tour-dash-departure-card",
+    kind: "info",
+    essential: false,
+  },
+  {
+    id: "dash-quick-start",
+    screen: "dashboard",
+    target: "tour-dash-quick-start",
+    kind: "info",
+    essential: true,
+  },
+  {
+    id: "dash-plan",
+    screen: "dashboard",
+    target: "tour-dash-plan",
+    kind: "info",
+    essential: false,
+  },
+
   // Before you start — Copilots list
   {
     id: "copilots-create",
@@ -309,10 +374,11 @@ export const COPILOT_TOUR_STEPS: TourStepConfig[] = [
 
 export function getVisibleTourSteps(
   mode: TourMode,
-  options: { includeLiveEdit?: boolean } = {},
+  options: { scope?: TourScope; includeLiveEdit?: boolean } = {},
 ): TourStepConfig[] {
-  const { includeLiveEdit = true } = options;
+  const { scope = "dashboard", includeLiveEdit = true } = options;
   return COPILOT_TOUR_STEPS.filter((step) => {
+    if (scope === "copilots" && step.screen === "dashboard") return false;
     if (step.onlyWhenLiveEdit && !includeLiveEdit) return false;
     if (mode === "essentials" && !step.essential) return false;
     return true;

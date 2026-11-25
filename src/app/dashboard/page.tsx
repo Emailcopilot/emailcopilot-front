@@ -136,6 +136,7 @@ export default function OverviewPage() {
       comparisonLabel,
       icon: Send,
       footnote: statsLive ? undefined : t("All time"),
+      dataTour: "tour-dash-sent",
     },
     {
       label: "Replies",
@@ -144,6 +145,7 @@ export default function OverviewPage() {
       comparisonLabel,
       icon: BarChart3,
       comingSoon: !statsLive,
+      dataTour: "tour-dash-replies",
     },
     {
       label: "Reply Rate",
@@ -152,6 +154,7 @@ export default function OverviewPage() {
       comparisonLabel,
       icon: Users,
       comingSoon: !statsLive,
+      dataTour: "tour-dash-reply-rate",
     },
     {
       label: "Copilots",
@@ -159,6 +162,7 @@ export default function OverviewPage() {
       change: 0,
       comparisonLabel,
       icon: Bot,
+      dataTour: "tour-dash-copilots-kpi",
     },
   ];
 
@@ -172,7 +176,6 @@ export default function OverviewPage() {
         }
         description={`Here's what's happening with your outreach today`}
         actionLabel="Create New Copilot"
-        actionDataTour="copilots-create"
         secondaryAction={<TourTriggerButton fromBeginning />}
         onAction={() => {
           if (isDemo) {
@@ -194,6 +197,7 @@ export default function OverviewPage() {
             comparisonLabel={s.comparisonLabel}
             comingSoon={"comingSoon" in s && s.comingSoon}
             footnote={"footnote" in s ? s.footnote : undefined}
+            dataTour={s.dataTour}
           />
         ))}
       </div>

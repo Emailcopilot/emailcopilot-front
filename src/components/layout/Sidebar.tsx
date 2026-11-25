@@ -112,7 +112,7 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      <UserCard user={user} isActive={true} />
+      <UserCard user={user} isActive={true} planTourId="tour-dash-plan" />
     </aside>
   );
 

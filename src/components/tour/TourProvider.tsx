@@ -26,6 +26,7 @@ import type {
   TourLocaleBundle,
   TourMode,
   TourPrepareAction,
+  TourScope,
   TourStepConfig,
   TourWizardStep,
 } from "./tour-types";
@@ -87,7 +88,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
   const { userId, isLoaded: authLoaded } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
-  const { isDemo } = useDemoMode();
+  const { isDemo, enterDemo } = useDemoMode();
   const { hasActivePlan } = useBilling();
   const { locale } = useI18n();
   const editingLive = useCopilotStore((s) => s.editingLive);
@@ -98,48 +99,53 @@ export function TourProvider({ children }: { children: ReactNode }) {
 
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setModeState] = useState<TourMode>("essentials");
+  const [scope, setScope] = useState<TourScope>("dashboard");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [pendingRedirectTarget, setPendingRedirectTarget] = useState<
+    string | null
+  >(null);
 
   const autoStartedRef = useRef(false);
   const prevIsDemoRef = useRef(isDemo);
-  const entryPathRef = useRef<"/dashboard" | "/dashboard/copilots">(
-    "/dashboard/copilots",
-  );
 
   const inWizard = pathname.startsWith("/dashboard/copilots/new");
   const includeLiveEdit = inWizard
-    ? copilotStoreMode === "edit" && editingLive
+    ? isDemo
+      ? copilotStoreMode === "edit" && editingLive
+      : true
     : isDemo;
 
   const visibleSteps = useMemo(
-    () => getVisibleTourSteps(mode, { includeLiveEdit }),
-    [mode, includeLiveEdit],
+    () => getVisibleTourSteps(mode, { scope, includeLiveEdit }),
+    [mode, scope, includeLiveEdit],
   );
 
   const safeIndex =
     visibleSteps.length === 0
       ? 0
       : Math.max(0, Math.min(activeIndex, visibleSteps.length - 1));
-  const activeStep = isOpen && canUseTour ? visibleSteps[safeIndex] : undefined;
+  const currentCandidate =
+    isOpen && canUseTour ? visibleSteps[safeIndex] : undefined;
+  const awaitingRedirect =
+    pendingRedirectTarget !== null && pathname !== pendingRedirectTarget;
+  const activeStep = awaitingRedirect ? undefined : currentCandidate;
   const translations = useMemo(() => getTourTranslations(locale), [locale]);
 
   const navigateForStep = useCallback(
-    (step: TourStepConfig | undefined) => {
+    (step: TourStepConfig | undefined, demoActive = isDemo) => {
       if (!step) return;
-      if (step.screen === "copilots") {
-        if (step.id === "copilots-create") {
-          if (!isTourEntryRoute(pathname)) {
-            router.push(
-              isDemo
-                ? `${entryPathRef.current}?demo=true`
-                : entryPathRef.current,
-            );
-          }
-          return;
+      if (step.screen === "dashboard") {
+        if (pathname !== "/dashboard") {
+          router.push(demoActive ? "/dashboard?demo=true" : "/dashboard");
         }
+        return;
+      }
+      if (step.screen === "copilots") {
         if (pathname !== "/dashboard/copilots") {
           router.push(
-            isDemo ? "/dashboard/copilots?demo=true" : "/dashboard/copilots",
+            demoActive
+              ? "/dashboard/copilots?demo=true"
+              : "/dashboard/copilots",
           );
         }
         return;
@@ -148,7 +154,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
       useCopilotStore.getState().setStep(targetWizardStep);
       if (!pathname.startsWith("/dashboard/copilots/new")) {
         router.push(
-          isDemo
+          demoActive
             ? `/dashboard/copilots/new?edit=-101&step=${targetWizardStep}&demo=true`
             : "/dashboard/copilots/new",
         );
@@ -160,45 +166,64 @@ export function TourProvider({ children }: { children: ReactNode }) {
   const startTour = useCallback(
     (options?: StartTourOptions) => {
       if (!canUseTour) return;
-      if (isTourEntryRoute(pathname)) {
-        entryPathRef.current =
-          pathname === "/dashboard" ? "/dashboard" : "/dashboard/copilots";
-      }
-      const targetMode = options?.mode ?? mode;
-      const steps = getVisibleTourSteps(targetMode, { includeLiveEdit });
-      let startIdx = 0;
 
-      if (
-        !options?.fromBeginning &&
-        pathname.startsWith("/dashboard/copilots/new")
-      ) {
+      const targetScope: TourScope =
+        pathname === "/dashboard" || !isTourActiveRoute(pathname)
+          ? "dashboard"
+          : "copilots";
+      const targetMode = options?.mode ?? mode;
+      const steps = getVisibleTourSteps(targetMode, {
+        scope: targetScope,
+        includeLiveEdit:
+          inWizard && isDemo ? copilotStoreMode === "edit" && editingLive : true,
+      });
+
+      let startIdx = 0;
+      if (!options?.fromBeginning && inWizard) {
         const targetScreen = `step${currentWizardStep}` as const;
         const found = steps.findIndex((s) => s.screen === targetScreen);
         if (found >= 0) startIdx = found;
       }
 
       if (authLoaded) writeTourSeen(userId);
+      setScope(targetScope);
       setModeState(targetMode);
       setActiveIndex(startIdx);
       setIsOpen(true);
 
       const targetStep = steps[startIdx];
+      if (!isTourActiveRoute(pathname)) {
+        setPendingRedirectTarget("/dashboard");
+        enterDemo("/dashboard");
+        return;
+      }
+      setPendingRedirectTarget(null);
+
+      if (inWizard && !isDemo) {
+        const wizardStep = targetStep?.wizardStep ?? currentWizardStep;
+        enterDemo(`/dashboard/copilots/new?edit=-101&step=${wizardStep}`);
+        return;
+      }
+
+      enterDemo();
+
       if (options?.fromBeginning) {
-        navigateForStep(targetStep);
-      } else if (
-        pathname.startsWith("/dashboard/copilots/new") &&
-        targetStep?.wizardStep
-      ) {
+        navigateForStep(targetStep, true);
+      } else if (inWizard && targetStep?.wizardStep) {
         useCopilotStore.getState().setStep(targetStep.wizardStep);
-      } else if (!isTourEntryRoute(pathname)) {
-        navigateForStep(targetStep);
+      } else if (pathname !== "/dashboard" && pathname !== "/dashboard/copilots") {
+        navigateForStep(targetStep, true);
       }
     },
     [
       authLoaded,
       canUseTour,
+      copilotStoreMode,
       currentWizardStep,
-      includeLiveEdit,
+      editingLive,
+      enterDemo,
+      inWizard,
+      isDemo,
       mode,
       navigateForStep,
       pathname,
@@ -208,12 +233,21 @@ export function TourProvider({ children }: { children: ReactNode }) {
 
   const restartTour = useCallback(() => {
     if (!canUseTour) return;
-    const steps = getVisibleTourSteps(mode, { includeLiveEdit });
+    const steps = getVisibleTourSteps(mode, { scope, includeLiveEdit: true });
     if (authLoaded) writeTourSeen(userId);
     setActiveIndex(0);
     setIsOpen(true);
-    navigateForStep(steps[0]);
-  }, [authLoaded, canUseTour, includeLiveEdit, mode, navigateForStep, userId]);
+    enterDemo();
+    navigateForStep(steps[0], true);
+  }, [
+    authLoaded,
+    canUseTour,
+    enterDemo,
+    mode,
+    navigateForStep,
+    scope,
+    userId,
+  ]);
 
   const closeTour = useCallback(() => {
     if (authLoaded) writeTourSeen(userId);
@@ -248,7 +282,10 @@ export function TourProvider({ children }: { children: ReactNode }) {
     (nextMode: TourMode) => {
       if (!canUseTour) return;
       const current = visibleSteps[safeIndex];
-      const nextSteps = getVisibleTourSteps(nextMode, { includeLiveEdit });
+      const nextSteps = getVisibleTourSteps(nextMode, {
+        scope,
+        includeLiveEdit,
+      });
       const resolved = resolveStepIndexAfterModeChange(nextSteps, current);
       setModeState(nextMode);
       setActiveIndex(resolved);
@@ -261,6 +298,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
       isOpen,
       navigateForStep,
       safeIndex,
+      scope,
       visibleSteps,
     ],
   );
@@ -281,10 +319,11 @@ export function TourProvider({ children }: { children: ReactNode }) {
       return;
     }
     autoStartedRef.current = true;
-    entryPathRef.current =
-      pathname === "/dashboard" ? "/dashboard" : "/dashboard/copilots";
+    const nextScope: TourScope =
+      pathname === "/dashboard" ? "dashboard" : "copilots";
     writeTourSeen(userId);
     const raf = requestAnimationFrame(() => {
+      setScope(nextScope);
       setModeState("essentials");
       setActiveIndex(0);
       setIsOpen(true);
@@ -294,14 +333,23 @@ export function TourProvider({ children }: { children: ReactNode }) {
 
   // Close the tour if user has no active plan, leaves eligible routes, or exits demo mode mid-tour.
   useEffect(() => {
+    if (pendingRedirectTarget && pathname === pendingRedirectTarget) {
+      const clearRaf = requestAnimationFrame(() =>
+        setPendingRedirectTarget(null),
+      );
+      return () => cancelAnimationFrame(clearRaf);
+    }
     const exitedDemo = prevIsDemoRef.current && !isDemo;
     prevIsDemoRef.current = isDemo;
     if (!isOpen) return;
+    if (pendingRedirectTarget && !isTourActiveRoute(pathname)) {
+      return;
+    }
     if (!canUseTour || !isTourActiveRoute(pathname) || exitedDemo) {
       const raf = requestAnimationFrame(() => setIsOpen(false));
       return () => cancelAnimationFrame(raf);
     }
-  }, [canUseTour, isDemo, isOpen, pathname]);
+  }, [canUseTour, isDemo, isOpen, pathname, pendingRedirectTarget]);
 
   // Keyboard navigation while tour is open (disabled inside inputs/TipTap).
   useEffect(() => {

@@ -21,6 +21,7 @@ test("all 5 project locales define complete non-empty copy for every Copilot tou
     assert.ok(bundle.ui.takeTour.trim().length > 0);
     assert.ok(bundle.ui.essentials.trim().length > 0);
     assert.ok(bundle.ui.fullTour.trim().length > 0);
+    assert.ok(bundle.ui.dashboardOverview.trim().length > 0);
     assert.ok(bundle.ui.wizardStep(3).includes("3"));
 
     for (const step of COPILOT_TOUR_STEPS) {
@@ -35,23 +36,66 @@ test("all 5 project locales define complete non-empty copy for every Copilot tou
   assert.equal(getTourTranslations("pt"), TOUR_TRANSLATIONS.en);
 });
 
-test("essentials mode spans Copilots intro through all 6 wizard steps and filters live-edit stop when inactive", () => {
-  const essentials = getVisibleTourSteps("essentials", { includeLiveEdit: true });
-  const essentialsDraft = getVisibleTourSteps("essentials", { includeLiveEdit: false });
-  const full = getVisibleTourSteps("full", { includeLiveEdit: true });
+test("dashboard scope begins on Overview before advancing into Copilots and wizard steps", () => {
+  const dashEssentials = getVisibleTourSteps("essentials", {
+    scope: "dashboard",
+    includeLiveEdit: true,
+  });
+  const dashFull = getVisibleTourSteps("full", {
+    scope: "dashboard",
+    includeLiveEdit: true,
+  });
+  const copilotsEssentials = getVisibleTourSteps("essentials", {
+    scope: "copilots",
+    includeLiveEdit: true,
+  });
+  const essentialsDraft = getVisibleTourSteps("essentials", {
+    scope: "copilots",
+    includeLiveEdit: false,
+  });
 
-  assert.ok(essentials.length < full.length);
+  assert.ok(dashEssentials.length < dashFull.length);
   assert.deepEqual(
-    [...new Set(essentials.map((s) => s.screen))],
+    [...new Set(dashEssentials.map((s) => s.screen))],
+    ["dashboard", "copilots", "step1", "step2", "step3", "step4", "step5", "step6"],
+  );
+  assert.deepEqual(
+    dashEssentials.filter((s) => s.screen === "dashboard").map((s) => s.id),
+    ["dash-sent", "dash-performance", "dash-quick-start"],
+  );
+  assert.deepEqual(
+    dashFull.filter((s) => s.screen === "dashboard").map((s) => s.id),
+    [
+      "dash-sent",
+      "dash-replies",
+      "dash-reply-rate",
+      "dash-copilots-kpi",
+      "dash-performance",
+      "dash-copilots-card",
+      "dash-departure-card",
+      "dash-quick-start",
+      "dash-plan",
+    ],
+  );
+  const firstCopilotIdx = dashFull.findIndex((s) => s.screen === "copilots");
+  assert.equal(dashFull[firstCopilotIdx].id, "copilots-create");
+  assert.equal(dashFull[firstCopilotIdx - 1].id, "dash-plan");
+
+  assert.deepEqual(
+    [...new Set(copilotsEssentials.map((s) => s.screen))],
     ["copilots", "step1", "step2", "step3", "step4", "step5", "step6"],
   );
-  assert.equal(essentials.some((s) => s.onlyWhenLiveEdit), true);
+  assert.equal(copilotsEssentials.some((s) => s.onlyWhenLiveEdit), true);
   assert.equal(essentialsDraft.some((s) => s.onlyWhenLiveEdit), false);
 });
 
 test("switching between full tour and essentials keeps current or nearest preceding stop", () => {
-  const full = getVisibleTourSteps("full", { includeLiveEdit: true });
-  const essentials = getVisibleTourSteps("essentials", { includeLiveEdit: true });
+  const full = getVisibleTourSteps("full", { scope: "dashboard", includeLiveEdit: true });
+  const essentials = getVisibleTourSteps("essentials", { scope: "dashboard", includeLiveEdit: true });
+
+  const optionalDash = full.find((s) => s.id === "dash-copilots-card");
+  const idxDashEssentials = resolveStepIndexAfterModeChange(essentials, optionalDash);
+  assert.equal(essentials[idxDashEssentials].id, "dash-performance");
 
   const optionalStep = full.find((s) => s.id === "step1-goal");
   const idxInEssentials = resolveStepIndexAfterModeChange(essentials, optionalStep);

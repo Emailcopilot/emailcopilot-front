@@ -21,7 +21,10 @@ export default function DepartureCard({
     : storeLeads.filter((lead) => !hidden.has(lead.id));
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-5  w-full ">
+    <div
+      data-tour="tour-dash-departure-card"
+      className="bg-white border border-gray-200 rounded-lg p-5  w-full "
+    >
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold text-gray-900">Departure</h2>
         {leads.length > 0 && (
