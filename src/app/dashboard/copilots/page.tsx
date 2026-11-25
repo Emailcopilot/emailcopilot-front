@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { Archive, Loader2, Plus, Send, X } from "lucide-react";
 import { toast } from "sonner";
 import { copilotsApi } from "@/lib/api";
@@ -17,13 +17,17 @@ import CopilotLimitDialog from "@/components/ui/limits/CopilotLimitDialog";
 import { copilotQuota, currentPlanId, higherTiers } from "@/lib/limits";
 import { useBilling, billingKeys } from "@/lib/useBilling";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_COPILOTS } from "@/lib/demo/demo-data";
 import { sortCopilotsArchivedLast } from "@/lib/sort-copilots";
 import { useI18n } from "@/lib/i18n";
+import { TourTriggerButton } from "@/components/tour";
 
 export default function CopilotsPage() {
   const router = useRouter();
   const { t } = useI18n();
   const queryClient = useQueryClient();
+  const { isDemo, exitDemo } = useDemoMode();
   const { limits, plans, refetchLimits } = useBilling();
   const quota = copilotQuota(limits);
   const [limitDialogOpen, setLimitDialogOpen] = useState(false);
@@ -41,10 +45,41 @@ export default function CopilotsPage() {
   // Pagination state — same responsive rows-per-page as the templates table
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = useRowsPerPage(20);
+  const fetchSeqRef = useRef(0);
+
+  const fetchCopilots = useCallback(async () => {
+    const seq = ++fetchSeqRef.current;
+    try {
+      setLoading(true);
+      const res = await copilotsApi.getAll();
+      if (seq !== fetchSeqRef.current) return;
+      console.log("Fetched copilots from copilot page :", res.data);
+      setCopilots(res.data);
+      // Creating, deleting or archiving a copilot changes the plan usage.
+      queryClient.invalidateQueries({ queryKey: billingKeys.limits() });
+      if (res.data.length === 0) {
+        router.push("/dashboard/copilots/new");
+      }
+    } catch {
+      if (seq !== fetchSeqRef.current) return;
+      setCopilots([]);
+    } finally {
+      if (seq === fetchSeqRef.current) {
+        setLoading(false);
+      }
+    }
+  }, [queryClient, router]);
 
   useEffect(() => {
+    if (isDemo) {
+      fetchSeqRef.current += 1;
+      setCopilots(DEMO_COPILOTS);
+      setLoading(false);
+      return;
+    }
+
     fetchCopilots();
-  }, []);
+  }, [fetchCopilots, isDemo]);
 
   // Deep link from the wizard's own guard (/dashboard/copilots?limit=copilots).
   useEffect(() => {
@@ -54,28 +89,15 @@ export default function CopilotsPage() {
     window.history.replaceState(null, "", "/dashboard/copilots");
   }, []);
 
-  async function fetchCopilots() {
-    try {
-      setLoading(true);
-      const res = await copilotsApi.getAll();
-      console.log("Fetched copilots from copilot page :", res.data);
-      setCopilots(res.data);
-      // Creating, deleting or archiving a copilot changes the plan usage.
-      queryClient.invalidateQueries({ queryKey: billingKeys.limits() });
-      if (res.data.length === 0) {
-        router.push("/dashboard/copilots/new");
-      }
-    } catch {
-      setCopilots([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   const planId = currentPlanId(limits);
   const tiers = higherTiers(plans, planId);
 
   async function handleCreate() {
+    if (isDemo) {
+      exitDemo("/dashboard/copilots/new");
+      return;
+    }
+
     if (limits && !limits.hasActivePlan) {
       router.push("/dashboard/billing?required=plan");
       return;
@@ -172,6 +194,8 @@ export default function CopilotsPage() {
         title="Copilots"
         description="Manage your automated outreach campaigns."
         actionLabel="Create New Copilot"
+        actionDataTour="copilots-create"
+        secondaryAction={<TourTriggerButton fromBeginning />}
         onAction={handleCreate}
       />
 
@@ -224,6 +248,7 @@ export default function CopilotsPage() {
             <CopilotCardsList
               copilots={paginatedData}
               onRefresh={fetchCopilots}
+              readOnly={isDemo}
             />
           </div>
         ) : (
@@ -233,17 +258,23 @@ export default function CopilotsPage() {
               <CopilotCardsList
                 copilots={paginatedData}
                 onRefresh={fetchCopilots}
+                readOnly={isDemo}
               />
             </div>
             <div className="hidden md:contents">
               <CopilotTable
                 copilots={paginatedData}
                 onRefresh={fetchCopilots}
-                selectedIds={selectedIds}
-                onSelectionChange={(ids) => {
-                  setSelectedIds(ids);
-                  setConfirmArchive(false);
-                }}
+                readOnly={isDemo}
+                selectedIds={isDemo ? undefined : selectedIds}
+                onSelectionChange={
+                  isDemo
+                    ? undefined
+                    : (ids) => {
+                        setSelectedIds(ids);
+                        setConfirmArchive(false);
+                      }
+                }
               />
             </div>
           </>

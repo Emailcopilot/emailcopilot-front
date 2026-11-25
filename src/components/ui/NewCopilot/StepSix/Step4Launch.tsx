@@ -27,6 +27,7 @@ import EmailLimitDialog from "@/components/ui/limits/EmailLimitDialog";
 import TestEmailGateModal from "./TestEmailGateModal";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
 
 function ReadinessItem({ done, label }: { done: boolean; label: string }) {
   const { t } = useI18n();
@@ -59,6 +60,7 @@ export default function Step4Launch({
 }: Step4LaunchProps) {
   const feedback = useSetupFeedbackActions();
   const { t, locale } = useI18n();
+  const { isDemo } = useDemoMode();
   const router = useRouter();
   const { copilotData, setStep, draftId, persistDraft, mode, editingLive } =
     useCopilotStore();
@@ -87,7 +89,7 @@ export default function Step4Launch({
       copilotsApi
         .testEmailStatus(draftId as number)
         .then((res) => res.data as CopilotTestEmailStatus),
-    enabled: draftId != null,
+    enabled: draftId != null && !isDemo,
     retry: false,
   });
 
@@ -109,6 +111,7 @@ export default function Step4Launch({
   };
   // show alert when user tries to leave the page with unsaved changes
   useEffect(() => {
+    if (isDemo) return;
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
 
@@ -120,7 +123,7 @@ export default function Step4Launch({
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [isDemo]);
 
   // Readiness — what the "ready to take off" checks reflect.
   const readySetup = !!copilotData.name?.trim();
@@ -197,6 +200,7 @@ export default function Step4Launch({
   // Gate only when no test email has ever been sent for this copilot. If the
   // status can't be verified, fail open so a flaky endpoint never blocks launch.
   const testEmailSent =
+    isDemo ||
     testEmailSentNow ||
     (draftId == null
       ? false
@@ -208,6 +212,10 @@ export default function Step4Launch({
           : false);
 
   const sendTestEmail = async (fromGate = false) => {
+    if (isDemo) {
+      toast.info(t("Demo mode is read only. Create your own item to start."));
+      return;
+    }
     if (feedback.isBusy()) return;
     setSendingTestEmail(true);
     try {
@@ -237,6 +245,10 @@ export default function Step4Launch({
   };
 
   const handleLaunch = () => {
+    if (isDemo) {
+      onLaunch();
+      return;
+    }
     // No active plan (including a pending checkout): the shell gate owns this
     // in practice, but never let the wizard park a copilot that cannot send.
     if (limits && !limits.hasActivePlan) {
@@ -267,7 +279,10 @@ export default function Step4Launch({
           : t("Review your settings and finish the open steps before launching.")}
       </p>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8">
+      <div
+        data-tour="tour-step6-review"
+        className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8"
+      >
         {/* Card 1: Setup */}
         <div
           onClick={() => setStep(1)}
@@ -528,7 +543,10 @@ export default function Step4Launch({
           <ArrowLeft size={15} /> {t("Back")}
         </button>
 
-        <div className="flex items-center gap-2 flex-wrap ml-auto">
+        <div
+          data-tour="tour-step6-actions"
+          className="flex items-center gap-2 flex-wrap ml-auto"
+        >
           <button
             type="button"
             onClick={(event) => { if (event.detail <= 1) void sendTestEmail(); }}

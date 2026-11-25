@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { toast } from "sonner";
 import { emailAccountsApi } from "@/lib/api";
 import { EmailAccount } from "@/lib/types";
+import { clearDemoPending } from "@/lib/demo/demo-storage";
 import { translate as t } from "@/lib/i18n";
 
 type EmailAccountPayload = Record<string, unknown>;
@@ -52,6 +53,7 @@ export const useEmailAccountStore = create<EmailAccountStore>((set, get) => ({
     try {
       await emailAccountsApi.create(data);
       await get().fetchAccounts();
+      clearDemoPending();
       toast.success(t("Email account created successfully"));
     } catch (error) {
       console.error(error);

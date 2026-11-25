@@ -6,6 +6,8 @@ import Image from "next/image";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useEmailAccountStore } from "@/store/emailAccountStore";
 import { useI18n } from "@/lib/i18n";
+import { toast } from "sonner";
+import { useDemoMode } from "@/lib/demo/demo-mode";
 interface ProvidersOptionProps {
   setShowOtherProviderPopUp: (show: boolean) => void;
   setSelectedProfileName: (name: string) => void;
@@ -20,8 +22,14 @@ function ProvidersOption({
   returnTo,
 }: ProvidersOptionProps) {
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
   const { oauthConnecting, oauthConnect } = useEmailAccountStore();
   const { updateCopilotData, copilotData } = useCopilotStore();
+  const guardDemo = () => {
+    if (!isDemo) return false;
+    toast.info(t("Demo mode is read only. Create your own item to start."));
+    return true;
+  };
   return (
     <div>
       <div className="space-y-6">
@@ -41,7 +49,7 @@ function ProvidersOption({
             {t("Recommended")}
           </h3>
 
-          <div className="space-y-3">
+          <div data-tour="tour-step2-oauth" className="space-y-3">
             {/* Connect with Gmail - highlighted */}
             <button
               type="button"
@@ -52,6 +60,7 @@ function ProvidersOption({
                   : "border-gray-200 hover:border-primary hover:bg-primary-light"
               } transition-colors text-left`}
               onClick={() => {
+                if (guardDemo()) return;
                 setSelectedProfileName("gmail");
                 oauthConnect("gmail", returnTo);
               }}
@@ -92,6 +101,7 @@ function ProvidersOption({
                   : "border-gray-200 hover:border-primary hover:bg-primary-light"
               } transition-colors text-left`}
               onClick={() => {
+                if (guardDemo()) return;
                 setSelectedProfileName("outlook");
                 oauthConnect("outlook", returnTo);
               }}
@@ -144,7 +154,9 @@ function ProvidersOption({
         {/* Connect other provider */}
         <button
           type="button"
+          data-tour="tour-step2-smtp"
           onClick={() => {
+            if (guardDemo()) return;
             setShowOtherProviderPopUp(true);
             setSelectedProfileName("other");
           }}

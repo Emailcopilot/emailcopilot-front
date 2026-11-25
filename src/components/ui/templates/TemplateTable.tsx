@@ -35,6 +35,7 @@ interface TemplateTableProps {
   onDuplicate: (id: number) => void;
   onCreateNew: () => void;
   loading?: boolean;
+  readOnly?: boolean;
 }
 
 export default function TemplateTable({
@@ -47,6 +48,7 @@ export default function TemplateTable({
   onDuplicate,
   onCreateNew,
   loading = false,
+  readOnly = false,
 }: TemplateTableProps) {
   const { t } = useI18n();
   return (
@@ -85,7 +87,7 @@ export default function TemplateTable({
                 : "text-[#94A3B8]"
             }`}
           >
-            {t(col)}
+            {readOnly && col === "Actions" ? null : t(col)}
           </span>
         ))}
       </div>
@@ -135,6 +137,7 @@ export default function TemplateTable({
               onEdit={() => onEdit(tpl)}
               onDelete={() => onDelete(tpl.id)}
               onDuplicate={() => onDuplicate(tpl.id)}
+              readOnly={readOnly}
             />
           ))}
         </div>

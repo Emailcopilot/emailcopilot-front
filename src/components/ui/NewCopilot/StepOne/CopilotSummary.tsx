@@ -8,7 +8,7 @@ function CopilotSummary({ draftId }: { draftId?: string }) {
   const isRelaunch = mode === "edit" && editingLive;
   const { t } = useI18n();
   return (
-    <div className="w-full ">
+    <div data-tour="tour-step1-summary" className="w-full ">
       <h2 className="text-lg font-bold mb-1">{t("Copilot Summary")}</h2>
       <p className="text-md text-gray-500 mb-5">
         {t("Here’s a summary of your copilot.")}

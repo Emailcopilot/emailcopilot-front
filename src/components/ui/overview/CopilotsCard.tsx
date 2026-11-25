@@ -5,13 +5,23 @@ import { useCopilotStore } from "@/store/copilotStore";
 import NoData from "./NoData";
 import { useI18n } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
+import type { Copilot } from "@/components/layout/features/copilots/CopilotTable";
 import { sortCopilotsArchivedLast } from "@/lib/sort-copilots";
 
-export default function CopilotsCard() {
+export default function CopilotsCard({
+  copilots: demoCopilots,
+}: {
+  copilots?: Copilot[];
+}) {
   const { t } = useI18n();
-  const { copilots } = useCopilotStore();
+  const { copilots: storeCopilots } = useCopilotStore();
+  const copilots = demoCopilots ?? storeCopilots;
   const router = useRouter();
-  const visibleCopilots = sortCopilotsArchivedLast(copilots).slice(0, 3);
+  const visibleCopilots = (
+    demoCopilots
+      ? sortCopilotsArchivedLast(demoCopilots)
+      : sortCopilotsArchivedLast(storeCopilots)
+  ).slice(0, 3);
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-5  w-full ">
@@ -35,12 +45,15 @@ export default function CopilotsCard() {
             {visibleCopilots.map((copilot) => (
               <tr
                 key={copilot.id}
-                onClick={() =>
-                  router.push(
-                    `/dashboard/departure?copilotId=${copilot.id}&name=${copilot.name}`,
-                  )
+                onClick={
+                  demoCopilots
+                    ? undefined
+                    : () =>
+                        router.push(
+                          `/dashboard/departure?copilotId=${copilot.id}&name=${copilot.name}`,
+                        )
                 }
-                className="cursor-pointer group"
+                className={demoCopilots ? "group" : "cursor-pointer group"}
               >
                 <td className="py-3 text-sm font-semibold text-gray-900 group-hover:text-primary transition-colors">
                   {copilot.name}

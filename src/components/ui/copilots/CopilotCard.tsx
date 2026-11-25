@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { copilotsApi } from "@/lib/api";
 import { toast } from "sonner";
 import { getCopilotStatusAppearance } from "@/lib/copilot-status-appearance";
+import { useCopilotStore } from "@/store/copilotStore";
 
 export interface CardContent {
   badgeLabel: string;
@@ -142,6 +143,7 @@ export interface CopilotCardProps {
   showMenu?: boolean;
   onMenuClose?: () => void;
   onRefresh?: () => void;
+  readOnly?: boolean;
   className?: string;
 }
 
@@ -153,6 +155,7 @@ function CopilotCard({
   showMenu = false,
   onMenuClose,
   onRefresh,
+  readOnly = false,
   className = "",
 }: CopilotCardProps) {
   const { t, locale } = useI18n();
@@ -190,20 +193,41 @@ function CopilotCard({
   const handleActionButton = (copilot: Copilot) => {
     switch (copilot.status.toLocaleLowerCase()) {
       case "paused":
-        return {
-          action: () => handleResume(),
-          label: "Resume",
-        };
+        return readOnly
+          ? {
+              action: () => {
+                useCopilotStore.getState().setStep(1);
+                router.push(
+                  `/dashboard/copilots/new?edit=${copilot.id}&step=1&demo=true`,
+                );
+              },
+              label: "Continue setup",
+            }
+          : {
+              action: () => handleResume(),
+              label: "Resume",
+            };
       case "draft":
         return {
-          action: () =>
-            router.push(`/dashboard/copilots/new?edit=${copilot.id}`),
+          action: () => {
+            if (readOnly) useCopilotStore.getState().setStep(1);
+            router.push(
+              `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+            );
+          },
           label: "Continue setup",
         };
       default:
         return {
-          action: () => router.push(`/dashboard/departure`),
-          label: "View in Departure",
+          action: () => {
+            if (readOnly) useCopilotStore.getState().setStep(1);
+            router.push(
+              readOnly
+                ? `/dashboard/copilots/new?edit=${copilot.id}&step=1&demo=true`
+                : `/dashboard/departure`,
+            );
+          },
+          label: readOnly ? "Continue setup" : "View in Departure",
         };
     }
   };
@@ -212,10 +236,18 @@ function CopilotCard({
 
   return (
     <div
-      onClick={() => router.push(`/dashboard/copilots/new?edit=${copilot.id}`)}
+      onClick={() => {
+        if (readOnly) useCopilotStore.getState().setStep(1);
+        router.push(
+          `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+        );
+      }}
       onKeyDown={(e) => {
         if (e.key === "Enter" && e.target === e.currentTarget) {
-          router.push(`/dashboard/copilots/new?edit=${copilot.id}`);
+          if (readOnly) useCopilotStore.getState().setStep(1);
+          router.push(
+            `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+          );
         }
       }}
       tabIndex={0}
@@ -229,17 +261,19 @@ function CopilotCard({
           </h3>
           <CopilotStatus status={copilot.status} isSmall />
         </div>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onActionsClick?.();
-          }}
-          aria-label={t("Copilot actions")}
-          className="shrink-0 text-gray-300 transition-colors hover:text-gray-500"
-        >
-          {showMenu ? <X size={18} /> : <MoreVertical size={18} />}
-        </button>
+        {!readOnly && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onActionsClick?.();
+            }}
+            aria-label={t("Copilot actions")}
+            className="shrink-0 text-gray-300 transition-colors hover:text-gray-500"
+          >
+            {showMenu ? <X size={18} /> : <MoreVertical size={18} />}
+          </button>
+        )}
       </div>
 
       {/* 2. How is it going */}
@@ -289,7 +323,7 @@ function CopilotCard({
           <MoveRight size={14} />
         </button>
       </div>
-      {showMenu && (
+      {showMenu && !readOnly && (
         <div
           className="absolute right-4 top-12 z-20"
           onClick={(e) => e.stopPropagation()}

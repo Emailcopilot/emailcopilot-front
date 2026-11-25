@@ -13,6 +13,8 @@ import DashboardHeader from "@/components/layout/DashboardHeader";
 import DashboardContainer from "@/components/layout/DashboardContainer";
 import Pagination from "@/components/ui/templates/Pagination";
 import { useRowsPerPage } from "@/lib/hooks";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_FLIGHT_SCHEDULES } from "@/lib/demo/demo-data";
 
 interface CopilotLite {
   id: number;
@@ -21,6 +23,7 @@ interface CopilotLite {
 
 export default function FlightSchedulePage() {
   const perPage = useRowsPerPage(10);
+  const { isDemo, exitDemo, clearDemoPending } = useDemoMode();
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [copilots, setCopilots] = useState<CopilotLite[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,26 +63,35 @@ export default function FlightSchedulePage() {
   }, []);
 
   useEffect(() => {
+    if (isDemo) {
+      setSchedules(DEMO_FLIGHT_SCHEDULES);
+      setCopilots([]);
+      setLoading(false);
+      return;
+    }
     fetchSchedules();
     fetchCopilots();
-  }, [fetchSchedules, fetchCopilots]);
+  }, [fetchSchedules, fetchCopilots, isDemo]);
 
   useEffect(() => {
+    if (isDemo) return;
     const params = new URLSearchParams(window.location.search);
     if (params.get("new") === "true") {
       setIsModalOpen(true);
     }
-  }, []);
+  }, [isDemo]);
 
   // ── Enrich: derive used-by counts from copilots ────────────────────────────
 
   const rows: FlightScheduleRow[] = useMemo(
     () =>
-      schedules.map((s) => ({
-        ...s,
-        usedBy: copilots.filter((c) => c.flightScheduleId === s.id).length,
-      })),
-    [schedules, copilots],
+      isDemo
+        ? DEMO_FLIGHT_SCHEDULES
+        : schedules.map((s) => ({
+            ...s,
+            usedBy: copilots.filter((c) => c.flightScheduleId === s.id).length,
+          })),
+    [isDemo, schedules, copilots],
   );
 
   const filtered = useMemo(() => {
@@ -110,6 +122,7 @@ export default function FlightSchedulePage() {
       await flightSchedulesApi.create(data);
       toast.success(tr("Flight schedule created."));
     }
+    clearDemoPending();
     closeModal();
     fetchSchedules();
   };
@@ -117,11 +130,12 @@ export default function FlightSchedulePage() {
   // ── Delete ─────────────────────────────────────────────────────────────────
 
   const handleDelete = async (schedule: Schedule) => {
-    if (!schedule.id) return;
+    if (isDemo || !schedule.id) return;
     if (!confirm(tr("Are you sure you want to delete this flight schedule?")))
       return;
     try {
       await flightSchedulesApi.delete(schedule.id);
+      clearDemoPending();
       toast.success(tr("Flight schedule deleted."));
       fetchSchedules();
     } catch {
@@ -132,6 +146,7 @@ export default function FlightSchedulePage() {
   // ── Duplicate (client-side — no API duplicate endpoint) ────────────────────
 
   const handleDuplicate = async (schedule: Schedule) => {
+    if (isDemo) return;
     try {
       await flightSchedulesApi.create({
         name: `${schedule.name || "Flight Schedule"} (${tr("Copy")})`,
@@ -142,6 +157,7 @@ export default function FlightSchedulePage() {
         sendingHoursActive: schedule.sendingHoursActive,
         timezone: schedule.timezone,
       });
+      clearDemoPending();
       toast.success(tr("Flight schedule duplicated."));
       fetchSchedules();
     } catch {
@@ -152,11 +168,15 @@ export default function FlightSchedulePage() {
   // ── Modal helpers ──────────────────────────────────────────────────────────
 
   const openCreateModal = () => {
+    if (isDemo) {
+      exitDemo();
+    }
     setEditingSchedule(null);
     setIsModalOpen(true);
   };
 
   const openEditModal = (schedule: Schedule) => {
+    if (isDemo) return;
     setEditingSchedule(schedule);
     setIsModalOpen(true);
   };
@@ -195,6 +215,7 @@ export default function FlightSchedulePage() {
         onDuplicate={handleDuplicate}
         onCreateNew={openCreateModal}
         loading={loading}
+        readOnly={isDemo}
       />
 
       {filtered.length > 0 && (

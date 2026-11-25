@@ -213,6 +213,8 @@ export function useBilling() {
         subscriptionLoading: subscriptionQuery.isLoading,
         subscriptionFetching: subscriptionQuery.isFetching,
         subscriptionError: subscriptionQuery.error,
+        subscriptionLoaded: subscriptionQuery.isSuccess,
+        invoicesLoaded: invoicesQuery.isSuccess,
         retrySubscription: () => subscriptionQuery.refetch(),
 
         // ── Actions ───────────────────────────────────────────────────────────────

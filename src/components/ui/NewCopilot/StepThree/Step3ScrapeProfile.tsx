@@ -16,6 +16,7 @@ import { targetAudiencesApi } from "@/lib/api";
 import { toast } from "sonner";
 import Switcher from "../../Switcher";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
 // ── TagInput ─────────────────────────────────────────────────────────────────
 
 interface TagInputProps {
@@ -247,11 +248,13 @@ export default function Step3ScrapeProfile() {
   const [loading, setLoading] = useState(false);
   const [enableCity, setEnableCity] = useState(false);
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
   const { data: profiles = [], isLoading: loadingProfiles } =
     useWizardTargetAudiences();
 
   // show alert when user tries to leave the page with unsaved changes
   useEffect(() => {
+    if (isDemo) return;
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
 
@@ -263,7 +266,7 @@ export default function Step3ScrapeProfile() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [isDemo]);
 
   // If a target audience was already linked (edit/duplicate mode) or the user
   // picks an existing profile, hydrate the form fields from that profile so
@@ -310,6 +313,10 @@ export default function Step3ScrapeProfile() {
   const canContinue = !!copilotData.targetAudienceId || industries.length > 0;
 
   const handleONpress = async () => {
+    if (isDemo) {
+      setStep(4);
+      return;
+    }
     // If a profile is selected, persist the link and proceed.
     if (copilotData.targetAudienceId) {
       setLoading(true);
@@ -363,7 +370,10 @@ export default function Step3ScrapeProfile() {
 
       <div className="space-y-8">
         {/* Industry */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start">
+        <div
+          data-tour="tour-step3-industry"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start"
+        >
           <div>
             <h3 className="text-sm relative font-bold text-gray-900">
               {t("Industry")}
@@ -398,7 +408,10 @@ export default function Step3ScrapeProfile() {
         </div>
 
         {/* Country */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start">
+        <div
+          data-tour="tour-step3-country"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start"
+        >
           <div>
             <h3 className="text-sm font-bold text-gray-900">{t("Country")}</h3>
             <p className="text-xs text-gray-500 mt-1">
@@ -424,7 +437,10 @@ export default function Step3ScrapeProfile() {
         </div>
 
         {/* Cities */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start">
+        <div
+          data-tour="tour-step3-city"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-6 items-start"
+        >
           <div>
             <div className=" w-full flex justify-between items-center gap-2">
               <h3 className="text-sm font-bold text-gray-900">{t("City")}</h3>
@@ -502,7 +518,7 @@ export default function Step3ScrapeProfile() {
         </div>
       </div>
       <div>
-        <div className="space-y-4">
+        <div data-tour="tour-step3-saved" className="space-y-4">
           {loadingProfiles ? (
             <div className="text-sm text-gray-500">{t("Loading target audiences...")}</div>
           ) : profiles.length === 0 ? (

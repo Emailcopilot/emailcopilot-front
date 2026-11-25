@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { CircleHelp, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -14,10 +15,17 @@ import PlanSelector from "@/components/ui/billing/PlanSelector";
 import PlanStatusCard from "@/components/ui/billing/PlanStatusCard";
 import type { BillingInterval } from "@/components/ui/billing/PlanSelector";
 import { parseBillingIntent } from "@/lib/billingIntent";
+import {
+  readBillingOnboardingState,
+  shouldArmBillingOnboarding,
+  writeBillingOnboardingState,
+} from "@/lib/billing-onboarding";
+import { readTourSeen } from "@/components/tour/tour-storage";
 import { useBilling, type PlanId } from "@/lib/useBilling";
 import { useI18n } from "@/lib/i18n";
 
 export default function BillingPage() {
+  const { userId } = useAuth();
   const { t } = useI18n();
   const {
     plans,
@@ -33,6 +41,8 @@ export default function BillingPage() {
     refetchLimits,
     hasActivePlan,
     hasSubscription,
+    subscriptionLoaded,
+    invoicesLoaded,
     paymentState,
     attemptedPlan,
     isCanceling,
@@ -97,8 +107,29 @@ export default function BillingPage() {
     window.history.replaceState(null, "", "/dashboard/billing");
   }, [plans]);
 
+  function armOnboardingBeforeCheckout() {
+    if (!userId) return;
+    const billingLoaded =
+      !loading &&
+      limits !== null &&
+      subscriptionLoaded &&
+      (invoicesLoaded || subscription === null);
+    if (
+      shouldArmBillingOnboarding({
+        billingLoaded,
+        limits,
+        invoices,
+        state: readBillingOnboardingState(userId),
+        tourSeen: readTourSeen(userId),
+      })
+    ) {
+      writeBillingOnboardingState(userId, "armed");
+    }
+  }
+
   async function handleSubscribe(planId: PlanId, interval: BillingInterval) {
     setSubscribingPlanId(planId);
+    armOnboardingBeforeCheckout();
     try {
       // Resolves by navigating away to Mollie's hosted checkout.
       await subscribe(
@@ -117,6 +148,7 @@ export default function BillingPage() {
     if (!subscription) return;
 
     setIsRetrying(true);
+    armOnboardingBeforeCheckout();
     try {
       const annual =
         subscription.billingInterval === "year" ||

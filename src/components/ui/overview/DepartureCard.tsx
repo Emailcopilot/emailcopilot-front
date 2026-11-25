@@ -1,17 +1,24 @@
 import Link from "next/link";
 import { useLeadStore } from "@/store/leadStore";
 import { formatDateTime } from "@/lib/helpers";
+import type { Lead } from "@/lib/types";
 import NoData from "./NoData";
 import { useI18n } from "@/lib/i18n";
 import LeadStatus from "../departure/LeadStatus";
 import { getHiddenLeadIds } from "../departure/LeadMenu";
 
-export default function DepartureCard() {
+export default function DepartureCard({
+  leads: demoLeads,
+}: {
+  leads?: Lead[];
+}) {
   const { t } = useI18n();
-  const { leads: allLeads } = useLeadStore();
+  const { leads: storeLeads } = useLeadStore();
   // Leads the user removed from the Departure overview stay hidden here too.
   const hidden = getHiddenLeadIds();
-  const leads = allLeads.filter((lead) => !hidden.has(lead.id));
+  const leads = demoLeads
+    ? demoLeads
+    : storeLeads.filter((lead) => !hidden.has(lead.id));
 
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-5  w-full ">

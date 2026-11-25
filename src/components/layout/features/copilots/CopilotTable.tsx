@@ -188,22 +188,26 @@ function StepColumn({
   step,
   index,
   copilotId,
+  readOnly = false,
 }: {
   step: WorkflowStep;
   index: number;
   copilotId: string | number;
+  readOnly?: boolean;
 }) {
   const router = useRouter();
   const { t } = useI18n();
   const { setStep } = useCopilotStore();
   return (
     <div
-      onClick={() => (
-        setStep((index + 1) as Step),
-        router.push(`/dashboard/copilots/new?edit=${copilotId}`)
-      )}
+      onClick={() => {
+        const targetStep = (index + 1) as Step;
+        setStep(targetStep);
+        const demoSuffix = readOnly ? `&step=${targetStep}&demo=true` : "";
+        router.push(`/dashboard/copilots/new?edit=${copilotId}${demoSuffix}`);
+      }}
       title={`${index + 1}. ${t(step.title)}: ${t(step.label)}`}
-      className="flex items-center gap-1.5 group hover:bg-primary/5 border border-gray-100 hover:border-primary rounded-lg px-2 py-1"
+      className="flex cursor-pointer items-center gap-1.5 group hover:bg-primary/5 border border-gray-100 hover:border-primary rounded-lg px-2 py-1"
     >
       <StepIcon state={step.state} />
       <span className="text-[12px] font-medium group-hover:text-primary text-gray-700 whitespace-nowrap">
@@ -216,9 +220,11 @@ function StepColumn({
 function WorkflowStepper({
   steps,
   copilotId,
+  readOnly = false,
 }: {
   steps: WorkflowStep[];
   copilotId: string | number;
+  readOnly?: boolean;
 }) {
   return (
     // One row: the icon shows each step's state, details are in the tooltip.
@@ -229,6 +235,7 @@ function WorkflowStepper({
           step={step}
           index={index}
           copilotId={copilotId}
+          readOnly={readOnly}
         />
       ))}
     </div>
@@ -249,6 +256,7 @@ export interface CopilotTableProps {
   onActionsClick?: (copilot: Copilot) => void;
   /** Called when menu actions require a refresh (e.g., delete, archive, status change). */
   onRefresh?: () => void;
+  readOnly?: boolean;
   /** Ids of the checked rows. When given together with onSelectionChange, a checkbox column is shown. */
   selectedIds?: Set<number>;
   onSelectionChange?: (ids: Set<number>) => void;
@@ -261,6 +269,7 @@ function CopilotTable({
 
   onActionsClick,
   onRefresh,
+  readOnly = false,
   selectedIds,
   onSelectionChange,
   className = "",
@@ -366,12 +375,12 @@ function CopilotTable({
               </th>
               <th aria-hidden className="sticky top-0 z-40 w-1/4 bg-white p-0 shadow-[inset_0_-1px_0_#E2E8F0]" />
               <th className="sticky right-0 top-0 z-50 rounded-tr-lg bg-white shadow-[inset_0_-1px_0_#E2E8F0] w-22 min-w-22 px-5 py-2.5 text-center font-normal text-xs leading-5 text-[#94A3B8]">
-                {t("Actions")}
+                {readOnly ? null : t("Actions")}
               </th>
             </tr>
           </thead>
           <tbody className=" relative">
-            {copilots.map((copilot) => {
+            {copilots.map((copilot, rowIndex) => {
               const steps = computeSteps(copilot);
 
               const sendLimit = copilot.flightSchedule?.sendLimit;
@@ -379,12 +388,18 @@ function CopilotTable({
               return (
                 <tr
                   key={copilot.id}
-                  onClick={() =>
-                    router.push(`/dashboard/copilots/new?edit=${copilot.id}`)
-                  }
+                  onClick={() => {
+                    if (readOnly) useCopilotStore.getState().setStep(1);
+                    router.push(
+                      `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+                    );
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && e.target === e.currentTarget) {
-                      router.push(`/dashboard/copilots/new?edit=${copilot.id}`);
+                      if (readOnly) useCopilotStore.getState().setStep(1);
+                      router.push(
+                        `/dashboard/copilots/new?edit=${copilot.id}${readOnly ? "&step=1&demo=true" : ""}`,
+                      );
                     }
                   }}
                   tabIndex={0}
@@ -432,7 +447,13 @@ function CopilotTable({
                     className="w-px whitespace-nowrap px-5 py-4 align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <WorkflowStepper steps={steps} copilotId={copilot.id} />
+                    <div data-tour={rowIndex === 0 ? "copilots-workflow" : undefined}>
+                      <WorkflowStepper
+                        steps={steps}
+                        copilotId={copilot.id}
+                        readOnly={readOnly}
+                      />
+                    </div>
                   </td>
                   <td aria-hidden className="w-1/4 p-0" />
                   <td className="w-px whitespace-nowrap px-5 py-4 text-sm align-middle text-[#0F172A]">
@@ -448,53 +469,57 @@ function CopilotTable({
                     className="sticky right-0 z-40 w-22 min-w-22 bg-white group-hover/row:bg-gray-50 shadow-[inset_0_-1px_0_#E2E8F0] [tr:last-child>&]:shadow-none px-5 py-4 text-center align-middle"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        if (menuCopilotId === copilot.id) {
-                          setMenuCopilotId(null);
-                          setMenuPos(null);
-                          return;
-                        }
-                        const r = e.currentTarget.getBoundingClientRect();
-                        const MENU_H = 216;
-                        const top =
-                          r.bottom + 6 + MENU_H > window.innerHeight
-                            ? Math.max(8, r.top - MENU_H - 6)
-                            : r.bottom + 6;
-                        setMenuPos({
-                          top,
-                          right: Math.max(8, window.innerWidth - r.right),
-                        });
-                        setMenuCopilotId(copilot.id);
-                      }}
-                      className="text-gray-300 transition-colors hover:text-gray-500"
-                      aria-label="Copilot actions"
-                    >
-                      {menuCopilotId === copilot.id ? (
-                        <X size={18} />
-                      ) : (
-                        <MoreVertical size={18} />
-                      )}
-                    </button>
-                    {menuCopilotId === copilot.id &&
-                      menuPos &&
-                      createPortal(
-                        <div
-                          className="fixed z-[100]"
-                          style={{ top: menuPos.top, right: menuPos.right }}
-                        >
-                          <CopilotMenu
-                            copilot={copilot}
-                            onRefresh={onRefresh || (() => {})}
-                            onClose={() => {
+                    {!readOnly && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            if (menuCopilotId === copilot.id) {
                               setMenuCopilotId(null);
                               setMenuPos(null);
-                            }}
-                          />
-                        </div>,
-                        document.body,
-                      )}
+                              return;
+                            }
+                            const r = e.currentTarget.getBoundingClientRect();
+                            const MENU_H = 216;
+                            const top =
+                              r.bottom + 6 + MENU_H > window.innerHeight
+                                ? Math.max(8, r.top - MENU_H - 6)
+                                : r.bottom + 6;
+                            setMenuPos({
+                              top,
+                              right: Math.max(8, window.innerWidth - r.right),
+                            });
+                            setMenuCopilotId(copilot.id);
+                          }}
+                          className="text-gray-300 transition-colors hover:text-gray-500"
+                          aria-label="Copilot actions"
+                        >
+                          {menuCopilotId === copilot.id ? (
+                            <X size={18} />
+                          ) : (
+                            <MoreVertical size={18} />
+                          )}
+                        </button>
+                        {menuCopilotId === copilot.id &&
+                          menuPos &&
+                          createPortal(
+                            <div
+                              className="fixed z-[100]"
+                              style={{ top: menuPos.top, right: menuPos.right }}
+                            >
+                              <CopilotMenu
+                                copilot={copilot}
+                                onRefresh={onRefresh || (() => {})}
+                                onClose={() => {
+                                  setMenuCopilotId(null);
+                                  setMenuPos(null);
+                                }}
+                              />
+                            </div>,
+                            document.body,
+                          )}
+                      </>
+                    )}
                   </td>
                 </tr>
               );

@@ -2,9 +2,13 @@
 
 import React, { useState } from "react";
 import { X, Clock, Minus, Plus, ChevronDown, CircleAlert } from "lucide-react";
-import { getBrowserTimeZone } from "@/lib/helpers";
+import {
+  getBrowserTimeZone,
+  getStoredDefaultTimeZone,
+} from "@/lib/helpers";
 import TimeZoneSelect from "@/components/ui/TimeZoneSelect";
 import type { Schedule } from "./FlightScheduleCard";
+import { useUser } from "@clerk/nextjs";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
 import { useI18n } from "@/lib/i18n";
 
@@ -46,6 +50,7 @@ export default function FlightScheduleFormModal({
 }: FlightScheduleFormModalProps) {
   const { t } = useI18n();
   const isEditing = !!schedule;
+  const { user } = useUser();
 
   // ── Form state (pre-populated when editing) ────────────────────────────────
 
@@ -67,7 +72,9 @@ export default function FlightScheduleFormModal({
     schedule?.sendingHoursActive ?? false,
   );
   const [timezone, setTimezone] = useState(
-    schedule?.timezone || getBrowserTimeZone(),
+    schedule?.timezone ||
+      getStoredDefaultTimeZone(user?.id) ||
+      getBrowserTimeZone(),
   );
 
   const [saving, setSaving] = useState(false);

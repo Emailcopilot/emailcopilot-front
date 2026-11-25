@@ -21,6 +21,7 @@ interface TemplateRowProps {
   onEdit: () => void;
   onDelete: () => void;
   onDuplicate: () => void;
+  readOnly?: boolean;
 }
 
 // Reply tracking isn't implemented yet. Greyed out until it is; flip to true
@@ -57,6 +58,7 @@ export default function TemplateRow({
   onEdit,
   onDelete,
   onDuplicate,
+  readOnly = false,
 }: TemplateRowProps) {
   const { t, locale } = useI18n();
   const isUp = (template.trend ?? "up") === "up";
@@ -133,11 +135,13 @@ export default function TemplateRow({
         </span>
 
         <div className="flex items-center">
-          <TemplateActions
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onDuplicate={onDuplicate}
-          />
+          {!readOnly && (
+            <TemplateActions
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onDuplicate={onDuplicate}
+            />
+          )}
         </div>
       </div>
 
@@ -159,11 +163,13 @@ export default function TemplateRow({
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <UsageStatus inUse={usedIn > 0} isSmall />
-            <TemplateActions
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onDuplicate={onDuplicate}
-            />
+            {!readOnly && (
+              <TemplateActions
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onDuplicate={onDuplicate}
+              />
+            )}
           </div>
         </div>
       </div>

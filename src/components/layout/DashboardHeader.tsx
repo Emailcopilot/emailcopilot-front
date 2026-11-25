@@ -13,6 +13,8 @@ interface DashboardHeaderProps {
   actionHref?: string;
   actionIcon?: LucideIcon;
   actionVariant?: "primary" | "outline";
+  actionDataTour?: string;
+  secondaryAction?: ReactNode;
   onAction?: () => void;
   showAction?: boolean;
 }
@@ -26,6 +28,8 @@ export default function DashboardHeader({
   actionHref,
   actionIcon: ActionIcon = Plus,
   actionVariant = "primary",
+  actionDataTour,
+  secondaryAction,
 
   onAction,
 }: DashboardHeaderProps) {
@@ -61,16 +65,30 @@ export default function DashboardHeader({
         )}
       </div>
 
-      {showAction &&
-        (actionHref ? (
-          <Link href={actionHref} onClick={onAction} className={actionClassName}>
-            {actionContent}
-          </Link>
-        ) : (
-          <button onClick={onAction} className={actionClassName}>
-            {actionContent}
-          </button>
-        ))}
+      {(secondaryAction || showAction) && (
+        <div className="flex items-center gap-2 shrink-0">
+          {secondaryAction}
+          {showAction &&
+            (actionHref ? (
+              <Link
+                href={actionHref}
+                onClick={onAction}
+                data-tour={actionDataTour}
+                className={actionClassName}
+              >
+                {actionContent}
+              </Link>
+            ) : (
+              <button
+                onClick={onAction}
+                data-tour={actionDataTour}
+                className={actionClassName}
+              >
+                {actionContent}
+              </button>
+            ))}
+        </div>
+      )}
     </div>
   );
 }

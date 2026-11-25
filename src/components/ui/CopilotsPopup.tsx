@@ -6,10 +6,13 @@ import { copilotsApi } from "@/lib/api";
 import CopilotStatus from "./CopilotStatus";
 import { useI18n } from "@/lib/i18n";
 import type { CopilotStatusType } from "@/store/copilotStore";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import type { DemoPopupCopilot } from "@/lib/demo/demo-data";
 
 interface CopilotPopupProps {
   isOpen: boolean;
   onClose: (copilotId?: number, copilotName?: string) => void;
+  demoCopilots?: DemoPopupCopilot[];
 }
 
 interface CopilotDataPopup {
@@ -36,8 +39,13 @@ interface CopilotDataPopup {
   };
 }
 
-export function CopilotsPopup({ isOpen, onClose }: CopilotPopupProps) {
+export function CopilotsPopup({
+  isOpen,
+  onClose,
+  demoCopilots,
+}: CopilotPopupProps) {
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -61,8 +69,22 @@ export function CopilotsPopup({ isOpen, onClose }: CopilotPopupProps) {
   };
 
   useEffect(() => {
+    if (!isOpen) return;
+
+    if (isDemo) {
+      setCopilotsList(demoCopilots ?? []);
+      setMeta({
+        total: demoCopilots?.length ?? 0,
+        page: 1,
+        limit: demoCopilots?.length ?? 10,
+        totalPages: 1,
+      });
+      setLoading(false);
+      return;
+    }
+
     fetchCopilots();
-  }, [page, limit]);
+  }, [isOpen, page, limit, isDemo, demoCopilots]);
 
   if (!isOpen) return null;
 

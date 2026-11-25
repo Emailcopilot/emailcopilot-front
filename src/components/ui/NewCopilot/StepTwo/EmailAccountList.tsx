@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useEmailAccountStore } from "@/store/emailAccountStore";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_EMAIL_ACCOUNTS } from "@/lib/demo/demo-data";
 
 export default function EmailAccountList({
     setSelectedProfileName,
@@ -15,6 +17,8 @@ export default function EmailAccountList({
     const { accounts, isLoading, deleteAccount, setEditingAccount, setShowModal } = useEmailAccountStore();
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
     const { t } = useI18n();
+    const { isDemo } = useDemoMode();
+    const displayAccounts = isDemo ? DEMO_EMAIL_ACCOUNTS : accounts;
 
     useEffect(() => {
         const handleWindowClick = () => setOpenMenuId(null);
@@ -32,13 +36,13 @@ export default function EmailAccountList({
         }
     };
 
-    if (isLoading) return null;
-    if (accounts.length === 0) return null;
+    if (!isDemo && isLoading) return null;
+    if (displayAccounts.length === 0) return null;
 
     return (
-        <div className="mt-6">
+        <div data-tour="tour-step2-saved" className="mt-6">
             <div className="space-y-3">
-                {accounts.map((profile) => (
+                {displayAccounts.map((profile) => (
                     <div key={profile.id} className="flex gap-2 items-center">
                         <button
                             type="button"
@@ -67,48 +71,50 @@ export default function EmailAccountList({
                                 </div>
                             </div>
 
-                            <div className="relative isolate shrink-0 flex items-center">
-                                <button
-                                    type="button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setOpenMenuId(openMenuId === profile.id ? null : profile.id);
-                                    }}
-                                    className="text-gray-300 transition-colors hover:text-gray-500"
-                                >
-                                    {openMenuId === profile.id ? <X size={18} /> : <MoreVertical size={18} />}
-                                </button>
-                                {openMenuId === profile.id && (
-                                    <div
-                                        className="absolute right-0 top-full mt-1 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-10 py-1"
-                                        onClick={(e) => e.stopPropagation()}
+                            {!isDemo && (
+                                <div className="relative isolate shrink-0 flex items-center">
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setOpenMenuId(openMenuId === profile.id ? null : profile.id);
+                                        }}
+                                        className="text-gray-300 transition-colors hover:text-gray-500"
                                     >
-                                        <button
-                                            type="button"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setOpenMenuId(null);
-                                                setEditingAccount(profile);
-                                                setShowModal(true);
-                                            }}
-                                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
+                                        {openMenuId === profile.id ? <X size={18} /> : <MoreVertical size={18} />}
+                                    </button>
+                                    {openMenuId === profile.id && (
+                                        <div
+                                            className="absolute right-0 top-full mt-1 w-36 bg-white border border-gray-200 rounded-xl shadow-lg z-10 py-1"
+                                            onClick={(e) => e.stopPropagation()}
                                         >
-                                            <Edit2 size={14} /> {t("Edit")}
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setOpenMenuId(null);
-                                                handleDelete(profile.id);
-                                            }}
-                                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
-                                        >
-                                            <Trash2 size={14} /> {t("Delete")}
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setOpenMenuId(null);
+                                                    setEditingAccount(profile);
+                                                    setShowModal(true);
+                                                }}
+                                                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
+                                            >
+                                                <Edit2 size={14} /> {t("Edit")}
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setOpenMenuId(null);
+                                                    handleDelete(profile.id);
+                                                }}
+                                                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
+                                            >
+                                                <Trash2 size={14} /> {t("Delete")}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </button>
                     </div>
                 ))}

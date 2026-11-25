@@ -8,14 +8,19 @@ import { flightSchedulesApi } from "@/lib/api";
 import {
   baseScheduleName,
   getBrowserTimeZone,
+  getStoredDefaultTimeZone,
   isValidTimeZone,
   nextScheduleCopyName,
+  saveStoredDefaultTimeZone,
 } from "@/lib/helpers";
 import { toast } from "sonner";
 import TimeZoneSelect from "@/components/ui/TimeZoneSelect";
 import ScheduleList from "./ScheduleList";
+import { useUser } from "@clerk/nextjs";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { useTour } from "@/components/tour";
 
 const DAYS = [
   { value: 1, label: "Mon" },
@@ -61,14 +66,23 @@ function pickFields(s: Partial<ScheduleFields>): ScheduleFields {
 }
 
 export default function ScheduleStep() {
-  const { copilotData, updateCopilotData, updateFlightSchedule, setStep, persistDraft } =
-    useCopilotStore();
+  const {
+    copilotData,
+    updateCopilotData,
+    updateFlightSchedule,
+    setStep,
+    persistDraft,
+  } = useCopilotStore();
 
   const schedule = copilotData.flightSchedule;
   const selectedId = copilotData.flightScheduleId;
+  const { user, isLoaded } = useUser();
 
   const [loading, setLoading] = useState(false);
+  const [saveAsDefault, setSaveAsDefault] = useState(true);
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
+  const { prepareAction } = useTour();
   // Open by default when nothing is linked yet (edit mode hydrates later).
   const [listOpen, setListOpen] = useState(!copilotData.flightScheduleId);
 
@@ -76,24 +90,37 @@ export default function ScheduleStep() {
     if (copilotData.flightScheduleId) setListOpen(false);
   }, [copilotData.flightScheduleId]);
 
+  useEffect(() => {
+    if (prepareAction === "schedule-list-open") {
+      setListOpen(true);
+    }
+  }, [prepareAction]);
+
   // A brand-new (unlinked) schedule starts on the visitor's own zone instead
   // of the hardcoded default, so the picker opens where the user actually is.
   const preselectedTimeZone = useRef(false);
   useEffect(() => {
-    if (preselectedTimeZone.current) return;
+    if (!isLoaded || preselectedTimeZone.current) return;
     preselectedTimeZone.current = true;
-    if (selectedId) return;
+    if (selectedId || isDemo) return;
 
     const current = schedule.timezone;
-    if (current === DEFAULT_TIMEZONE || !isValidTimeZone(current)) {
-      updateFlightSchedule({ timezone: getBrowserTimeZone() });
-    }
-  }, [selectedId, schedule.timezone, updateFlightSchedule]);
+    if (current !== DEFAULT_TIMEZONE && isValidTimeZone(current)) return;
+
+    updateFlightSchedule({
+      timezone: getStoredDefaultTimeZone(user?.id) ?? getBrowserTimeZone(),
+    });
+  }, [
+    isLoaded,
+    selectedId,
+    isDemo,
+    schedule.timezone,
+    updateFlightSchedule,
+    user?.id,
+  ]);
 
   // Local text for the daily limit so the field can be cleared/typed freely.
-  const [limitText, setLimitText] = useState(
-    String(schedule.sendLimit ?? 30),
-  );
+  const [limitText, setLimitText] = useState(String(schedule.sendLimit ?? 30));
 
   useEffect(() => {
     setLimitText(String(schedule.sendLimit ?? 30));
@@ -101,9 +128,10 @@ export default function ScheduleStep() {
 
   // Baseline = the linked saved schedule (null = custom, nothing linked).
   // dirty = user changed the form after (or without) selecting a schedule.
-  const [baseline, setBaseline] = useState<{ id: number; data: ScheduleFields } | null>(
-    selectedId ? { id: selectedId, data: pickFields(schedule) } : null,
-  );
+  const [baseline, setBaseline] = useState<{
+    id: number;
+    data: ScheduleFields;
+  } | null>(selectedId ? { id: selectedId, data: pickFields(schedule) } : null);
   const prevSelectedIdRef = useRef(selectedId);
 
   useEffect(() => {
@@ -122,13 +150,12 @@ export default function ScheduleStep() {
     JSON.stringify(pickFields(schedule)) !== JSON.stringify(baseline.data);
   // Renaming a linked schedule is an explicit "save as new": the typed name
   // is kept verbatim instead of getting a v2/v3 suffix.
-  const nameEdited =
-    baseline !== null && schedule.name !== baseline.data.name;
+  const nameEdited = baseline !== null && schedule.name !== baseline.data.name;
 
   // Only warn about unsaved changes when the form actually differs from the
   // linked schedule (or is a filled-in custom schedule).
   useEffect(() => {
-    if (!dirty) return;
+    if (!dirty || isDemo) return;
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = "";
@@ -137,7 +164,7 @@ export default function ScheduleStep() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [dirty]);
+  }, [dirty, isDemo]);
 
   const toggleDay = (day: number) => {
     let newDays;
@@ -149,9 +176,19 @@ export default function ScheduleStep() {
     updateFlightSchedule({ activeDays: newDays.sort() });
   };
 
+  const persistDefaultTimeZone = () => {
+    if (!saveAsDefault) return;
+    saveStoredDefaultTimeZone(user?.id, schedule.timezone);
+  };
+
   const handleSave = async () => {
     if (schedule.activeDays.length === 0) {
       toast.error(t("Please select at least one active day."));
+      return;
+    }
+
+    if (isDemo) {
+      setStep(6);
       return;
     }
 
@@ -160,6 +197,7 @@ export default function ScheduleStep() {
       setLoading(true);
       try {
         await persistDraft();
+        persistDefaultTimeZone();
         setStep(6);
       } catch {
         toast.error(t("Failed to save draft. Please try again."));
@@ -213,6 +251,8 @@ export default function ScheduleStep() {
         return;
       }
 
+      persistDefaultTimeZone();
+
       if (selectedId) {
         toast.success(
           t(
@@ -243,7 +283,10 @@ export default function ScheduleStep() {
       </div>
 
       <div className="flex flex-col gap-8 w-full max-w-4xl">
-        <div className="border-b border-slate-100 pb-8">
+        <div
+          data-tour="tour-step5-name"
+          className="border-b border-slate-100 pb-8"
+        >
           <h3 className="text-sm font-bold text-slate-900 mb-2">
             {t("Schedule Name (if creating new)")}
           </h3>
@@ -257,7 +300,10 @@ export default function ScheduleStep() {
         </div>
 
         {/* Daily send limit */}
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8">
+        <div
+          data-tour="tour-step5-limit"
+          className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8"
+        >
           <div className=" col-span-1 lg:col-span-2 ">
             <h3 className="text-sm font-bold text-slate-900 mb-1">
               {t("Daily send limit")}
@@ -300,9 +346,10 @@ export default function ScheduleStep() {
                       }}
                       onBlur={() => {
                         const n = parseInt(limitText, 10);
-                        const final = Number.isNaN(n) || n < 1
-                          ? schedule.sendLimit ?? 30
-                          : n;
+                        const final =
+                          Number.isNaN(n) || n < 1
+                            ? (schedule.sendLimit ?? 30)
+                            : n;
                         setLimitText(String(final));
                         if (final !== schedule.sendLimit) {
                           updateFlightSchedule({ sendLimit: final });
@@ -368,7 +415,10 @@ export default function ScheduleStep() {
         </div>
 
         {/* Active days */}
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8">
+        <div
+          data-tour="tour-step5-days"
+          className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8"
+        >
           <div className="col-span-1 lg:col-span-2">
             <h3 className="text-sm font-bold text-slate-900 mb-1">
               {t("Active days")}
@@ -400,7 +450,10 @@ export default function ScheduleStep() {
         </div>
 
         {/* Sending hours */}
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8">
+        <div
+          data-tour="tour-step5-hours"
+          className="grid grid-cols-1 lg:grid-cols-6 gap-6 border-b border-slate-100 pb-8"
+        >
           <div className="col-span-1 lg:col-span-2">
             <h3 className="text-sm font-bold text-slate-900 mb-1 flex items-center pr-2">
               {t("Sending hours")}
@@ -409,7 +462,9 @@ export default function ScheduleStep() {
               </span>
             </h3>
             <p className="text-xs text-slate-500">
-              {t("Set the daily time window when your copilot can send emails.")}
+              {t(
+                "Set the daily time window when your copilot can send emails.",
+              )}
             </p>
           </div>
           <div className="col-span-1 lg:col-span-4 flex items-start gap-4 flex-1 pt-1">
@@ -444,7 +499,9 @@ export default function ScheduleStep() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-slate-700">{t("To")}</span>
+                  <span className="text-sm font-medium text-slate-700">
+                    {t("To")}
+                  </span>
                   <div className="relative">
                     <select
                       value={schedule.sendingHours.end}
@@ -520,12 +577,23 @@ export default function ScheduleStep() {
             </p>
           </div>
 
-          <div className="col-span-4 flex-1 pt-1 justify-between flex">
+          <div className="col-span-4 flex-1 pt-1">
             <TimeZoneSelect
               value={schedule.timezone}
               onChange={(timezone) => updateFlightSchedule({ timezone })}
               className="w-full max-w-md"
             />
+            <label className="mt-3 flex max-w-md cursor-pointer items-start gap-2 text-xs font-medium text-slate-600">
+              <input
+                type="checkbox"
+                checked={saveAsDefault}
+                onChange={(e) => setSaveAsDefault(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 accent-blue-600"
+              />
+              <span>
+                {t("Save this timezone as my default for new flight schedules")}
+              </span>
+            </label>
           </div>
         </div>
       </div>
@@ -573,7 +641,7 @@ export default function ScheduleStep() {
       )}
 
       {/* Saved schedules — collapsed dropdown so the form stays on top */}
-      <div className="mt-6">
+      <div data-tour="tour-step5-saved" className="mt-6">
         <button
           type="button"
           onClick={() => setListOpen((o) => !o)}

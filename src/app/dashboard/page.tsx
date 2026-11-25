@@ -18,7 +18,12 @@ import CopilotsCard from "@/components/ui/overview/CopilotsCard";
 import CopilotFooter from "@/components/ui/NewCopilot/CopilotFooter";
 import { useLeadStore } from "@/store/leadStore";
 import { useCopilotStore } from "@/store/copilotStore";
+import { useAuth, useUser } from "@clerk/nextjs";
+import { decodeJwtPayload, getDisplayUsername } from "@/lib/userDisplay";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_COPILOTS, DEMO_LEADS } from "@/lib/demo/demo-data";
 import { useI18n } from "@/lib/i18n";
+import { TourTriggerButton } from "@/components/tour";
 
 /**
  * The API has no per-day stats yet (GET /leads returns 20 leads and sentAt is
@@ -30,19 +35,52 @@ const DAILY_STATS_LIVE = false;
 export default function OverviewPage() {
   const { leads, getAllLeads } = useLeadStore();
   const { copilots, getAllCopilots } = useCopilotStore();
+  const { user, isLoaded } = useUser();
+  const { getToken } = useAuth();
+  const { isDemo, exitDemo } = useDemoMode();
 
   const router = useRouter();
   const { t, locale } = useI18n();
 
   const [period, setPeriod] = useState<DateRange>("Last 7 days");
+  const [displayUsername, setDisplayUsername] = useState("");
 
   useEffect(() => {
+    if (!isLoaded) return;
+
+    let cancelled = false;
+
+    const loadUsername = async () => {
+      try {
+        const token = await getToken();
+        const claims = token ? decodeJwtPayload(token) : null;
+        if (!cancelled) setDisplayUsername(getDisplayUsername(claims, user));
+      } catch {
+        if (!cancelled) setDisplayUsername(getDisplayUsername(null, user));
+      }
+    };
+
+    void loadUsername();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [getToken, isLoaded, user]);
+
+  useEffect(() => {
+    if (isDemo) return;
     getAllLeads();
     getAllCopilots();
-    console.log("Leads fetched from the overview page :", leads);
-  }, []);
+  }, [getAllCopilots, getAllLeads, isDemo]);
 
-  const leadChartItems = useMemo(() => buildLeadChartItems(leads, 60), [leads]);
+  const displayLeads = isDemo ? DEMO_LEADS : leads;
+  const displayCopilots = isDemo ? DEMO_COPILOTS : copilots;
+  const statsLive = DAILY_STATS_LIVE || isDemo;
+
+  const leadChartItems = useMemo(
+    () => buildLeadChartItems(displayLeads, 60),
+    [displayLeads],
+  );
 
   const sentStats = useMemo(
     () =>
@@ -83,7 +121,7 @@ export default function OverviewPage() {
   );
 
   // Total over all copilots, accurate until daily stats exist.
-  const totalSent = (copilots ?? []).reduce(
+  const totalSent = (displayCopilots ?? []).reduce(
     (sum, c) => sum + (Number(c.emailsSent) || 0),
     0,
   );
@@ -91,13 +129,13 @@ export default function OverviewPage() {
   const stats = [
     {
       label: "Emails Sent",
-      value: DAILY_STATS_LIVE
+      value: statsLive
         ? sentStats.total
         : totalSent.toLocaleString(locale === "en" ? "en-US" : locale),
       change: sentStats.percentageChange,
       comparisonLabel,
       icon: Send,
-      footnote: DAILY_STATS_LIVE ? undefined : t("All time"),
+      footnote: statsLive ? undefined : t("All time"),
     },
     {
       label: "Replies",
@@ -105,7 +143,7 @@ export default function OverviewPage() {
       change: replyStats.percentageChange,
       comparisonLabel,
       icon: BarChart3,
-      comingSoon: true,
+      comingSoon: !statsLive,
     },
     {
       label: "Reply Rate",
@@ -113,11 +151,11 @@ export default function OverviewPage() {
       change: 0,
       comparisonLabel,
       icon: Users,
-      comingSoon: true,
+      comingSoon: !statsLive,
     },
     {
       label: "Copilots",
-      value: copilots?.length ?? 0,
+      value: displayCopilots?.length ?? 0,
       change: 0,
       comparisonLabel,
       icon: Bot,
@@ -127,10 +165,22 @@ export default function OverviewPage() {
   return (
     <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 xl:px-8 py-4 sm:py-5">
       <DashboardHeader
-        title="Welcome back!👋"
+        title={
+          displayUsername
+            ? t("Welcome back, {name}!👋", { name: displayUsername })
+            : t("Welcome back!👋")
+        }
         description={`Here's what's happening with your outreach today`}
         actionLabel="Create New Copilot"
-        onAction={() => router.push("/dashboard/copilots/new")}
+        actionDataTour="copilots-create"
+        secondaryAction={<TourTriggerButton fromBeginning />}
+        onAction={() => {
+          if (isDemo) {
+            exitDemo("/dashboard/copilots/new");
+            return;
+          }
+          router.push("/dashboard/copilots/new");
+        }}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
@@ -148,14 +198,14 @@ export default function OverviewPage() {
         ))}
       </div>
       <Chart
-        leads={leads}
+        leads={displayLeads}
         range={period}
         onRangeChange={(newRange) => setPeriod(newRange)}
-        comingSoon={!DAILY_STATS_LIVE}
+        comingSoon={!statsLive}
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
-        <CopilotsCard />
-        <DepartureCard />
+        <CopilotsCard copilots={isDemo ? DEMO_COPILOTS : undefined} />
+        <DepartureCard leads={isDemo ? DEMO_LEADS : undefined} />
         <QuickStart />
       </div>
       <CopilotFooter />

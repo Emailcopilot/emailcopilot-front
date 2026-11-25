@@ -9,6 +9,7 @@ import EmailAccountList from "./EmailAccountList";
 import { useEmailAccountStore } from "@/store/emailAccountStore";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
 
 export default function Step2EmailProfile() {
   const { copilotData, setStep, persistDraft, draftId } = useCopilotStore();
@@ -18,15 +19,17 @@ export default function Step2EmailProfile() {
   );
   const [saving, setSaving] = useState(false);
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
 
   useEffect(() => {
+    if (isDemo) return;
     fetchAccounts();
-  }, [fetchAccounts]);
+  }, [fetchAccounts, isDemo]);
 
   const handleClosePopup = (saved?: boolean) => {
     setShowModal(false);
     setEditingAccount(null);
-    if (saved) {
+    if (saved && !isDemo) {
       fetchAccounts();
     }
   };
@@ -56,6 +59,10 @@ export default function Step2EmailProfile() {
 
       <StepsActions
         onPress={async () => {
+          if (isDemo) {
+            setStep(3);
+            return;
+          }
           setSaving(true);
           try {
             await persistDraft();

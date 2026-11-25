@@ -7,16 +7,24 @@ import { toast } from "sonner";
 import type { Schedule } from "@/components/ui/flightSchedule/FlightScheduleCard";
 import { useCopilotStore } from "../../../../store/copilotStore";
 import { useI18n } from "@/lib/i18n";
+import { useDemoMode } from "@/lib/demo/demo-mode";
+import { DEMO_FLIGHT_SCHEDULES } from "@/lib/demo/demo-data";
 
 function ScheduleList({ onSelect }: { onSelect?: () => void }) {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(true);
   const { t } = useI18n();
+  const { isDemo } = useDemoMode();
 
   const { copilotData, updateCopilotData } = useCopilotStore();
   const selectedId = copilotData.flightScheduleId;
 
   const fetchSchedules = useCallback(async () => {
+    if (isDemo) {
+      setSchedules(DEMO_FLIGHT_SCHEDULES);
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       const res = await flightSchedulesApi.getAll();
@@ -27,7 +35,7 @@ function ScheduleList({ onSelect }: { onSelect?: () => void }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isDemo, t]);
 
   useEffect(() => {
     fetchSchedules();

@@ -924,7 +924,15 @@ const nl: Messages = {
   "The recipient's website": "De website van de ontvanger",
   "The recipient's phone number": "Het telefoonnummer van de ontvanger",
   "Your name as the sender": "Je naam als afzender",
-  // Billing UX updates and auth guard
+  // Demo mode, billing UX updates, schedule default timezone, and auth guard
+  "Welcome back, {name}!👋": "Welkom terug, {name}!👋",
+  "Demo mode. You are viewing sample data until you create your first item.":
+    "Demomodus. Je bekijkt voorbeeldgegevens totdat je je eerste item aanmaakt.",
+  "Exit demo": "Demo verlaten",
+  "Demo mode is read only. Create your own item to start.":
+    "De demomodus is alleen-lezen. Maak je eigen item aan om te beginnen.",
+  "Save this timezone as my default for new flight schedules":
+    "Deze tijdzone opslaan als standaard voor nieuwe Flight Schedules",
   "Could not retry payment. Try again.":
     "Kon de betaling niet opnieuw proberen. Probeer het opnieuw.",
   "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up.":
@@ -1894,7 +1902,15 @@ const de: Messages = {
   "The recipient's website": "Die Website des Empfängers",
   "The recipient's phone number": "Die Telefonnummer des Empfängers",
   "Your name as the sender": "Dein Name als Absender",
-  // Billing UX updates and auth guard
+  // Demo mode, billing UX updates, schedule default timezone, and auth guard
+  "Welcome back, {name}!👋": "Willkommen zurück, {name}!👋",
+  "Demo mode. You are viewing sample data until you create your first item.":
+    "Demomodus. Du siehst Beispieldaten, bis du dein erstes Element erstellst.",
+  "Exit demo": "Demo beenden",
+  "Demo mode is read only. Create your own item to start.":
+    "Der Demomodus ist schreibgeschützt. Erstelle dein eigenes Element, um zu starten.",
+  "Save this timezone as my default for new flight schedules":
+    "Diese Zeitzone als Standard für neue Flight Schedules speichern",
   "Could not retry payment. Try again.":
     "Zahlung konnte nicht erneut versucht werden. Bitte versuche es erneut.",
   "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up.":
@@ -2861,7 +2877,15 @@ const fr: Messages = {
   "The recipient's website": "Le site web du destinataire",
   "The recipient's phone number": "Le numéro de téléphone du destinataire",
   "Your name as the sender": "Votre nom en tant qu'expéditeur",
-  // Billing UX updates and auth guard
+  // Demo mode, billing UX updates, schedule default timezone, and auth guard
+  "Welcome back, {name}!👋": "Bon retour, {name}!👋",
+  "Demo mode. You are viewing sample data until you create your first item.":
+    "Mode démo. Vous consultez des données d'exemple jusqu'à ce que vous créiez votre premier élément.",
+  "Exit demo": "Quitter la démo",
+  "Demo mode is read only. Create your own item to start.":
+    "Le mode démo est en lecture seule. Créez votre propre élément pour commencer.",
+  "Save this timezone as my default for new flight schedules":
+    "Enregistrer ce fuseau horaire par défaut pour les nouveaux Flight Schedules",
   "Could not retry payment. Try again.":
     "Impossible de relancer le paiement. Réessayez.",
   "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up.":
@@ -3821,7 +3845,15 @@ const es: Messages = {
   "The recipient's website": "El sitio web del destinatario",
   "The recipient's phone number": "El número de teléfono del destinatario",
   "Your name as the sender": "Tu nombre como remitente",
-  // Billing UX updates and auth guard
+  // Demo mode, billing UX updates, schedule default timezone, and auth guard
+  "Welcome back, {name}!👋": "¡Bienvenido de nuevo, {name}!👋",
+  "Demo mode. You are viewing sample data until you create your first item.":
+    "Modo demo. Estás viendo datos de ejemplo hasta que crees tu primer elemento.",
+  "Exit demo": "Salir de la demo",
+  "Demo mode is read only. Create your own item to start.":
+    "El modo demo es de solo lectura. Crea tu propio elemento para empezar.",
+  "Save this timezone as my default for new flight schedules":
+    "Guardar esta zona horaria como predeterminada para nuevos Flight Schedules",
   "Could not retry payment. Try again.":
     "No se pudo reintentar el pago. Inténtalo de nuevo.",
   "Payment failed. You have not been charged. Your plan is not active yet. Retry the payment below to finish setting it up.":
