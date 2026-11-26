@@ -84,6 +84,13 @@ export default function EmailTemplateStep() {
   const { copilotData, updateCopilotData, setStep, persistDraft } =
     useCopilotStore();
 
+  // When an existing template is loaded, the user chooses whether saving
+  // changes that template (used by other copilots too) or creates a new one.
+  const [saveMode, setSaveMode] = useState<"update" | "new">("update");
+  useEffect(() => {
+    setSaveMode("update");
+  }, [originalTemplate?.id]);
+
   const [sendingTestEmail, setSendingTestEmail] = useState(false);
 
   const [templateName, setTemplateName] = useState(
@@ -284,6 +291,31 @@ export default function EmailTemplateStep() {
     const existingId = originalTemplate
       ? Number(originalTemplate.id)
       : NaN;
+
+    if (originalTemplate && !Number.isNaN(existingId) && saveMode === "new") {
+      // "Save as a new template": leave the original untouched. Without a
+      // new name the copy gets "Copy of …" so the two are easy to tell apart.
+      const newName =
+        templateName.trim() && templateName !== originalTemplate.name
+          ? templateName
+          : t("Copy of {name}", { name: originalTemplate.name || templateName });
+      const response = await templatesApi.create({
+        ...templatePayload,
+        name: newName,
+      });
+      const createdId = Number(response.data.id);
+      setTemplateName(newName);
+      setOriginalTemplate({
+        id: String(createdId),
+        body: currentBody,
+        subject: subjectInput,
+        name: newName,
+        variables: variableInput,
+      });
+      updateCopilotData({ templateId: createdId });
+      toast.success(t("Saved as a new template: {name}", { name: newName }));
+      return createdId;
+    }
 
     if (originalTemplate && !Number.isNaN(existingId)) {
       // Editing an existing template: update it in place. The copilot
@@ -733,6 +765,46 @@ export default function EmailTemplateStep() {
               </div>
             </div>
           </div>
+
+          {originalTemplate && (
+            <fieldset className="mt-4 rounded-xl border border-gray-200 bg-white px-4 py-3">
+              <legend className="px-1 text-xs font-semibold text-gray-500">
+                {t("When you save")}
+              </legend>
+              <div className="flex flex-col gap-2">
+                <label className="flex items-start gap-2 text-sm text-gray-800 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="template-save-mode"
+                    className="mt-0.5 accent-primary"
+                    checked={saveMode === "update"}
+                    onChange={() => setSaveMode("update")}
+                  />
+                  <span>
+                    {t("Update this template")}
+                    <span className="block text-xs text-gray-500">
+                      {t("Changes also apply to other copilots that use it.")}
+                    </span>
+                  </span>
+                </label>
+                <label className="flex items-start gap-2 text-sm text-gray-800 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="template-save-mode"
+                    className="mt-0.5 accent-primary"
+                    checked={saveMode === "new"}
+                    onChange={() => setSaveMode("new")}
+                  />
+                  <span>
+                    {t("Save as a new template")}
+                    <span className="block text-xs text-gray-500">
+                      {t("The saved template stays as it is.")}
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+          )}
 
           <StepsActions
             inline
