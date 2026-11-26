@@ -691,6 +691,9 @@ const nl: Messages = {
   "This is the first email your leads will receive.":
     "Dit is de eerste e-mail die je leads ontvangen.",
   "Your Templates": "Jouw templates",
+  "Loading all leads to filter by status…": "Alle leads laden om op status te filteren…",
+  "No leads with status \"{status}\".": "Geen leads met status \"{status}\".",
+  "Show all": "Alles tonen",
   "Saved flight schedules": "Opgeslagen flight schedules",
   "Search by name…": "Zoek op naam…",
   "When you save": "Bij opslaan",
@@ -1676,6 +1679,9 @@ const de: Messages = {
   "This is the first email your leads will receive.":
     "Das ist die erste E-Mail, die deine Leads erhalten.",
   "Your Templates": "Deine Vorlagen",
+  "Loading all leads to filter by status…": "Alle Leads werden geladen, um nach Status zu filtern…",
+  "No leads with status \"{status}\".": "Keine Leads mit Status „{status}“.",
+  "Show all": "Alle anzeigen",
   "Saved flight schedules": "Gespeicherte Flight Schedules",
   "Search by name…": "Nach Name suchen…",
   "When you save": "Beim Speichern",
@@ -2657,6 +2663,9 @@ const fr: Messages = {
   "This is the first email your leads will receive.":
     "C'est le premier e-mail que vos prospects recevront.",
   "Your Templates": "Vos modèles",
+  "Loading all leads to filter by status…": "Chargement de tous les leads pour filtrer par statut…",
+  "No leads with status \"{status}\".": "Aucun lead avec le statut « {status} ».",
+  "Show all": "Tout afficher",
   "Saved flight schedules": "Flight Schedules enregistrés",
   "Search by name…": "Rechercher par nom…",
   "When you save": "À l'enregistrement",
@@ -3632,6 +3641,9 @@ const es: Messages = {
   "This is the first email your leads will receive.":
     "Este es el primer correo que recibirán tus leads.",
   "Your Templates": "Tus plantillas",
+  "Loading all leads to filter by status…": "Cargando todos los leads para filtrar por estado…",
+  "No leads with status \"{status}\".": "No hay leads con el estado \"{status}\".",
+  "Show all": "Mostrar todo",
   "Saved flight schedules": "Flight Schedules guardados",
   "Search by name…": "Buscar por nombre…",
   "When you save": "Al guardar",
