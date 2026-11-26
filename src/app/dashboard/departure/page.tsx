@@ -18,6 +18,32 @@ import DashboardHeader from "@/components/layout/DashboardHeader";
 import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import CopilotToolbar, {
+  type StatusOption,
+  type ViewMode,
+} from "@/components/ui/copilots/CopilotToolBar";
+
+/** Lead status filter. "excluded" = suppressed leads (any status). */
+const LEAD_STATUS_OPTIONS: StatusOption[] = [
+  { value: "all", label: "All status", dotClassName: "bg-blue-500" },
+  { value: "new", label: "New", dotClassName: "bg-blue-500" },
+  { value: "sent", label: "Sent", dotClassName: "bg-emerald-500" },
+  { value: "replied", label: "Replied", dotClassName: "bg-violet-500" },
+  { value: "skipped", label: "Skipped", dotClassName: "bg-slate-400" },
+  { value: "failed", label: "Failed", dotClassName: "bg-rose-500" },
+  { value: "excluded", label: "Excluded", dotClassName: "bg-orange-500" },
+];
+
+// The API ignores ?status= (Freedcamp "Status Filters"), so for a status
+// filter we load every lead (limit max 100 per page) and filter here.
+// Switch this to a normal paged request once the back-end filters.
+const API_STATUS_FILTER = false;
+
+function matchesStatus(lead: Lead, status: string) {
+  if (status === "all") return true;
+  if (status === "excluded") return !!lead.suppressed;
+  return !lead.suppressed && (lead.status || "sent") === status;
+}
 
 const MOCK_META: PaginatedMeta = {
   total: 50,
@@ -144,6 +170,11 @@ function LeadsPageContent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [loadingAll, setLoadingAll] = useState(false);
+  // All leads for one copilot + search, kept while only the status changes.
+  const allLeadsCacheRef = useRef<{ key: string; leads: Lead[] } | null>(null);
   const [activeLeadId, setActiveLeadId] = useState<number | null>(null);
   const [templateData, setTemplateData] = useState<{
     subject?: string;
@@ -213,11 +244,46 @@ function LeadsPageContent() {
     setPage(1);
   }, [searchParams]);
 
+  async function fetchAllLeads(
+    targetCopilotId: number | null,
+    trimmedSearch: string,
+    seq: number,
+  ): Promise<Lead[] | null> {
+    const key = `${targetCopilotId ?? "all"}|${trimmedSearch}`;
+    if (allLeadsCacheRef.current?.key === key)
+      return allLeadsCacheRef.current.leads;
+    setLoadingAll(true);
+    const params = {
+      limit: 100,
+      ...(trimmedSearch ? { search: trimmedSearch } : {}),
+      ...(targetCopilotId != null ? { copilotId: targetCopilotId } : {}),
+    };
+    const first = await leadsApi.getAll({ ...params, page: 1 });
+    if (seq !== requestSeqRef.current) return null;
+    let all: Lead[] = [...first.data.data];
+    const totalPages: number = first.data.meta?.totalPages ?? 1;
+    // 10 pages at a time keeps it fast without flooding the API.
+    for (let start = 2; start <= totalPages; start += 10) {
+      const pages = Array.from(
+        { length: Math.min(10, totalPages - start + 1) },
+        (_, i) => start + i,
+      );
+      const results = await Promise.all(
+        pages.map((p) => leadsApi.getAll({ ...params, page: p })),
+      );
+      if (seq !== requestSeqRef.current) return null;
+      results.forEach((r) => (all = all.concat(r.data.data)));
+    }
+    allLeadsCacheRef.current = { key, leads: all };
+    return all;
+  }
+
   async function fetchLeads(
     targetPage: number,
     targetLimit: number,
     targetCopilotId: number | null,
     targetSearch: string,
+    targetStatus: string,
   ) {
     // Sequence guard: as-you-type search fires overlapping requests and only
     // the newest response may update the table.
@@ -226,14 +292,36 @@ function LeadsPageContent() {
       setLoading(true);
 
       const trimmedSearch = targetSearch.trim();
+      const hidden = getHiddenLeadIds();
+
+      if (targetStatus !== "all" && !API_STATUS_FILTER) {
+        const all = await fetchAllLeads(targetCopilotId, trimmedSearch, seq);
+        if (!all || seq !== requestSeqRef.current) return;
+        const filtered = all.filter(
+          (lead) => !hidden.has(lead.id) && matchesStatus(lead, targetStatus),
+        );
+        const totalPages = Math.max(1, Math.ceil(filtered.length / targetLimit));
+        const safePage = Math.min(targetPage, totalPages);
+        setLeads(
+          filtered.slice((safePage - 1) * targetLimit, safePage * targetLimit),
+        );
+        setMeta({
+          total: filtered.length,
+          page: safePage,
+          limit: targetLimit,
+          totalPages,
+        });
+        return;
+      }
+
       const res = await leadsApi.getAll({
         page: targetPage,
         limit: targetLimit,
         ...(trimmedSearch ? { search: trimmedSearch } : {}),
         ...(targetCopilotId != null ? { copilotId: targetCopilotId } : {}),
+        ...(targetStatus !== "all" ? { status: targetStatus } : {}),
       });
       if (seq !== requestSeqRef.current) return;
-      const hidden = getHiddenLeadIds();
       setLeads(res.data.data.filter((lead: Lead) => !hidden.has(lead.id)));
       setMeta(res.data.meta);
     } catch {
@@ -241,13 +329,17 @@ function LeadsPageContent() {
         console.error("Failed to fetch leads");
       }
     } finally {
-      if (seq === requestSeqRef.current) setLoading(false);
+      if (seq === requestSeqRef.current) {
+        setLoading(false);
+        setLoadingAll(false);
+      }
     }
   }
 
   useEffect(() => {
-    fetchLeads(page, effectiveLimit, copilotId, debouncedSearchTerm);
-  }, [page, effectiveLimit, copilotId, debouncedSearchTerm]);
+    fetchLeads(page, effectiveLimit, copilotId, debouncedSearchTerm, statusFilter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, effectiveLimit, copilotId, debouncedSearchTerm, statusFilter]);
 
   // When the viewport-derived size changes and the user hasn't picked a
   // manual size, restart from page 1 so the new size applies from the top.
@@ -276,10 +368,12 @@ function LeadsPageContent() {
   };
 
   const handleDeleteLead = (id: number) => {
+    allLeadsCacheRef.current = null;
     setLeads((prev) => prev.filter((lead) => lead.id !== id));
   };
 
   const handleSuppressionChange = (id: number, suppressed: boolean) => {
+    allLeadsCacheRef.current = null;
     setLeads((prev) =>
       prev.map((lead) => (lead.id === id ? { ...lead, suppressed } : lead)),
     );
@@ -289,6 +383,14 @@ function LeadsPageContent() {
     setSearch(value);
     setPage(1);
   };
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value);
+    setPage(1);
+  };
+
+  const statusLabel =
+    LEAD_STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "";
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 xl:px-8 py-4 sm:py-5 [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:min-h-full [@media(min-height:1081px)]:flex-col">
@@ -301,24 +403,40 @@ function LeadsPageContent() {
 
       {/* Search stays mounted through loading and empty states so typing
           keeps focus and a no-results query can always be cleared. */}
-      <div className="w-full p-2 border border-[#E2E8F0] mb-3 bg-white rounded-lg flex items-center">
-        <div className="relative min-w-48 flex-1">
-          <Search
-            size={14}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-          />
-          <input
-            value={search}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder={t("Search company, email, website or phone...")}
-            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-3 text-sm outline-none focus:border-gray-300 focus:ring-2 focus:ring-gray-100"
-          />
-        </div>
+      <div className="w-full p-2 border border-[#E2E8F0] mb-3 bg-white rounded-lg">
+        <CopilotToolbar
+          search={search}
+          onSearchChange={handleSearchChange}
+          status={statusFilter}
+          onStatusChange={handleStatusChange}
+          statusOptions={LEAD_STATUS_OPTIONS}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
+          searchPlaceholder="Search company, email, website or phone..."
+        />
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-48 text-gray-400">
-          {t("Loading...")}
+        <div className="flex flex-col items-center justify-center gap-2 h-48 text-gray-400">
+          {loadingAll && <Loader2 size={18} className="animate-spin" />}
+          {loadingAll
+            ? t("Loading all leads to filter by status…")
+            : t("Loading...")}
+        </div>
+      ) : leads.length === 0 && statusFilter !== "all" && !search.trim() ? (
+        <div className="bg-white border border-[#E2E8F0] rounded-lg flex flex-col items-center justify-center py-12 px-6 text-center">
+          <h2 className="font-semibold text-sm text-gray-900 mb-1">
+            {t("No results found")}
+          </h2>
+          <p className="text-sm text-gray-500 mb-4">
+            {t('No leads with status "{status}".', { status: t(statusLabel) })}
+          </p>
+          <button
+            onClick={() => handleStatusChange("all")}
+            className="px-4 py-2 border border-[#E2E8F0] rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            {t("Show all")}
+          </button>
         </div>
       ) : leads.length === 0 && search.trim() ? (
         <div className="bg-white border border-[#E2E8F0] rounded-lg flex flex-col items-center justify-center py-12 px-6 text-center">
@@ -353,7 +471,13 @@ function LeadsPageContent() {
       ) : (
         <>
           {/* Mobile / tablet: one card per lead (the wide table only fits from lg). */}
-          <div className="lg:hidden bg-white border border-[#E2E8F0] rounded-lg overflow-hidden mb-6">
+          <div
+            className={
+              viewMode === "grid"
+                ? "lg:grid lg:grid-cols-2 2xl:grid-cols-3 lg:gap-4 bg-white lg:bg-transparent border border-[#E2E8F0] lg:border-0 rounded-lg overflow-hidden lg:overflow-visible mb-6"
+                : "lg:hidden bg-white border border-[#E2E8F0] rounded-lg overflow-hidden mb-6"
+            }
+          >
             {leads.map((lead, index) => {
               const status = lead.suppressed
                 ? "suppressed"
@@ -361,7 +485,11 @@ function LeadsPageContent() {
               return (
                 <div
                   key={lead.id + index}
-                  className="px-4 py-4 border-b last:border-b-0 border-[#E2E8F0]"
+                  className={`px-4 py-4 border-b last:border-b-0 border-[#E2E8F0] ${
+                    viewMode === "grid"
+                      ? "lg:bg-white lg:border lg:last:border-b lg:rounded-lg"
+                      : ""
+                  }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
@@ -410,7 +538,7 @@ function LeadsPageContent() {
             })}
           </div>
 
-          <div className="hidden lg:contents">
+          <div className={viewMode === "grid" ? "hidden" : "hidden lg:contents"}>
           <div className="bg-white border border-[#E2E8F0] rounded-lg overflow-hidden mb-6 [@media(min-height:1081px)]:flex [@media(min-height:1081px)]:flex-1 [@media(min-height:1081px)]:flex-col">
             <div className="overflow-auto max-h-[calc(100dvh-320px)]">
               <table className="w-full text-sm min-w-225">
