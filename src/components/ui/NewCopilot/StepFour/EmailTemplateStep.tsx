@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -18,6 +18,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import StepsActions from "../StepsActions";
+import SavedListSection from "../SavedListSection";
 import { templatesApi } from "@/lib/api";
 import { useSetupFeedbackActions } from "@/lib/SetupFeedbackProvider";
 import { useWizardTemplates } from "@/lib/useWizardOptions";
@@ -64,6 +65,14 @@ export default function EmailTemplateStep() {
 
   const { data: templates = [], isLoading: isLoadingTemplates } =
     useWizardTemplates();
+  const [templateSearch, setTemplateSearch] = useState("");
+  const filteredTemplates = useMemo(() => {
+    const q = templateSearch.trim().toLowerCase();
+    if (!q) return templates;
+    return templates.filter((tpl) =>
+      [tpl.name, tpl.subject].some((v) => v?.toLowerCase().includes(q)),
+    );
+  }, [templates, templateSearch]);
   const [originalTemplate, setOriginalTemplate] = useState<{
     id: string;
     body: string;
@@ -733,22 +742,18 @@ export default function EmailTemplateStep() {
           />
         </div>
       </div>
-      {/* Divider */}
-      <div className="relative py-8">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-200" />
-        </div>
-        <div className="relative flex justify-center">
-          <span className="bg-white px-3 text-xs font-semibold text-gray-800">
-            {t("Your Templates")}
-          </span>
-        </div>
-      </div>
-      {/* Templates Popup */}
-
-      <div className="bg-white rounded-2xl  w-full  overflow-hidden flex flex-col max-h-[85vh] ">
-        {/* Body */}
-        <div className="p-6 overflow-y-auto flex-1 ">
+      <SavedListSection
+        title="Saved templates"
+        count={templates.length}
+        selectedLabel={
+          templates.find((tpl) => tpl.id === copilotData.templateId)?.name
+        }
+        search={templateSearch}
+        onSearchChange={setTemplateSearch}
+        searchPlaceholder="Search by name or subject…"
+        noMatches={templates.length > 0 && filteredTemplates.length === 0}
+      >
+        <div className="max-h-[70vh] overflow-y-auto">
           {/* Loading */}
           {isLoadingTemplates ? (
             <div className="flex flex-col items-center justify-center py-24 gap-3">
@@ -790,7 +795,7 @@ export default function EmailTemplateStep() {
           ) : (
             /* Grid */
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {templates.map((template) => (
+              {filteredTemplates.map((template) => (
                 <button
                   key={template.id}
                   onClick={() => {
@@ -860,7 +865,7 @@ export default function EmailTemplateStep() {
             </div>
           )}
         </div>
-      </div>
+      </SavedListSection>
 
       <StepsActions
         onPress={() => handleSave()}
