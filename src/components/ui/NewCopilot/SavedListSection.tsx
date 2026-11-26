@@ -46,7 +46,7 @@ export default function SavedListSection({
         aria-expanded={open}
         className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-left"
       >
-        <span className="flex items-center gap-2 min-w-0">
+        <span className="flex flex-wrap sm:flex-nowrap items-center gap-x-2 gap-y-1 min-w-0">
           <span className="text-sm font-semibold text-gray-900 shrink-0">
             {t(title)}
           </span>
@@ -54,8 +54,9 @@ export default function SavedListSection({
             {count}
           </span>
           {selectedLabel && (
-            <span className="text-xs text-gray-500 truncate">
-              · {t("Selected:")}{" "}
+            <span className="text-xs text-gray-500 truncate basis-full sm:basis-auto">
+              <span className="hidden sm:inline">· </span>
+              {t("Selected:")}{" "}
               <span className="font-medium text-gray-700">{selectedLabel}</span>
             </span>
           )}
