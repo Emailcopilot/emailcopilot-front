@@ -14,6 +14,8 @@ import {
 import { toast } from "sonner";
 import TimeZoneSelect from "@/components/ui/TimeZoneSelect";
 import ScheduleList from "./ScheduleList";
+import SavedListSection from "../SavedListSection";
+import type { Schedule } from "@/components/ui/flightSchedule/FlightScheduleCard";
 import { formatAllDayAvailability } from "@/lib/sending-schedule";
 import { useI18n } from "@/lib/i18n";
 
@@ -69,12 +71,21 @@ export default function ScheduleStep() {
 
   const [loading, setLoading] = useState(false);
   const { t } = useI18n();
-  // Open by default when nothing is linked yet (edit mode hydrates later).
-  const [listOpen, setListOpen] = useState(!copilotData.flightScheduleId);
-
+  // Saved schedules for the collapsible list below the form.
+  const [savedSchedules, setSavedSchedules] = useState<Schedule[]>([]);
+  const [schedulesLoading, setSchedulesLoading] = useState(true);
+  const [scheduleSearch, setScheduleSearch] = useState("");
   useEffect(() => {
-    if (copilotData.flightScheduleId) setListOpen(false);
-  }, [copilotData.flightScheduleId]);
+    flightSchedulesApi
+      .getAll()
+      .then((res) => setSavedSchedules(res.data ?? []))
+      .catch(() => toast.error(t("Failed to load flight schedules.")))
+      .finally(() => setSchedulesLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const filteredSchedules = savedSchedules.filter((s) =>
+    (s.name ?? "").toLowerCase().includes(scheduleSearch.trim().toLowerCase()),
+  );
 
   // A brand-new (unlinked) schedule starts on the visitor's own zone instead
   // of the hardcoded default, so the picker opens where the user actually is.
@@ -572,39 +583,18 @@ export default function ScheduleStep() {
         </div>
       )}
 
-      {/* Saved schedules — collapsed dropdown so the form stays on top */}
-      <div className="mt-6">
-        <button
-          type="button"
-          onClick={() => setListOpen((o) => !o)}
-          aria-expanded={listOpen}
-          className="w-full flex items-center justify-between gap-3 px-4 sm:px-5 py-3.5 border border-[#E2E8F0] rounded-lg bg-white hover:bg-gray-50 transition-colors"
-        >
-          <span className="flex items-center gap-2.5 min-w-0">
-            <Clock size={16} className="text-[#59637C] shrink-0" />
-            <span className="text-sm font-bold text-gray-900">
-              {t("Your Flight Schedules")}
-            </span>
-            {baseline !== null && (
-              <span className="truncate max-w-48 text-xs font-medium text-primary bg-primary-light px-2 py-0.5 rounded-full">
-                {t("Using: {name}", { name: baseline.data.name })}
-              </span>
-            )}
-          </span>
-          <ChevronDown
-            size={16}
-            className={`text-gray-400 shrink-0 transition-transform ${
-              listOpen ? "rotate-180" : ""
-            }`}
-          />
-        </button>
-
-        {listOpen && (
-          <div className="mt-4">
-            <ScheduleList onSelect={() => setListOpen(false)} />
-          </div>
-        )}
-      </div>
+      {/* Saved schedules — collapsed by default, same as steps 3 and 4 */}
+      <SavedListSection
+        title="Saved flight schedules"
+        count={savedSchedules.length}
+        selectedLabel={savedSchedules.find((s) => s.id === selectedId)?.name}
+        search={scheduleSearch}
+        onSearchChange={setScheduleSearch}
+        searchPlaceholder="Search by name…"
+        noMatches={savedSchedules.length > 0 && filteredSchedules.length === 0}
+      >
+        <ScheduleList schedules={filteredSchedules} loading={schedulesLoading} />
+      </SavedListSection>
 
       <StepsActions
         onPress={handleSave}
