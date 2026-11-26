@@ -1,37 +1,21 @@
 "use client";
 
 import FlightScheduleCard from "@/components/ui/flightSchedule/FlightScheduleCard";
-import { useState, useEffect, useCallback } from "react";
-import { flightSchedulesApi } from "@/lib/api";
-import { toast } from "sonner";
 import type { Schedule } from "@/components/ui/flightSchedule/FlightScheduleCard";
 import { useCopilotStore } from "../../../../store/copilotStore";
 import { useI18n } from "@/lib/i18n";
 
-function ScheduleList({ onSelect }: { onSelect?: () => void }) {
-  const [schedules, setSchedules] = useState<Schedule[]>([]);
-  const [loading, setLoading] = useState(true);
+function ScheduleList({
+  schedules,
+  loading,
+}: {
+  schedules: Schedule[];
+  loading: boolean;
+}) {
   const { t } = useI18n();
 
   const { copilotData, updateCopilotData } = useCopilotStore();
   const selectedId = copilotData.flightScheduleId;
-
-  const fetchSchedules = useCallback(async () => {
-    try {
-      setLoading(true);
-      const res = await flightSchedulesApi.getAll();
-      setSchedules(res.data);
-    } catch {
-      toast.error(t("Failed to load flight schedules."));
-      setSchedules([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchSchedules();
-  }, [fetchSchedules]);
 
   const handleSelect = (schedule: Schedule) => {
     if (!schedule.id) return;
@@ -44,7 +28,6 @@ function ScheduleList({ onSelect }: { onSelect?: () => void }) {
         flightSchedule: schedule,
       });
     }
-    onSelect?.();
   };
 
   return (
