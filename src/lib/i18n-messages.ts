@@ -691,6 +691,12 @@ const nl: Messages = {
   "This is the first email your leads will receive.":
     "Dit is de eerste e-mail die je leads ontvangen.",
   "Your Templates": "Jouw templates",
+  "Saved target audiences": "Opgeslagen doelgroepen",
+  "Saved templates": "Opgeslagen templates",
+  "Selected:": "Gekozen:",
+  "Search by name, country or city…": "Zoek op naam, land of stad…",
+  "Search by name or subject…": "Zoek op naam of onderwerp…",
+  "No matches for \"{query}\"": "Geen resultaten voor \"{query}\"",
   "Fetching templates...": "Templates ophalen...",
   "No templates yet": "Nog geen templates",
   "Once you save a template it will appear here, ready to use.":
@@ -1662,6 +1668,12 @@ const de: Messages = {
   "This is the first email your leads will receive.":
     "Das ist die erste E-Mail, die deine Leads erhalten.",
   "Your Templates": "Deine Vorlagen",
+  "Saved target audiences": "Gespeicherte Zielgruppen",
+  "Saved templates": "Gespeicherte Vorlagen",
+  "Selected:": "Ausgewählt:",
+  "Search by name, country or city…": "Nach Name, Land oder Stadt suchen…",
+  "Search by name or subject…": "Nach Name oder Betreff suchen…",
+  "No matches for \"{query}\"": "Keine Treffer für „{query}“",
   "Fetching templates...": "Vorlagen werden geladen...",
   "No templates yet": "Noch keine Vorlagen",
   "Once you save a template it will appear here, ready to use.":
@@ -2629,6 +2641,12 @@ const fr: Messages = {
   "This is the first email your leads will receive.":
     "C'est le premier e-mail que vos prospects recevront.",
   "Your Templates": "Vos modèles",
+  "Saved target audiences": "Audiences cibles enregistrées",
+  "Saved templates": "Modèles enregistrés",
+  "Selected:": "Sélectionné :",
+  "Search by name, country or city…": "Rechercher par nom, pays ou ville…",
+  "Search by name or subject…": "Rechercher par nom ou objet…",
+  "No matches for \"{query}\"": "Aucun résultat pour « {query} »",
   "Fetching templates...": "Récupération des modèles...",
   "No templates yet": "Aucun modèle pour l'instant",
   "Once you save a template it will appear here, ready to use.":
@@ -3590,6 +3608,12 @@ const es: Messages = {
   "This is the first email your leads will receive.":
     "Este es el primer correo que recibirán tus leads.",
   "Your Templates": "Tus plantillas",
+  "Saved target audiences": "Públicos objetivo guardados",
+  "Saved templates": "Plantillas guardadas",
+  "Selected:": "Seleccionado:",
+  "Search by name, country or city…": "Buscar por nombre, país o ciudad…",
+  "Search by name or subject…": "Buscar por nombre o asunto…",
+  "No matches for \"{query}\"": "Sin resultados para \"{query}\"",
   "Fetching templates...": "Cargando plantillas...",
   "No templates yet": "Aún no hay plantillas",
   "Once you save a template it will appear here, ready to use.":
