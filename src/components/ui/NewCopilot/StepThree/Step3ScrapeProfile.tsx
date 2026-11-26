@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Country, City, ICountry, ICity } from "country-state-city";
 import StepsActions from "../StepsActions";
+import SavedListSection from "../SavedListSection";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useWizardTargetAudiences } from "@/lib/useWizardOptions";
 import { targetAudiencesApi } from "@/lib/api";
@@ -249,6 +250,14 @@ export default function Step3ScrapeProfile() {
   const { t } = useI18n();
   const { data: profiles = [], isLoading: loadingProfiles } =
     useWizardTargetAudiences();
+  const [profileSearch, setProfileSearch] = useState("");
+  const filteredProfiles = useMemo(() => {
+    const q = profileSearch.trim().toLowerCase();
+    if (!q) return profiles;
+    return profiles.filter((p) =>
+      [p.name, p.country, p.city].some((v) => v?.toLowerCase().includes(q)),
+    );
+  }, [profiles, profileSearch]);
 
   // show alert when user tries to leave the page with unsaved changes
   useEffect(() => {
@@ -490,68 +499,65 @@ export default function Step3ScrapeProfile() {
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="relative py-8">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-200" />
-        </div>
-        <div className="relative flex justify-center">
-          <span className="bg-white px-3 text-xs font-semibold text-gray-800">
-            {t("Your Target Audience")}
-          </span>
-        </div>
-      </div>
-      <div>
-        <div className="space-y-4">
-          {loadingProfiles ? (
-            <div className="text-sm text-gray-500">{t("Loading target audiences...")}</div>
-          ) : profiles.length === 0 ? (
-            <div className="text-sm text-gray-500 bg-gray-50 border border-gray-100 rounded-lg p-6 text-center">
-              {t("No saved target audiences yet.")}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {profiles.map((profile) => (
-                <div
-                  key={profile.id}
-                  className={`relative p-4 rounded-xl border transition-all cursor-pointer ${
-                    copilotData.targetAudienceId === profile.id
-                      ? "border-primary/20 bg-primary/5"
-                      : "border-gray-200 hover:border-primary/20 hover:bg-primary/5"
-                  }`}
-                  onClick={() => {
-                    if (copilotData.targetAudienceId === profile.id) {
-                      updateCopilotData({ targetAudienceId: null });
-                    } else {
-                      updateCopilotData({ targetAudienceId: profile.id });
-                      updateTargetProfile({
-                        countries: profile.country ? [profile.country] : [],
-                        cities: profile.city ? [profile.city] : [],
-                        industries: profile.name ? [profile.name] : [],
-                      });
-                      setEnableCity(Boolean(profile.city));
-                    }
-                  }}
-                >
-                  <h4 className="font-semibold text-gray-900 line-clamp-1">
-                    {profile.name}
-                  </h4>
-                  <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
-                    <div className="flex items-center gap-1.5">
-                      <MapPin size={14} className="text-gray-400" />
-                      <span>{profile?.country || t("All")} </span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Building2 size={14} className="text-gray-400" />
-                      <span>{profile?.city || t("All")} </span>
-                    </div>
+      <SavedListSection
+        title="Saved target audiences"
+        count={profiles.length}
+        selectedLabel={
+          profiles.find((p) => p.id === copilotData.targetAudienceId)?.name
+        }
+        search={profileSearch}
+        onSearchChange={setProfileSearch}
+        searchPlaceholder="Search by name, country or city…"
+        noMatches={profiles.length > 0 && filteredProfiles.length === 0}
+      >
+        {loadingProfiles ? (
+          <div className="text-sm text-gray-500">{t("Loading target audiences...")}</div>
+        ) : profiles.length === 0 ? (
+          <div className="text-sm text-gray-500 bg-gray-50 border border-gray-100 rounded-lg p-6 text-center">
+            {t("No saved target audiences yet.")}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {filteredProfiles.map((profile) => (
+              <div
+                key={profile.id}
+                className={`relative p-4 rounded-xl border transition-all cursor-pointer ${
+                  copilotData.targetAudienceId === profile.id
+                    ? "border-primary/20 bg-primary/5"
+                    : "border-gray-200 hover:border-primary/20 hover:bg-primary/5"
+                }`}
+                onClick={() => {
+                  if (copilotData.targetAudienceId === profile.id) {
+                    updateCopilotData({ targetAudienceId: null });
+                  } else {
+                    updateCopilotData({ targetAudienceId: profile.id });
+                    updateTargetProfile({
+                      countries: profile.country ? [profile.country] : [],
+                      cities: profile.city ? [profile.city] : [],
+                      industries: profile.name ? [profile.name] : [],
+                    });
+                    setEnableCity(Boolean(profile.city));
+                  }
+                }}
+              >
+                <h4 className="font-semibold text-gray-900 line-clamp-1">
+                  {profile.name}
+                </h4>
+                <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+                  <div className="flex items-center gap-1.5">
+                    <MapPin size={14} className="text-gray-400" />
+                    <span>{profile?.country || t("All")} </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Building2 size={14} className="text-gray-400" />
+                    <span>{profile?.city || t("All")} </span>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </SavedListSection>
       <StepsActions
         onPress={() => handleONpress()}
         isLoading={loading}
