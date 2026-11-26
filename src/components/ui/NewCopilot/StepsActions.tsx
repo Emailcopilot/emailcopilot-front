@@ -1,4 +1,4 @@
-import { ArrowRight, Rocket } from "lucide-react";
+import { ArrowLeft, ArrowRight, Rocket } from "lucide-react";
 import { useState } from "react";
 import { useCopilotStore } from "@/store/copilotStore";
 import { useI18n } from "@/lib/i18n";
@@ -14,10 +14,14 @@ function StepsActions({
   inline?: boolean;
   onPress: () => void | Promise<void>;
 }) {
-  const { mode, editingLive, setRelaunchPending } = useCopilotStore();
+  const { mode, editingLive, setRelaunchPending, currentStep, setStep } =
+    useCopilotStore();
   const [relaunching, setRelaunching] = useState(false);
   const { t } = useI18n();
   const showRelaunch = mode === "edit" && editingLive;
+  // Mobile only: the stepper there is a thin bar, so give steps 2–5 a way
+  // back next to the CTA. Desktop keeps the clickable stepper at the top.
+  const showBack = !inline && currentStep > 1;
 
   // Saves the current step exactly like "Save & Continue"; the store turns
   // the step change at the end of that save into a re-launch.
@@ -40,9 +44,19 @@ function StepsActions({
       className={
         inline
           ? "mt-4 flex justify-end w-full"
-          : "pt-5 flex justify-end w-full border-t border-gray-200 mt-12 mb-4"
+          : "pt-5 flex flex-wrap gap-y-3 justify-end w-full border-t border-gray-200 mt-12 mb-4"
       }
     >
+      {showBack && (
+        <button
+          type="button"
+          onClick={() => setStep((currentStep - 1) as typeof currentStep)}
+          disabled={isLoading || relaunching}
+          className="md:hidden mr-auto flex items-center gap-2 px-4 py-2.5 border border-gray-300 bg-white rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <ArrowLeft size={15} /> {t("Back")}
+        </button>
+      )}
       {showRelaunch && (
         <button
           type="button"
@@ -61,7 +75,7 @@ function StepsActions({
           onPress();
         }}
         disabled={!canContinue || isLoading}
-        className="btn-cta border border-transparent text-white px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="btn-cta border border-transparent text-white px-4 sm:px-6 py-2.5 rounded-lg text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isLoading ? (
           <span className="flex items-center">
